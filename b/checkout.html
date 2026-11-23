@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta name="robots" content="noindex, nofollow">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Checkout — i9Store USA</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fragment+Mono&family=Schibsted+Grotesk:wght@400..900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="d.css">
+</head>
+<body>
+<script src="../shared/icons.js"></script>
+<a class="sr" href="#main">Skip to checkout</a>
+<header class="hdr co-hdr"><div class="wrap">
+  <a class="brand" href="index.html" aria-label="i9Store home"><img src="../shared/i9-seal.webp" alt="">i9Store</a>
+  <span class="help"><span>Questions before you pay? </span><a href="tel:+13053334374">+1 (305) 333-4374</a></span>
+</div></header>
+
+<main id="main" class="wrap">
+  <div class="co">
+    <form onsubmit="return false" novalidate>
+      <h1>Checkout.</h1>
+      <p class="intro">One page, no account. Save a password after you pay, if you want one.</p>
+      <a class="otoggle" href="#order"><span>Order · 2 pieces</span><span class="num">$1,506.00</span></a>
+
+      <fieldset class="grp">
+        <legend>Contact</legend><span class="gnote">For the receipt</span>
+        <div class="f full"><label for="em">E-mail</label><input id="em" type="email" autocomplete="email" placeholder="you@yourchurch.org"><span class="h">Your receipt and order link go here.</span></div>
+        <div class="f"><label for="nm">Full name</label><input id="nm" autocomplete="name"></div>
+        <div class="f"><label for="ph">Phone <span>(optional)</span></label><input id="ph" type="tel" autocomplete="tel"><span class="h">Only for delivery questions.</span></div>
+      </fieldset>
+
+      <fieldset class="grp">
+        <legend>Delivery</legend><span class="gnote">Ships from Miami</span>
+        <div class="f full"><label for="ad">Street address</label><input id="ad" autocomplete="street-address" placeholder="Start typing; we’ll suggest matches"></div>
+        <div class="f"><label for="apt">Apt, suite, building <span>(optional)</span></label><input id="apt" autocomplete="address-line2"></div>
+        <div class="f"><label for="org">Church or company <span>(optional)</span></label><input id="org" autocomplete="organization"></div>
+        <div class="dline"><span>Delivery date</span><span>Appears when your address is in</span></div>
+      </fieldset>
+
+      <fieldset class="grp">
+        <legend>Payment</legend><span class="gnote">Placeholder</span>
+        <div class="payph" role="note">
+          <b><svg class="ic" aria-hidden="true"><use href="#ic-lock"/></svg>Stripe’s payment form loads here</b>
+          <p>The live store embeds Stripe’s own form, so card details never reach i9 servers. Which wallets appear depends on the buyer’s device.</p>
+          <span class="note">Not live in this prototype</span>
+        </div>
+      </fieldset>
+
+      <button class="btn act pay" type="submit">Pay $1,506.00</button>
+      <p class="alt">Need an invoice or a PO instead? <a href="index.html#ways">Send this bag as a quote request</a></p>
+    </form>
+
+    <aside class="order" id="order" aria-labelledby="ord-h">
+      <div class="scene">
+        <h2 id="ord-h">Order <a href="index.html">Edit bag</a></h2>
+        <div class="oline"><span class="pk"><img src="https://storage.centrali9tv.com.br/prod/2026/01/images/original/95831_aputurels600xpr.jpeg" alt=""></span><div><b>Aputure LS 600d Pro</b><span class="s">APD0126A2C · Qty 1</span></div><span class="price">$1,417.00</span></div>
+        <div class="oline"><span class="pk"><img src="https://storage.centrali9tv.com.br/prod/2020/09/images/original/16255_29219.jpg" alt=""></span><div><b>Aputure Lantern Softbox</b><span class="s">65 cm · Qty 1</span></div><span class="price">$89.00</span></div>
+        <div class="sums">
+          <div><span>Subtotal</span><span class="num">$1,506.00</span></div>
+          <div><span>Shipping</span><span class="ok">Included</span></div>
+          <div><span>Sales tax</span><span class="ok">Included</span></div>
+          <div class="g"><span>Total <small>USD</small></span><span class="num">$1,506.00</span></div>
+          <p>Listed prices include shipping and sales tax and may change with the dollar. This is the figure you pay.</p>
+        </div>
+      </div>
+      <div class="assure">
+        <div><svg class="ic" aria-hidden="true"><use href="#ic-truck"/></svg><span>Ships from I9Store USA LLC, Miami, FL</span></div>
+        <div><svg class="ic" aria-hidden="true"><use href="#ic-shield-check"/></svg><span>LS 600d Pro: limited 1-year warranty</span></div>
+        <div><svg class="ic" aria-hidden="true"><use href="#ic-whatsapp-logo"/></svg><span>WhatsApp or <a href="tel:+13053334374">+1 (305) 333-4374</a></span></div>
+      </div>
+    </aside>
+  </div>
+</main>
+<script src="../shared/catalog.js"></script>
+<script src="d.js"></script>
+<script src="../switcher.js"></script>
+</body>
+</html>
