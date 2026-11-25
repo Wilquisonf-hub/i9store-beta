@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title data-i18n="m.cat.title">Your catalogue — i9 Studios content marketplace</title>
+<meta name="description" content="Titles cleared for your territory, vehicles, languages and audience.">
+<link rel="icon" href="img/i9-seal-64.png">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=PT+Mono&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/studios.css">
+<link rel="stylesheet" href="css/market.css">
+</head>
+<body data-page="catalog" data-nav="distribute">
+<div id="chrome-top"></div>
+<div class="demo-strip"><div class="wrap"><b>DEMO</b><span data-i18n="m.strip">Demonstration catalogue — titles and rights are examples. Netmotors is the one real i9 title. Nothing on these pages is sent anywhere.</span></div></div>
+
+<main id="main">
+  <div id="cat">
+    <section class="band black" id="cat-gate" hidden></section>
+    <div id="cat-main" hidden>
+      <section class="band black cat-head" aria-labelledby="cat-h">
+        <div class="wrap">
+          <div>
+            <p class="meta" id="cat-name"></p>
+            <h1 id="cat-h">Your catalogue</h1>
+            <div class="pchips"><span id="cat-chips" class="pchips"></span><a href="register.html?edit=1" id="cat-edit">Edit profile</a></div>
+          </div>
+          <div class="cnt"><div class="c1" id="cat-count"></div><p class="c2" id="cat-hidden"></p></div>
+        </div>
+      </section>
+      <section class="band graphite" id="filler" aria-label="Schedule filler" data-i18n-attr="aria-label:m.cat.filler"></section>
+      <section class="band black" id="feat" aria-label="An i9 Original" data-i18n-attr="aria-label:m.cat.orig" hidden></section>
+      <section class="band black packs-band" id="packs" aria-label="Packages" data-i18n-attr="aria-label:m.cat.packs" hidden></section>
+      <section class="band black" aria-label="Titles" data-i18n-attr="aria-label:m.cat.titles">
+        <div class="wrap cat-body">
+          <aside class="fside" id="cat-filters" aria-label="Filters" data-i18n-attr="aria-label:m.cat.filters"></aside>
+          <div>
+            <div class="gbar2">
+              <span class="meta-s" id="cat-shown"></span>
+              <span style="display:flex;gap:10px;align-items:center">
+                <button type="button" class="btn sm fbtn" id="f-open"><span>Filters</span></button>
+                <label><span data-i18n="m.cat.sort">Sort</span> <select id="cat-sort"></select></label>
+              </span>
+            </div>
+            <div class="cgrid" id="cat-grid"></div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+</main>
+<div id="chrome-bottom"></div>
+<script src="data/territories.js"></script>
+<script src="data/catalog-demo.js"></script>
+<script src="js/i18n.js"></script>
+<script src="js/chrome.js"></script>
+<script src="js/posters.js"></script>
+<script src="js/market.js"></script>
+</body>
+</html>

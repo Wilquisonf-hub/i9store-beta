@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title data-i18n="m.reg.title">Register as a buyer — i9 Studios content marketplace</title>
+<meta name="description" content="Tell us where and how you broadcast; see only the titles cleared for you.">
+<link rel="icon" href="img/i9-seal-64.png">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=PT+Mono&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/studios.css">
+<link rel="stylesheet" href="css/market.css">
+</head>
+<body data-page="register" data-nav="distribute">
+<div id="chrome-top"></div>
+<div class="demo-strip"><div class="wrap"><b>DEMO</b><span data-i18n="m.strip">Demonstration catalogue — titles and rights are examples. Netmotors is the one real i9 title. Nothing on these pages is sent anywhere.</span></div></div>
+
+<main id="main" class="reg">
+  <aside class="reg-side">
+    <div class="in">
+      <h1 data-i18n="m.reg.h">Find content for your schedule.</h1>
+      <p class="lede" data-i18n="m.reg.p">About two minutes. Your answers decide what the catalogue shows you: only titles whose rights fit your territory, your vehicles, your languages and your audience.</p>
+      <ol class="rnav">
+        <li class="on"><i></i><span data-i18n="m.reg.s1">Channel</span><span class="meta">01</span></li>
+        <li><i></i><span data-i18n="m.reg.s2">Audience</span><span class="meta">02</span></li>
+        <li><i></i><span data-i18n="m.reg.s3">Distribution</span><span class="meta">03</span></li>
+        <li><i></i><span data-i18n="m.reg.s4">Contact</span><span class="meta">04</span></li>
+      </ol>
+      <p class="note" data-i18n="m.reg.note">Design prototype: nothing is sent. Your profile is saved only in this browser, to personalise the catalogue.</p>
+      <p class="meta" style="color:rgba(247,246,242,.56);margin:0 0 12px" data-i18n="m.reg.try">In a hurry? Try a sample profile:</p>
+      <div class="samples"><button type="button" class="btn sm" style="border-color:rgba(247,246,242,.35);color:#f7f6f2" data-sample="za" data-i18n="m.demoZA">Faith channel · South Africa</button><button type="button" class="btn sm" style="border-color:rgba(247,246,242,.35);color:#f7f6f2" data-sample="us" data-i18n="m.demoUS">OTT platform · United States</button></div>
+    </div>
+  </aside>
+  <div class="reg-main">
+    <!-- DESIGN PROTOTYPE: this form posts nowhere. market.js stores the profile in localStorage only. -->
+    <form class="in" id="reg" novalidate>
+      <div class="rprog"><i id="r-prog"></i></div>
+      <p class="meta" style="color:rgba(10,10,10,.56);margin:0 0 14px" id="r-stepof">Step 1 of 4</p>
+
+      <fieldset class="rstep" data-step="1">
+        <legend tabindex="-1" data-i18n="m.reg.l1">Your channel</legend>
+        <p class="sub" data-i18n="m.reg.d1">Who you are and where your signal reaches. Rights are cleared per territory.</p>
+        <div class="fld"><label for="r-company" data-i18n="m.reg.company">Company or channel name</label><input id="r-company" type="text" autocomplete="organization"><p class="err" data-err="company" hidden></p></div>
+        <div class="fld"><label for="r-country" data-i18n="m.reg.country">Country where the company is based</label><select id="r-country"></select><p class="err" data-err="country" hidden></p></div>
+        <div class="fld"><span class="lb"><span data-i18n="m.reg.terr">Territories you broadcast to</span><span class="hint" data-i18n="m.reg.terrh">Every country your signal or service reaches.</span></span>
+          <div class="tchips" id="r-terr"></div>
+          <div class="sugs" id="r-sug"></div>
+          <div style="margin-top:10px"><select id="r-add" aria-label="Add a territory" data-i18n-attr="aria-label:m.reg.add"></select></div>
+          <p class="err" data-err="terr" hidden></p></div>
+      </fieldset>
+
+      <fieldset class="rstep" data-step="2" hidden>
+        <legend tabindex="-1" data-i18n="m.reg.l2">Your audience</legend>
+        <p class="sub" data-i18n="m.reg.d2">So we lead with what suits your viewers and hide what does not.</p>
+        <div class="fld"><span class="lb" data-i18n="m.reg.profile">Channel profile</span><div class="cards-r" id="r-profile" role="radiogroup"></div><p class="err" data-err="profile" hidden></p></div>
+        <div class="fld"><span class="lb"><span data-i18n="m.reg.langs">Languages you broadcast in</span></span><div class="chips" id="r-langs"></div><p class="err" data-err="langs" hidden></p></div>
+        <div class="fld"><span class="lb" data-i18n="m.reg.accept">You accept</span>
+          <div class="yn"><label class="tog"><input type="checkbox" id="r-dub" checked><span data-i18n="m.reg.dub">Dubbed versions in your languages</span></label>
+          <label class="tog"><input type="checkbox" id="r-subs" checked><span data-i18n="m.reg.subs">Original audio with subtitles</span></label></div></div>
+      </fieldset>
+
+      <fieldset class="rstep" data-step="3" hidden>
+        <legend tabindex="-1" data-i18n="m.reg.l3">How you distribute</legend>
+        <p class="sub" data-i18n="m.reg.d3">Rights are sold per vehicle. Pick every way you deliver.</p>
+        <div class="fld"><span class="lb" data-i18n="m.reg.veh">Transmission vehicles</span><div class="chips" id="r-veh"></div><p class="err" data-err="veh" hidden></p></div>
+        <div class="fld"><span class="lb"><span data-i18n="m.reg.looking">What you are looking for</span><span class="hint" data-i18n="m.reg.lookingh">Optional. We put these first.</span></span><div class="chips" id="r-looking"></div></div>
+        <div class="fld"><label for="r-gap"><span data-i18n="m.reg.gap">The gap in your schedule</span><span class="hint" data-i18n="m.reg.gaph">Optional. For example: weekday 20:00, 60 minutes, from March.</span></label><input id="r-gap" type="text"></div>
+      </fieldset>
+
+      <fieldset class="rstep" data-step="4" hidden>
+        <legend tabindex="-1" data-i18n="m.reg.l4">Who we talk to</legend>
+        <p class="sub" data-i18n="m.reg.d4">The person who receives screeners and the proposal.</p>
+        <div class="two">
+          <div class="fld"><label for="r-name" data-i18n="m.reg.name">Your name</label><input id="r-name" type="text" autocomplete="name"><p class="err" data-err="name" hidden></p></div>
+          <div class="fld"><label for="r-role" data-i18n="m.reg.role">Role</label><input id="r-role" type="text" autocomplete="organization-title"><p class="err" data-err="role" hidden></p></div>
+          <div class="fld"><label for="r-email" data-i18n="m.reg.email">Work email</label><input id="r-email" type="email" autocomplete="email"><p class="err" data-err="email" hidden></p></div>
+          <div class="fld"><label for="r-wa">WhatsApp</label><input id="r-wa" type="tel" autocomplete="tel"><p class="err" data-err="wa" hidden></p></div>
+        </div>
+        <p class="note" data-i18n="m.reg.note2">Prototype: nothing is sent when you continue. In the live marketplace this profile reaches the i9 Studios distribution team, who confirm rights before any proposal.</p>
+      </fieldset>
+
+      <div class="ract">
+        <button type="button" class="btn back" id="r-back" hidden data-i18n="m.reg.back">← Back</button>
+        <span class="grow">
+          <button type="button" class="btn solid" id="r-next" data-i18n="m.reg.next">Continue</button>
+          <button type="submit" class="btn sig" id="r-finish" hidden data-i18n="m.reg.finish">See my catalogue</button>
+        </span>
+      </div>
+    </form>
+  </div>
+</main>
+<div id="chrome-bottom"></div>
+<script src="data/territories.js"></script>
+<script src="data/catalog-demo.js"></script>
+<script src="js/i18n.js"></script>
+<script src="js/chrome.js"></script>
+<script src="js/posters.js"></script>
+<script src="js/market.js"></script>
+</body>
+</html>
