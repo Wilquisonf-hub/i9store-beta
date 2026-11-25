@@ -91,26 +91,27 @@
       if (vs.length < 2) { sw.hidden = true; return; }
       sw.hidden = false;
       $('#ev-chips').innerHTML = vs.map(v => { const p = P[v];
-        return `<button type="button" class="ev-chip" role="radio" aria-checked="${v === vid}" tabindex="${v === vid ? 0 : -1}" data-v="${v}" aria-label="${esc(p.colour)}, ${usd(p.usd)}" title="${esc(p.colour)} · ${usd(p.usd)}"><span style="--c:${p.hex}"></span></button>`; }).join('');
+        /* owner 25 Nov: one page per colour, like B&H. Each chip is a real link to that colour's page (crawlable); hover previews the photo. */
+        return `<a class="ev-chip" role="listitem" href="product-simple.html?id=${v}"${v === vid ? ' aria-current="page"' : ''} data-v="${v}" aria-label="${esc(p.colour)}, ${usd(p.usd)}" title="${esc(p.colour)} · ${usd(p.usd)}"><span style="--c:${p.hex}"></span></a>`; }).join('');
       const prices = new Set(vs.map(v => P[v].usd));
       const note = $('#ev-swnote');
       note.hidden = prices.size < 2;
       if (prices.size > 1) { const odd = vs.filter(v => P[v].usd !== mode(vs)); note.textContent = `Prices differ by colour, as listed: ${odd.map(v => P[v].colour + ' ' + usd(P[v].usd)).join(' · ')}.`; }
     }
     const mode = vs => { const c = {}; vs.forEach(v => { c[P[v].usd] = (c[P[v].usd] || 0) + 1; }); return +Object.keys(c).sort((a, b) => c[b] - c[a])[0]; };
-    $('#ev-chips').addEventListener('click', e => { const c = e.target.closest('[data-v]'); if (c) pick(c.dataset.v, true); });
-    $('#ev-chips').addEventListener('keydown', e => {
-      const vs = prod.variants, i = vs.indexOf(vid); let n = -1;
-      if (e.key === 'ArrowRight' || e.key === 'ArrowDown') n = (i + 1) % vs.length; else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') n = (i - 1 + vs.length) % vs.length;
-      else if (e.key === 'Home') n = 0; else if (e.key === 'End') n = vs.length - 1; else return;
-      e.preventDefault(); pick(vs[n], true); $(`#ev-chips [data-v="${vs[n]}"]`).focus();
-    });
-    /* hovering a chip warms its photo so the swap is instant */
-    $('#ev-chips').addEventListener('pointerover', e => { const c = e.target.closest('[data-v]'); if (c) { const im = new Image(); im.src = P[c.dataset.v].src; } });
+    /* a plain click swaps in place and pushes the colour's URL (as a framework link would); modified clicks open the page normally */
+    $('#ev-chips').addEventListener('click', e => { const c = e.target.closest('[data-v]'); if (!c || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button) return;
+      e.preventDefault(); if (c.dataset.v === vid) return; try { history.pushState(null, '', 'product-simple.html?id=' + c.dataset.v); } catch (er) {} pick(c.dataset.v, true); });
+    addEventListener('popstate', () => { const k = new URLSearchParams(location.search).get('id'); if (k && (prod.variants || []).includes(k)) pick(k, true); else if (k) location.reload(); });
+    /* hover previews that colour's photo, like B&H; leaving restores the chosen one */
+    const pv = $('#ev-img');
+    $('#ev-chips').addEventListener('pointerover', e => { const c = e.target.closest('[data-v]'); if (!c || e.pointerType === 'touch') return; const p = P[c.dataset.v]; if (p && pv.getAttribute('src') !== p.src) { pv.src = p.src; pv.dataset.preview = c.dataset.v; } });
+    $('#ev-chips').addEventListener('pointerleave', () => { if (pv.dataset.preview) { pv.removeAttribute('data-preview'); pv.src = P[vid].src; } });
 
     function pick(v, announce) {
       if (!P[v]) return; vid = v; paintVariant();
-      $$('#ev-chips [data-v]').forEach(c => { const on = c.dataset.v === v; c.setAttribute('aria-checked', on); c.tabIndex = on ? 0 : -1; });
+      pv.removeAttribute('data-preview');
+      $$('#ev-chips [data-v]').forEach(c => { if (c.dataset.v === v) c.setAttribute('aria-current', 'page'); else c.removeAttribute('aria-current'); });
       if (announce) $('#live').textContent = `${P[v].colour}, ${usd(P[v].usd)}`;
     }
 

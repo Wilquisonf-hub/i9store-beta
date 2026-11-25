@@ -43,9 +43,10 @@
 .ev-chips{display:flex;flex-wrap:wrap;gap:4px}
 .ev-chip{position:relative;width:44px;height:44px;padding:0;border:0;background:none;cursor:pointer;display:grid;place-items:center}
 .ev-chip span{width:32px;height:32px;background:var(--c);box-shadow:inset 0 0 0 1px rgba(247,246,242,.22)}
-.ev-chip[aria-checked="true"]{box-shadow:inset 0 0 0 2px var(--ink)}
-.ev-chip[aria-checked="true"]::after{content:"";position:absolute;left:6px;right:6px;bottom:-6px;height:3px;background:var(--signal)}
+.ev-chip[aria-current="page"]{box-shadow:inset 0 0 0 2px var(--ink)}
+.ev-chip[aria-current="page"]::after{content:"";position:absolute;left:6px;right:6px;bottom:-6px;height:3px;background:var(--signal)}
 .ev-chip:hover span{transform:scale(1.06)}
+.ev-chip:focus-visible{outline:3px solid var(--signal);outline-offset:1px}
 .ev-chip span{transition:transform .2s var(--ease)}
 .ev-swnote{margin:12px 0 0;color:var(--ink-3)}
 .ev-pr{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;padding:22px 0;margin-top:22px;border-top:1px solid var(--rule-2)}
