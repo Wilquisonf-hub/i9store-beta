@@ -3,6 +3,7 @@
   var parts = location.pathname.split('/');
   var file = parts.pop() || 'index.html';
   var cur = parts.pop();
+  var common = ['index.html', 'product.html', 'checkout.html'];
   var versions = [['a', 'A · On Air'], ['b', 'B · Hey Will'], ['c', 'C · Hybrid'], ['d', 'D · Daylight'], ['e', 'E · Solutions']];
   var css = '#i9beta{position:fixed;left:16px;bottom:16px;z-index:2147483000;display:flex;align-items:center;gap:2px;' +
     'background:#0A0A0A;color:#F7F6F2;font:500 12px/1 "PT Mono",ui-monospace,Menlo,monospace;letter-spacing:.04em;' +
@@ -18,7 +19,8 @@
   var html = '<a class="lbl" href="../index.html" title="All versions">BETA</a>';
   versions.forEach(function (v) {
     var name = v[1].split(' · ');
-    html += '<a href="../' + v[0] + '/' + file + '"' + (v[0] === cur ? ' aria-current="page"' : '') + '>' +
+    var target = (common.indexOf(file) >= 0 || v[0] === cur) ? file : 'index.html';
+    html += '<a href="../' + v[0] + '/' + target + '"' + (v[0] === cur ? ' aria-current="page"' : '') + '>' +
       name[0] + '<span class="long"> · ' + name[1] + '</span></a>';
   });
   nav.innerHTML = html;

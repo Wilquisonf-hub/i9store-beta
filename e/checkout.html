@@ -19,7 +19,7 @@
 
 <main id="main" class="stage co-body">
   <div class="wrap">
-    <a class="otoggle" href="#order"><span>Order · 2 pieces</span><span class="num">$1,506.00</span></a>
+    <a class="otoggle" href="#order"><span id="co-n">Order</span><span class="num" id="co-t">$0.00</span></a>
     <div class="co">
       <form class="co-main" onsubmit="return false" novalidate>
         <h1>Checkout.</h1>
@@ -49,27 +49,30 @@
           </div>
         </fieldset>
 
-        <button class="btn sig pay" type="submit">Pay $1,506.00</button>
+        <button class="btn sig pay" type="submit" id="co-pay">Pay</button>
         <p class="alt">Need an invoice or a PO instead? <a href="index.html#quote">Send this bag as a quote request</a></p>
       </form>
 
       <aside class="order" id="order" aria-labelledby="ord-h">
         <div class="in">
-          <h2 id="ord-h">Order <a href="index.html">Edit bag</a></h2>
-          <div class="oline"><span class="pk"><img src="https://storage.centrali9tv.com.br/prod/2026/01/images/original/95831_aputurels600xpr.jpeg" alt=""></span><div><b>Aputure LS 600d Pro</b><span class="s">Daylight LED, V-Mount</span><span class="q">APD0126A2C · ×1</span></div><span class="price">$1,417.00</span></div>
-          <div class="oline"><span class="pk"><img src="https://storage.centrali9tv.com.br/prod/2020/09/images/original/16255_29219.jpg" alt=""></span><div><b>Aputure Lantern Softbox</b><span class="s">65 cm</span><span class="q">×1</span></div><span class="price">$89.00</span></div>
+          <h2 id="ord-h">Order <a href="index.html">Keep shopping</a></h2>
+          <div id="co-lines"></div>
+          <div class="co-empty" id="co-empty" hidden>
+            <p><b>Your bag is empty.</b> Add a piece, a five-piece chain, a whole setup or a planned room, and it shows up here.</p>
+            <p class="links"><a href="setups.html">Shop a setup</a><a href="shop.html">Browse all equipment</a><a href="planner.html">Plan your room</a></p>
+          </div>
           <div class="totals">
             <div class="sl meta"><span><span class="tally"></span>Total before you pay</span><span>USD</span></div>
             <div class="sums">
-              <div><span>Subtotal</span><span class="num">$1,506.00</span></div>
+              <div><span>Subtotal</span><span class="num" id="co-sub">$0.00</span></div>
               <div><span>Shipping</span><span>Included</span></div>
               <div><span>Sales tax</span><span>Included</span></div>
-              <div class="g"><span>Total</span><span class="num">$1,506.00</span></div>
+              <div class="g"><span>Total</span><span class="num" id="co-tot">$0.00</span></div>
               <small>Listed prices include shipping and sales tax and may change with the dollar. This is the figure you pay.</small>
             </div>
             <div class="assure">
               <div><span class="meta">Ships from</span><span>I9Store USA LLC, Miami, FL</span></div>
-              <div><span class="meta">Warranty</span><span>LS 600d Pro: limited 1-year</span></div>
+              <div><span class="meta">Warranty</span><span>The manufacturer’s, as on each listing</span></div>
               <div><span class="meta">People</span><span>WhatsApp or <a href="tel:+13053334374">+1 (305) 333-4374</a></span></div>
             </div>
           </div>
@@ -80,6 +83,8 @@
 </main>
 <script src="../shared/catalog.js"></script>
 <script src="../shared/catalog-more.js"></script>
+<script src="../shared/catalog-browse.js"></script>
+<script src="bag.js"></script>
 <script src="g.js"></script>
 <script src="../switcher.js"></script>
 </body>

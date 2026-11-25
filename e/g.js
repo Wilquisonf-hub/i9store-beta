@@ -12,85 +12,34 @@
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const SH = '../shared/';
 
-  /* ---------- the nine sources ---------- */
-  const S = {
-    church: { label:'Churches', bus:'Churches', who:'Services, livestream, volunteer crews', chainName:'church chain', path:'Light to stream',
-      h:'Sunday, on air.', lede:'PTZ cameras, a switcher, wireless handhelds and stage light a volunteer crew can run. Buy a single piece, or send us your room and we’ll quote the whole chain.',
-      get:'Stage light, a PTZ camera, wireless handhelds, a mixer and a stream switcher.', mode:'both',
-      chain:['ls600d','ue20','ewd','l12','atemmls'], jobs:['Light the platform','Capture','Mic the pulpit','Mix','Switch and stream'],
-      picksH:'Picked for churches', picks:['rp60','atem1me','ewdme3','dm3','hyperdeck','solid'],
-      photo:'igreja.webp', pos:'46% 62%', src:'i9 church project', cap:'Sanctuary booth, i9 church project',
-      alt:'View from a sanctuary booth: a video router panel and program monitor in front of the stage and LED wall' },
-    broadcast: { label:'Broadcast & TV', bus:'Broadcast & TV', who:'Stations, studios, master control', chainName:'studio chain', path:'Light to switcher',
-      h:'Studio and field gear, specified to the SKU.', lede:'Studio cameras, talent audio, prompting and production switchers with part numbers up front. Quote against your PO, or buy single pieces now.',
-      get:'Key light, studio camera, talent lav, prompter and a 1 M/E switcher.', mode:'quote',
-      chain:['nova','bm4k','ewdme4','fps170','atem1me'], jobs:['Key light','Studio camera','Talent audio','Prompt','Switch'],
-      picksH:'Picked for stations', picks:['videohub','ursabg2','ue80','rp60','hyperdeck','va7'],
-      photo:'sol-broadcast-record-manaus-control.webp', pos:'50% 42%', src:'Record Manaus', cap:'Record Manaus control room · i9TV engineering',
-      alt:'A station control room: operators at the switcher and audio desks under a wall of program monitors' },
-    podcast: { label:'Podcast & radio', bus:'Podcast & radio', who:'Video podcasts, radio studios', chainName:'podcast chain', path:'Light to stream',
-      h:'Sound like radio. Look like TV.', lede:'A broadcast vocal mic, a podcast recorder, an auto-tracking camera and an ISO switcher that records every angle. For a company studio, a church radio or your own show.',
-      get:'Key light, AI-tracking camera, vocal mic, podcast recorder, ISO switcher.', mode:'both',
-      chain:['a200d','tail2','sm7b','p8','atemproiso'], jobs:['Key light','Camera','Mic','Record and mix','Switch and stream'],
-      picksH:'Picked for podcasts and radio', picks:['mv7','mdr','p60c','pt2c','l12','dm3'],
-      photo:'sol-podcast-studio-set.webp', pos:'50% 60%', src:'i9 podcast set', cap:'Podcast set · i9 podcast-studio solution',
-      alt:'A podcast set: a table with microphones on arms, leather armchairs and wood shelving under soft overhead light' },
-    events: { label:'Live events', bus:'Live events', who:'Concerts, conferences, sports', chainName:'event chain', path:'Camera to stream',
-      h:'One take. Every camera rolling.', lede:'A 4K camcorder, wireless video, handheld mics, crew intercom and an ISO switcher for shows that happen once. Quote the package for your date, or buy single pieces now.',
-      get:'4K camcorder, wireless video, handhelds, crew intercom, ISO switcher.', mode:'both',
-      chain:['xf605','bolt6','ewd','c16s','atemxiso'], jobs:['Camera','Wireless video','Mic the stage','Crew comms','Switch and stream'],
-      picksH:'Picked for live events', picks:['l20r','versa','sumo19se','ls1200d','ue80','ewdme3'],
-      photo:'sol-events-finday-camera.webp', pos:'55% 40%', src:'Finday, São Paulo', cap:'Finday, São Paulo · i9 Studios rental and crew',
-      alt:'A camera operator on a riser at a conference, stage light beams cutting through the haze behind him' },
-    production: { label:'Production companies', bus:'Production', who:'Crews on set and on location', chainName:'production chain', path:'Light to monitor',
-      h:'Gear that goes out on the next job.', lede:'High-output light, a cinema camera, wireless lavaliers, a field recorder and a wireless monitor for crews on location. Buy today, or quote quantities for the whole package.',
-      get:'High-output key, 6K cinema camera, wireless lav, recorder, monitor.', mode:'both',
-      chain:['ls600d','c80','ewdpme2','f6','m7pro'], jobs:['Key light','Camera','Wireless lav','Record sound','Monitor'],
-      picksH:'Picked for production', picks:['solid','nova','rs4','f22x','dome150','f10'],
-      photo:'sol-production-canta-comigo-rack.webp', pos:'50% 50%', src:'Canta Comigo', cap:'Canta Comigo · i9 Studios 4K OB truck',
-      alt:'Inside an OB truck: racks of camera control units, colour-bar monitors and orange fibre cabling' },
-    creator: { label:'Creators & YouTube', bus:'Creators', who:'Channels, streams, small studios', chainName:'creator chain', path:'Light to stream',
-      h:'Better picture and sound, this week.', lede:'A mirrorless camera made for video, a compact key light, wireless mics and a four-camera stream switcher. One-page checkout, no account needed.',
-      get:'Compact key, mirrorless camera, wireless mics, stream switcher, deck.', mode:'buy',
-      chain:['ls60d','r50v','profile','atemmp','lslive'], jobs:['Key light','Camera','Mic','Switch and stream','Control'],
-      picksH:'Picked for creators', picks:['lantern','a60x','mv7','tail2','ninja','mdr'],
-      comp:['r50v','ls60d','profile'], src:'Live listings', cap:'Three live listings · not a photo' },
-    education: { label:'Schools & government', bus:'Schools & gov', who:'Classrooms, chambers, public sessions', chainName:'session chain', path:'Camera to stream',
-      h:'Every session, streamed and on record.', lede:'PTZ cameras with a joystick controller, handheld mics for the floor, and a switcher and encoder to stream and archive. Quoted against a PO, or an invoice for your finance team.',
-      get:'PTZ camera and joystick, floor mics, ISO switcher, streaming encoder.', mode:'quote',
-      chain:['ue50','rp60','ewd','atemproiso','bmenc'], jobs:['Capture','Camera control','Mic the floor','Switch and record','Stream'],
-      picksH:'Picked for schools and government', picks:['crn300','hyperdeck','l12','sp150','ewdme4','va7'],
-      photo:'auditorio.webp', pos:'50% 64%', src:'Auditorium', cap:'Auditorium · i9 institutions and government',
-      alt:'A large dark auditorium seen from the back: rows of seats facing three wide screens' },
-    corporate: { label:'Corporate studios', bus:'Corporate', who:'In-house video, training, town halls', chainName:'corporate chain', path:'Light to switcher',
-      h:'A studio your team can run on Monday.', lede:'A PTZ camera, soft panel light, a lavalier, a teleprompter and an ISO switcher, sized for an ordinary meeting room. Buy it on a company card, or have it quoted.',
-      get:'Panel light, NDI PTZ camera, lavalier, teleprompter, ISO switcher.', mode:'both',
-      chain:['p60c','crn300','ewdme4','sp150','atemproiso'], jobs:['Key light','Camera','Mic','Prompt','Switch and stream'],
-      picksH:'Picked for corporate studios', picks:['sm7b','tail2','a200d','hyperdeck','bmenc','mdr'],
-      photo:'sol-corporate-studio.webp', pos:'50% 58%', src:'i9 corporate studio', cap:'Corporate studio · i9 corporate-studio solution',
-      alt:'A corporate studio: PTZ cameras on stands facing a meeting table with a screen and bookshelves' },
-    integrator: { label:'Integrators & resellers', bus:'Integrators', who:'Project lists across 140+ brands', chainName:'project chain', path:'Router to control',
-      h:'Project lists, priced by SKU.', lede:'Routing, conversion, AV networking, Dante audio and show control across 140+ brands. Build a quote list and send it in one go; a specialist replies with a priced list for the project.',
-      get:'12G router, converters, AV network switch, Dante console, show control.', mode:'quote',
-      chain:['videohub','microconv','m4250','dm3d','cuecore'], jobs:['Route','Convert','Network','Mix on Dante','Show control'],
-      picksH:'Picked for integrators', picks:['ue80','rp60','ewdxem2','atem1me','vptouch','hyperdeck'],
-      comp:['videohub','dm3d','cuecore'], src:'Live listings', cap:'Three live listings · not a photo' },
-  };
-  const ORDER = ['church','broadcast','podcast','events','production','education','corporate','creator','integrator'];
+  /* ---------- the nine sources: one source of truth, I9S.SOL in browse-core.js (shared with the menu, setups, shop) ---------- */
+  const X = window.I9S || {};
+  const S = X.SOL || {}, ORDER = X.ORDER || [];
   const total = k => S[k].chain.reduce((a, id) => a + P[id].usd, 0);
   window.I9G = { S, ORDER, total };
 
-  /* ---------- bag + quote list counters ---------- */
-  const counts = { bag: +($('#bag-ct')?.textContent || 0), quote: +($('#quote-ct')?.textContent || 0) };
-  function bump(kind, n = 1) {
-    counts[kind] += n; const el = $(kind === 'bag' ? '#bag-ct' : '#quote-ct');
-    if (el) { el.textContent = counts[kind]; el.classList.add('on'); }
-    const l = $('#live'); if (l) l.textContent = kind === 'bag' ? 'Added to bag' : 'Added to quote list';
+  /* ---------- bag (shared and saved: bag.js) + quote list (in-page counter) ---------- */
+  const BAG = window.I9BAG;
+  const counts = { quote: +($('#quote-ct')?.textContent || 0) };
+  function bumpQuote(n = 1) {
+    counts.quote += n; const el = $('#quote-ct');
+    if (el) { el.textContent = counts.quote; el.classList.add('on'); }
+    const l = $('#live'); if (l) l.textContent = 'Added to quote list';
   }
+  let chainIds = () => [];   /* the home page points this at the chain on program */
   document.addEventListener('click', e => {
     const a = e.target.closest('[data-add]'), q = e.target.closest('[data-quote]');
-    if (a) { bump('bag', a.dataset.add === 'chain' ? 5 : 1); a.classList.add('done'); if (a.classList.contains('add')) a.innerHTML = icon('check'); else a.textContent = 'Added'; }
-    if (q) { bump('quote', q.dataset.quote === 'chain' ? 5 : 1); q.classList.add('done'); q.textContent = 'In quote'; }
+    if (a) {
+      const v = a.dataset.add;
+      if (v === 'chain') { const ids = chainIds(); if (BAG) BAG.add(ids.map(id => ({ id, q: 1 })), `Added the ${a.dataset.chainName || 'chain'} · ${ids.length} pieces`); }
+      else if (P[v]) {
+        const qi = a.closest('.acts') && a.closest('.acts').querySelector('.qty input');
+        const n = Math.max(1, Math.floor(+(qi ? qi.value : 1) || 1));
+        if (BAG) BAG.add([{ id: v, q: n }], `Added ${P[v].brand} ${P[v].name}${n > 1 ? ' ×' + n : ''}`);
+      }
+      a.classList.add('done'); if (a.classList.contains('add')) a.innerHTML = icon('check'); else a.textContent = 'Added';
+    }
+    if (q) { bumpQuote(q.dataset.quote === 'chain' ? 5 : 1); q.classList.add('done'); q.textContent = 'In quote'; }
   });
   $$('.qty').forEach(q => { const i = $('input', q); $$('button', q).forEach(b => b.addEventListener('click', () => { i.value = Math.max(1, +i.value + (+b.dataset.d)); })); });
 
@@ -118,11 +67,36 @@
       `<li><a href="index.html#for-${k}">${esc(S[k].label)}<span class="meta-s">${S[k].chain.includes(id) ? 'in the chain' : 'picked'}</span></a></li>`).join('');
   }
 
+  /* ================= checkout: the saved bag, line by line ================= */
+  const coLines = $('#co-lines');
+  if (coLines && BAG) {
+    const paintCo = () => {
+      const ls = BAG.lines().filter(l => l.p), n = ls.reduce((a, l) => a + l.q, 0), sum = ls.reduce((a, l) => a + l.p.usd * l.q, 0);
+      coLines.innerHTML = ls.map(({ id, q, p }) => `<div class="oline" data-id="${esc(id)}"><span class="pk"><img src="${p.src}" alt=""></span>
+        <div><b>${esc(p.brand + ' ' + p.name)}</b>${p.sub ? `<span class="s">${esc(p.sub)}</span>` : ''}<span class="q">${p.sku ? esc(p.sku) + ' · ' : ''}×${q}${q > 1 ? ' · ' + usd(p.usd) + ' each' : ''}</span>
+        <button type="button" class="co-rm" data-rm="${esc(id)}" aria-label="Remove ${esc(p.brand + ' ' + p.name)} from the bag">Remove</button></div>
+        <span class="price">${usd(p.usd * q)}</span></div>`).join('');
+      $('#co-empty').hidden = ls.length > 0;
+      const pcs = n === 1 ? '1 piece' : n + ' pieces';
+      $('#co-n').textContent = 'Order · ' + pcs; $('#co-t').textContent = usd(sum);
+      $('#co-sub').textContent = usd(sum); $('#co-tot').textContent = usd(sum);
+      const pay = $('#co-pay'); pay.textContent = ls.length ? 'Pay ' + usd(sum) : 'Your bag is empty'; pay.disabled = !ls.length;
+    };
+    coLines.addEventListener('click', e => {
+      const r = e.target.closest('[data-rm]'); if (!r) return;
+      const p = P[r.dataset.rm]; BAG.remove(r.dataset.rm);
+      BAG.say(`Removed ${p ? p.brand + ' ' + p.name : 'the line'}. Bag has ${BAG.count()} pieces.`);
+      ($('#co-lines [data-rm]') || $('#co-empty a'))?.focus();
+    });
+    BAG.onChange(paintCo); paintCo();
+  }
+
   /* ================= home ================= */
   const bus = $('#bus');
   if (!bus) return;
 
   let cohort = 'church';
+  chainIds = () => S[cohort].chain.slice();
   try { cohort = localStorage.getItem('i9g-cohort') || 'church'; } catch (e) {}
   const fromHash = (location.hash.match(/^#for-(\w+)/) || [])[1];
   if (fromHash) cohort = fromHash;
@@ -182,8 +156,8 @@
     $('#tab-chain').textContent = Noun;
     $('#total').textContent = usd(total(cohort));
     $('#chain-acts').innerHTML = c.mode === 'quote'
-      ? `<button class="btn solid" data-quote="chain">Quote all five</button><button class="btn" data-add="chain">Add all five to bag</button>`
-      : `<button class="btn solid" data-add="chain">Add all five to bag</button><a class="btn" href="#quote">Quote it for my room</a>`;
+      ? `<button class="btn solid" data-quote="chain">Quote all five</button><button class="btn" data-add="chain" data-chain-name="${esc(c.chainName)}">Add all five to bag</button>`
+      : `<button class="btn solid" data-add="chain" data-chain-name="${esc(c.chainName)}">Add all five to bag</button><a class="btn" href="#quote">Quote it for my room</a>`;
     $('#path').innerHTML = c.chain.map((k, i) => { const p = P[k]; return `
       <article class="node">${i === 0 ? '<span class="start"><i></i>Start here</span>' : ''}<a class="pk" href="${pdp(k)}" tabindex="-1" aria-hidden="true"><img src="${p.src}" alt="" loading="lazy"></a><span class="sq" aria-hidden="true"></span>
         <p class="job meta">${String(i + 1).padStart(2, '0')} · ${esc(c.jobs[i])}</p><span class="br meta-s">${esc(p.brand)}</span><h3><a href="${pdp(k)}">${esc(p.name)}</a></h3><p class="b">${esc(p.sub)}</p>

@@ -326,6 +326,8 @@ button,input{font:inherit;color:inherit}
   .lrow .cat,.lhead span:nth-child(3){display:none}
 }
 @media (max-width:1000px){
+  .gnav nav,.ibtn.region{display:none}
+  .menu-btn{display:inline-flex;margin-left:-10px}
   .hero .wrap{grid-template-columns:1fr;gap:40px;padding-top:40px}
   .card{aspect-ratio:4/3;order:-1}
   .head{grid-template-columns:1fr;gap:20px}

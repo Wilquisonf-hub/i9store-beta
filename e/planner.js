@@ -42,6 +42,15 @@
     footLine:['We supply the equipment.<br>i9 Studios and i9TV do the rest.','Nós fornecemos o equipamento.<br>A i9 Studios e a i9TV fazem o resto.'],
     fShop:['Shop','Loja'], fHelp:['Help','Ajuda'], fQuote:['Request a quote','Pedir cotação'], fTerms:['Terms and conditions','Termos e condições'],
     footBot:['Camera angles: manufacturer spec pages (sources in the data file). Prices: live i9store.com/usa listings.','Ângulos: páginas de especificação dos fabricantes (fontes no arquivo de dados). Preços: loja i9store.com/usa.'],
+    /* setups (integration: setups.html "Open in room planner" -> planner.html?template=<setup id>) */
+    setFrom:['From the setup','Do setup'], setOpen:['Open the setup','Abrir o setup'], setMatch:['Open the matching setup','Abrir o setup correspondente'],
+    c_setCams:['Cameras from the setup “{0}”: {1}, placed on the {2} template.','Câmeras do setup “{0}”: {1}, posicionadas no modelo {2}.'],
+    c_setNoCams:['The setup “{0}” has no cameras in its parts list, so the plan uses the {1} template’s camera.','O setup “{0}” não tem câmeras na lista, então o plano usa a câmera do modelo {1}.'],
+    c_setUnknown:['The planner doesn’t model the cameras in the setup “{0}” yet ({1}), so the plan uses the {2} template’s cameras.','O planejador ainda não modela as câmeras do setup “{0}” ({1}), então o plano usa as câmeras do modelo {2}.'],
+    c_setSome:['Not modelled yet, left out of the plan: {0}.','Ainda não modelado, fora do plano: {0}.'],
+    tcMsg:['Your plan has changes. Start over from the {0} template? Its cameras, people and furniture replace yours.','Seu plano tem alterações. Recomeçar do modelo {0}? As câmeras, pessoas e mobília dele substituem as suas.'],
+    tcYes:['Replace my plan','Substituir meu plano'], tcNo:['Keep my plan','Manter meu plano'], live_kept:['Kept your plan.','Seu plano foi mantido.'],
+    addedLine:['Added {0}','Adicionado: {0}'], addedPlan:['Added {0} pieces from this plan','{0} peças deste plano adicionadas'],
     /* templates */
     t_podcast:['Podcast','Podcast'], t_church:['Church','Igreja'], t_studio:['Studio','Estúdio'], t_event:['Live event / corporate','Evento / corporativo'], t_empty:['Empty room','Sala vazia'],
     td_podcast:['3 hosts, table','3 pessoas, mesa'], td_church:['Stage, booth','Palco, cabine'], td_studio:['Desk, set','Bancada, cenário'], td_event:['Stage, FOH','Palco, FOH'], td_empty:['Start blank','Do zero'],
@@ -189,8 +198,22 @@
   const TORDER = ['podcast', 'church', 'studio', 'event', 'empty'];
   const FURN = { table:{ w:1.8, h:0.9 }, desk:{ w:2.4, h:0.8 }, pulpit:{ w:0.7, h:0.5 }, stage:{ w:8, h:4 }, seats:{ w:8, h:6 }, set:{ w:6, h:0.4 } };
 
+  /* setups (browse-core.js I9S.SET) -> the closest template. The setup's own cameras replace the template's when
+     planner-data.js models them; they take the template's camera positions (same kind first), aims and shots. */
+  const SETUP_TPL = { 'church-1op':'church', 'church-3ptz':'church', 'podcast-2cam':'podcast', 'broadcast-studio':'studio', 'event-2cam':'event',
+    'creator-desk':'empty', 'corporate-room':'studio', 'council-chamber':'event', 'interview-kit':'empty', 'control-rack':'empty' };
+  const SOL_TPL = { church:'church', podcast:'podcast', broadcast:'studio', events:'event', corporate:'studio', education:'event', creator:'empty', production:'empty', integrator:'empty' };
+  const TPL_SETUP = { podcast:'podcast-2cam', church:'church-3ptz', studio:'broadcast-studio', event:'event-2cam' };
+  const SETS = () => (window.I9S && window.I9S.SET) || {};
+  const tplForSetup = id => SETUP_TPL[id] || SOL_TPL[(SETS()[id] || {}).sol] || 'empty';
+  const camKind = m => D.PTZ[m] ? 'ptz' : D.CAMCORDER[m] ? 'cc' : D.BODIES[m] ? 'lens' : null;
+  /* a camera line in a parts list: modelled by the planner, or a Cameras listing that is not a controller */
+  const isCamItem = id => !!camKind(id) || (P[id] && P[id].dept === 'Cameras' && !/controller|joystick/i.test((P[id].sub || '') + ' ' + P[id].name));
+
   /* ======================= state ======================= */
   let S, uid = 1, sel = null;
+  let SETUP = null;   /* { id, tpl, title, loaded:[{m,q}], missing:[{id,q}] } while the plan comes from a setup */
+  let BASE = '';      /* the untouched plan for the current template / setup: an edit is any difference from it */
   const nid = () => uid++;
 
   function fromTemplate(key) {
@@ -205,6 +228,39 @@
     T.cams.forEach((c, i) => frameCam(S.cams[i], c.shot, c.aim));
     return s;
   }
+  function fromSetup(id) {
+    const st = SETS()[id]; if (!st) return null;
+    const key = tplForSetup(id), T = TPL[key];
+    fromTemplate(key);
+    const info = { id, tpl:key, title:st.title, loaded:[], missing:[] };
+    const units = [];
+    st.items.forEach(it => {
+      if (!isCamItem(it.id)) return;
+      const k = camKind(it.id);
+      if (k && P[it.id]) { info.loaded.push({ m:it.id, q:it.q }); for (let i = 0; i < it.q; i++) units.push({ k, m:it.id }); }
+      else info.missing.push({ id:it.id, q:it.q });
+    });
+    if (!units.length) return info;   /* nothing modelled: keep the template's cameras, the Checks panel says so */
+    const lensIds = st.items.map(it => it.id).filter(l => D.LENSES[l]);
+    const used = new Set(), spec = [];
+    S.cams = units.map((u, n) => {
+      let si = T.cams.findIndex((c, i) => !used.has(i) && c.k === u.k);
+      if (si < 0) si = T.cams.findIndex((c, i) => !used.has(i));
+      let o;
+      if (si >= 0) { used.add(si); o = T.cams[si]; }
+      else o = { x:S.w * (n + 1) / (units.length + 1), y:S.d * 0.85, mnt:'tripod', aim:'all', shot:'wide' };
+      let lens = null;
+      if (u.k === 'lens') { const mt = D.BODIES[u.m].mount; lens = lensIds.find(l => D.LENSES[l].mount === mt) || (o.lens && D.LENSES[o.lens] && D.LENSES[o.lens].mount === mt ? o.lens : null); }
+      spec.push(o);
+      return newCam(u.k, u.m, S, { x:o.x, y:o.y, mnt:o.mnt, man:u.k === 'ptz' ? false : (o.man ?? true), lens });
+    });
+    S.cams.forEach((c, i) => frameCam(c, spec[i].shot, spec[i].aim));
+    return info;
+  }
+  /* edits = any difference from the untouched template / setup plan (units are a display choice, not an edit) */
+  const planKey = () => { const o = pack(); delete o.u; return JSON.stringify(o); };
+  function pristine(tpl, setupId) { const keep = S; if (setupId) fromSetup(setupId); else fromTemplate(tpl); const k = planKey(); S = keep; return k; }
+  const fromThisSetup = () => SETUP && SETUP.tpl === S.tpl;
   function newCam(k, m, s, o = {}) {
     const c = { id:nid(), k, m, x:o.x ?? s.w / 2, y:o.y ?? s.d * 0.85, a:o.a ?? 0, z:0, f:0, lens:o.lens || null, sf:null,
       mnt:o.mnt || (k === 'ptz' ? 'wall' : 'tripod'), man:o.man ?? (k !== 'ptz'), tgt:-1 };
@@ -715,6 +771,12 @@
 
     /* --- framing checks --- */
     views.forEach((v, i) => { if (!v.tg) warn(t('c_noTgt', labs[i])); else if (v.out) warn(t('c_tgtOut', labs[i], pname(v.tg.p.n))); });
+    if (fromThisSetup()) {
+      const nm = id => P[id].brand + ' ' + P[id].name, list = a => a.map(x => `${x.q} × ${nm(x.m || x.id)}`).join(', ');
+      if (SETUP.loaded.length) { warn(t('c_setCams', SETUP.title, list(SETUP.loaded), t('t_' + SETUP.tpl)), 'info'); if (SETUP.missing.length) warn(t('c_setSome', list(SETUP.missing)), 'info'); }
+      else if (SETUP.missing.length) warn(t('c_setUnknown', SETUP.title, list(SETUP.missing), t('t_' + SETUP.tpl)), 'info');
+      else warn(t('c_setNoCams', SETUP.title, t('t_' + SETUP.tpl)), 'info');
+    }
     if (nC) warn(t('c_stream'), 'info');
     BOM = out.filter(l => !l.info || true); CHECKS = chk;
   }
@@ -778,6 +840,15 @@
     $('#tr-note').textContent = t('tr_' + S.tr);
     $('#fmt').value = S.fmt; $('#ctl').value = S.ctl;
     if (document.activeElement !== $('#ext')) $('#ext').value = S.ext;
+    const ts = $('#tset'), sid = fromThisSetup() ? SETUP.id : TPL_SETUP[S.tpl], st = sid && SETS()[sid];
+    if (ts) {
+      ts.hidden = !st;
+      if (st) ts.innerHTML = fromThisSetup()
+        ? `<span class="tl" title="${esc(st.title)}">${t('setFrom')} <b>${esc(st.title)}</b></span><a href="setups.html#${esc(sid)}">${t('setOpen')} ${icon('arrow-right')}</a>`
+        : `<a href="setups.html#${esc(sid)}" title="${esc(st.title)}"><span class="tl">${t('setMatch')}: ${esc(st.title)}</span> ${icon('arrow-right')}</a>`;
+    }
+    const tc = $('#tconfirm');
+    if (tc && !tc.hidden && tc.dataset.v) { $('#tc-msg').textContent = t('tcMsg', t('t_' + tc.dataset.v)); $('#tc-yes').textContent = t('tcYes'); $('#tc-no').textContent = t('tcNo'); }
   }
   function applyLang() {
     document.documentElement.lang = LANG === 'pt' ? 'pt-BR' : 'en';
@@ -822,10 +893,20 @@
     const h = location.hash;
     const m = h.match(/^#p=([\w-]+)/);
     if (m) { try { if (unpack(JSON.parse(b64d(m[1])))) return true; } catch (e) {} }
-    const tm = h.match(/^#(?:tpl|for)=?-?(\w+)/);
+    const tm = h.match(/^#(?:tpl|for)=?-?([\w-]+)/);
     const map = { church:'church', podcast:'podcast', studio:'studio', event:'event', events:'event', corporate:'event', broadcast:'studio', education:'event', empty:'empty' };
-    fromTemplate(tm && map[tm[1]] ? map[tm[1]] : 'podcast');
+    if (tm && SETS()[tm[1]]) { SETUP = fromSetup(tm[1]); return true; }
+    if (tm && map[tm[1]]) { SETUP = null; fromTemplate(map[tm[1]]); return true; }
+    const q = queryTemplate();
+    if (q) { SETUP = fromSetup(q); return true; }
+    SETUP = null; fromTemplate('podcast');
     return true;
+  }
+  function queryTemplate() { try { const v = new URLSearchParams(location.search).get('template'); return v && SETS()[v] ? v : null; } catch (e) { return null; } }
+  /* after a load: keep the setup note for a saved plan that still sits on the setup's template, and remember the untouched plan */
+  function settle() {
+    if (/^#p=/.test(location.hash)) { const q = queryTemplate(); SETUP = null; if (q && tplForSetup(q) === S.tpl) { const keep = S; SETUP = fromSetup(q); S = keep; } }
+    BASE = pristine(S.tpl, fromThisSetup() ? SETUP.id : null);
   }
 
   /* ======================= interaction: drag, rotate, keys ======================= */
@@ -943,7 +1024,32 @@
   $('#add-person').addEventListener('click', () => { S.ppl.push({ id:nid(), n:'p_person:' + (S.ppl.length + 1), x:S.w / 2, y:S.d / 2, a:180 }); select('ppl', S.ppl.length - 1, true); });
 
   /* head controls */
-  $('#tbus').addEventListener('change', e => { const v = e.target.value; if (!TPL[v]) return; fromTemplate(v); sel = { kind:'cam', i:0 }; Object.values(pool).forEach(m => { m.forEach(x => x.remove()); m.clear(); }); L.ctrl.innerHTML = ''; say(t('live_tpl', t('t_' + v), S.cams.length)); update({ stat:true, force:true, now:true }); });
+  function applyTemplate(v) {
+    hideConfirm();
+    SETUP = null;
+    if (location.search) { try { history.replaceState(null, '', location.pathname + location.hash); } catch (e) {} }
+    fromTemplate(v); BASE = planKey();
+    sel = { kind:'cam', i:0 }; Object.values(pool).forEach(m => { m.forEach(x => x.remove()); m.clear(); }); L.ctrl.innerHTML = '';
+    say(t('live_tpl', t('t_' + v), S.cams.length)); update({ stat:true, force:true, now:true });
+  }
+  function askTemplate(v) {
+    const tc = $('#tconfirm'); tc.dataset.v = v; tc.hidden = false;
+    $('#tc-msg').textContent = t('tcMsg', t('t_' + v)); $('#tc-yes').textContent = t('tcYes'); $('#tc-no').textContent = t('tcNo');
+    say(t('tcMsg', t('t_' + v)));
+  }
+  function hideConfirm() { const tc = $('#tconfirm'); if (tc) { tc.hidden = true; delete tc.dataset.v; } }
+  $('#tbus').addEventListener('change', e => {
+    const v = e.target.value; if (!TPL[v]) return;
+    if (planKey() !== BASE) { askTemplate(v); renderHead(); return; }   /* renderHead puts the radio back on the current template */
+    applyTemplate(v);
+  });
+  $('#tconfirm').addEventListener('click', e => {
+    const b = e.target.closest('[data-tc]'); if (!b) return;
+    const v = $('#tconfirm').dataset.v;
+    if (b.dataset.tc === 'yes' && TPL[v]) { applyTemplate(v); $(`#tbus input[value="${v}"]`)?.focus(); }
+    else { hideConfirm(); say(t('live_kept')); $(`#tbus input[value="${S.tpl}"]`)?.focus(); }
+  });
+  $('#tconfirm').addEventListener('keydown', e => { if (e.key === 'Escape') { e.preventDefault(); hideConfirm(); say(t('live_kept')); $(`#tbus input[value="${S.tpl}"]`)?.focus(); } });
   const dimChange = () => {
     const u = S.unit === 'ft' ? FT : 1, num = v => parseFloat(String(v).replace(',', '.')), w = num($('#room-w').value) / u, d = num($('#room-d').value) / u;
     if (!(w >= 2 && w <= 80 && d >= 2 && d <= 80)) { renderHead(); return; }
@@ -965,13 +1071,12 @@
   $('#cviews').addEventListener('click', e => { const b = e.target.closest('[data-cam]'); if (b) select('cam', +b.dataset.cam); });
 
   /* bag, quote, print, link */
-  let bag = 0;
-  function bump(n) { bag += n; const el2 = $('#bag-ct'); if (el2) { el2.textContent = bag; el2.classList.add('on'); } }
+  const BAG = window.I9BAG;
   $('#bom').addEventListener('click', e => {
     const a = e.target.closest('[data-padd]');
-    if (a && !a.classList.contains('done')) { bump(+a.dataset.qty || 1); a.classList.add('done'); a.textContent = t('added'); say(t('added')); return; }
+    if (a && !a.classList.contains('done')) { const p = P[a.dataset.padd]; if (BAG) BAG.add([{ id:a.dataset.padd, q:+a.dataset.qty || 1 }], t('addedLine', p.brand + ' ' + p.name)); a.classList.add('done'); a.textContent = t('added'); return; }
     const id = e.target.closest('button')?.id;
-    if (id === 'b-addall') { let n = 0; $$('[data-padd]').forEach(x => { if (!x.classList.contains('done')) { n += +x.dataset.qty || 1; x.classList.add('done'); x.textContent = t('added'); } }); if (n) bump(n); e.target.closest('button').classList.add('done'); say(t('added')); }
+    if (id === 'b-addall') { const L = []; $$('[data-padd]').forEach(x => { if (!x.classList.contains('done')) { L.push({ id:x.dataset.padd, q:+x.dataset.qty || 1 }); x.classList.add('done'); x.textContent = t('added'); } }); if (L.length && BAG) BAG.add(L, t('addedPlan', L.reduce((n, l) => n + l.q, 0))); e.target.closest('button').classList.add('done'); }
     if (id === 'b-print') window.print();
     if (id === 'b-link') { copy(planURL()).then(() => { const b = $('#b-link'); b.textContent = t('linkCopied'); say(t('linkCopied')); }); }
     if (id === 'b-quote') openQuote();
@@ -1002,11 +1107,12 @@
 
   /* ======================= boot ======================= */
   layers();
-  loadHash();
+  loadHash(); settle();
   sel = S.cams.length ? { kind:'cam', i:0 } : null;
   applyLang();
   update({ stat:true, force:true, now:true });
   if ('ResizeObserver' in window) { let rt = 0; new ResizeObserver(() => { clearTimeout(rt); rt = setTimeout(() => { renderStatic(); renderPlan(); }, 60); }).observe(box); }
-  window.addEventListener('hashchange', () => { const h = location.hash; if (/^#p=/.test(h) && h === '#p=' + b64e(JSON.stringify(pack()))) return; if (/^#(p|tpl)=/.test(h)) { Object.values(pool).forEach(m => { m.forEach(x => x.remove()); m.clear(); }); L.ctrl.innerHTML = ''; loadHash(); sel = S.cams.length ? { kind:'cam', i:0 } : null; update({ stat:true, force:true }); } });
-  window.I9PLANNER = { get state() { return S; }, view, hfov, runOf, get bom() { return BOM; }, get checks() { return CHECKS; }, select, update };
+  window.addEventListener('hashchange', () => { const h = location.hash; if (/^#p=/.test(h) && h === '#p=' + b64e(JSON.stringify(pack()))) return; if (/^#(p|tpl)=/.test(h)) { Object.values(pool).forEach(m => { m.forEach(x => x.remove()); m.clear(); }); L.ctrl.innerHTML = ''; hideConfirm(); loadHash(); settle(); sel = S.cams.length ? { kind:'cam', i:0 } : null; update({ stat:true, force:true }); } });
+  window.I9PLANNER = { get state() { return S; }, view, hfov, runOf, get bom() { return BOM; }, get checks() { return CHECKS; }, select, update,
+    get setup() { return fromThisSetup() ? SETUP : null; }, get edited() { return planKey() !== BASE; } };
 })();

@@ -10,14 +10,11 @@
 }
 
 /* ---------- nav additions ---------- */
-.gnav .plan-link{display:flex;align-items:center;gap:8px}
-.gnav .plan-link .tally{width:7px;height:7px}
 .lang{display:inline-flex;border:1px solid var(--rule-2);margin-right:4px}
 .lang button{min-width:40px;min-height:36px;padding:0 8px;background:none;border:0;cursor:pointer;font:400 11px/1 var(--mono);letter-spacing:.12em;color:var(--ink-2)}
 .lang button[aria-pressed="true"]{background:var(--ink);color:var(--black)}
 .lang button:hover{color:var(--ink)}
 .lang button[aria-pressed="true"]:hover{color:var(--black)}
-@media (min-width:1100px) and (max-width:1279px){.planner-page .gnav nav a{padding:0 8px;font-size:14px}}
 @media (max-width:1499px){.planner-page .talk{display:none}}
 .planner-page .logo{flex:none}
 
@@ -40,6 +37,26 @@
 .num-in input:focus-visible,.row input:focus-visible,.row select:focus-visible{outline:2px solid var(--signal);outline-offset:1px}
 .dims .x{color:var(--ink-3)}
 .dims .hint{color:var(--ink-3)}
+.tset{display:flex;flex-wrap:wrap;align-items:center;gap:4px 16px;margin:-6px 0 0;color:var(--ink-3)}
+.tset b{color:var(--ink);font-weight:500}
+.tset a{display:inline-flex;align-items:center;gap:6px;min-height:32px;color:var(--ink);text-decoration:none;font:500 14px/1.2 var(--sans)}
+.tset a:hover{text-decoration:underline;text-underline-offset:3px}
+.tset a .ic{width:14px;height:14px}
+.tset a .ic{flex:none}
+/* desktop: the link rides the template legend's row so the head (and the plan's first screen) keep their height */
+@media (min-width:1100px){
+  .setup{position:relative}
+  .tset{position:absolute;top:-9px;right:0;max-width:calc(100% - 250px);margin:0;flex-wrap:nowrap;justify-content:flex-end;gap:14px}
+  .tset .tl{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .tset>.tl{flex:0 1 auto}
+  .tset a{flex:none;white-space:nowrap;max-width:100%}
+  .tset>a:only-child{flex:0 1 auto;min-width:0}
+}
+.tconfirm{display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;gap:10px 14px;padding:12px 14px;border:1px solid var(--signal);background:var(--panel)}
+.tconfirm .tally{width:8px;height:8px}
+.tconfirm p{margin:0;font-size:14px;line-height:1.45;color:var(--ink)}
+.tconfirm .tc-acts{display:flex;gap:8px;flex-wrap:wrap}
+@media (max-width:699px){.tconfirm{grid-template-columns:auto minmax(0,1fr)}.tconfirm .tc-acts{grid-column:1/-1}.tconfirm .tc-acts .btn{flex:1 1 0}}
 
 /* segmented control */
 .seg{display:inline-flex;border:1px solid var(--rule-2);max-width:100%}

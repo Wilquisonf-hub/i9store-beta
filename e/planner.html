@@ -9,6 +9,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=PT+Mono&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="g.css">
+<link rel="stylesheet" href="nav-mega.css">
 <link rel="stylesheet" href="planner.css">
 </head>
 <body class="planner-page">
@@ -19,9 +20,9 @@
 <header class="gnav"><div class="wrap">
   <button class="ibtn menu-btn" aria-label="Menu"><svg class="ic" aria-hidden="true"><use href="#ic-list"/></svg></button>
   <a class="logo" href="index.html" aria-label="i9Store home"><img src="../shared/i9-seal.webp" alt=""><span><b>i9Store</b><small>i9 / Equipment</small></span></a>
-  <nav aria-label="Departments"><a href="#">Cameras</a><a href="#">Lighting</a><a href="#">Audio</a><a href="#">Studio</a><a href="#">Monitoring</a><a href="#">Lenses</a><a href="#">Brands</a><a class="plan-link" href="planner.html" aria-current="page"><span class="tally" aria-hidden="true"></span><span data-i18n="navPlanner">Planner</span></a></nav>
+  <nav class="mega-bar" data-mega aria-label="Shop"></nav>
   <div class="right">
-    <button class="ibtn srch" aria-label="Search"><svg class="ic" aria-hidden="true"><use href="#ic-magnifying-glass"/></svg></button>
+    <a class="ibtn srch" href="shop.html" aria-label="Search the catalogue"><svg class="ic" aria-hidden="true"><use href="#ic-magnifying-glass"/></svg></a>
     <div class="lang" role="group" aria-label="Language"><button type="button" data-lang="en" aria-pressed="true">EN</button><button type="button" data-lang="pt" aria-pressed="false">PT</button></div>
     <a class="ibtn qlist" href="index.html#quote" aria-label="Quote list"><svg class="ic" aria-hidden="true"><use href="#ic-clipboard-text"/></svg><span class="ct" id="quote-ct">0</span></a>
     <a class="ibtn" href="checkout.html" aria-label="Bag"><svg class="ic" aria-hidden="true"><use href="#ic-bag"/></svg><span class="ct" id="bag-ct">0</span></a>
@@ -40,6 +41,7 @@
       </div>
       <div class="setup">
         <fieldset class="bus tbus" id="tbus"><legend class="meta" data-i18n="tplLegend">Start from · Room template</legend></fieldset>
+        <div class="tconfirm" id="tconfirm" role="group" aria-labelledby="tc-msg" hidden><span class="tally" aria-hidden="true"></span><p id="tc-msg"></p><div class="tc-acts"><button type="button" class="btn sm sig" data-tc="yes" id="tc-yes">Replace my plan</button><button type="button" class="btn sm" data-tc="no" id="tc-no">Keep my plan</button></div></div>
         <div class="dims" role="group" aria-labelledby="dims-l">
           <span class="meta" id="dims-l" data-i18n="room">Room</span>
           <label class="num-in"><span class="sr" data-i18n="width">Width</span><input id="room-w" type="text" inputmode="decimal" autocomplete="off" spellcheck="false"><i class="u">m</i></label>
@@ -48,6 +50,7 @@
           <div class="seg sm" role="group" aria-label="Units" id="units"><button type="button" data-unit="m" aria-pressed="true">m</button><button type="button" data-unit="ft" aria-pressed="false">ft</button></div>
           <span class="hint meta-s" data-i18n="dimsHint">width × depth</span>
         </div>
+        <p class="tset meta-s" id="tset" hidden></p>
       </div>
     </div>
   </section>
@@ -150,7 +153,11 @@
 </div></footer>
 <script src="../shared/catalog.js"></script>
 <script src="../shared/catalog-more.js"></script>
+<script src="../shared/catalog-browse.js"></script>
 <script src="../shared/planner-data.js"></script>
+<script src="bag.js"></script>
+<script src="browse-core.js"></script>
+<script src="nav-mega.js"></script>
 <script src="g.js"></script>
 <script src="planner.js"></script>
 <script src="../switcher.js"></script>
