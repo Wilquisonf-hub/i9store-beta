@@ -107,7 +107,7 @@
       <div class="mg-help">
         <dl class="mg-facts">
           <div><dt class="meta">Ships from</dt><dd><b>Miami, Florida.</b> I9Store USA LLC, 20815 NE 16th Ave, Miami, FL 33179.</dd></div>
-          <div><dt class="meta">Price</dt><dd><b>Shipping and sales tax included</b>, as each listing states.</dd></div>
+          <div><dt class="meta">Price</dt><dd><b>In USD, before sales tax and shipping.</b> Both are calculated at checkout. Tax-exempt? Resellers and religious institutions send their certificate there.</dd></div>
           <div><dt class="meta">Installments</dt><dd><b>Installment plans are available through our support team.</b> Ask on WhatsApp before you pay.</dd></div>
           <div><dt class="meta">A person</dt><dd><b>WhatsApp a specialist</b>, or call <a href="tel:+13053334374">+1 (305) 333-4374</a>. <a href="mailto:contato@i9tv.com.br">contato@i9tv.com.br</a></dd></div>
         </dl>
@@ -225,7 +225,7 @@
         return `<li><a class="mg-row" href="product-simple.html?id=${m.def}"><span class="th lit"><img src="${d.thumb || d.src}" alt=""></span><span class="grow"><span>${esc(m.short)}</span><small>${esc(m.does)} · ${m.variants.length > 1 ? m.variants.length + ' colours · from ' : ''}${usd(E.minPrice(m))}</small></span></a></li>`; }))}`; },
     departments: () => VIEWS.categories().replace('<h2 class="mg-vh">Categories</h2>', '<h2 class="mg-vh">Departments</h2>'),
     help: () => `<h2 class="mg-vh">Help</h2>${rows([
-      `<li><div class="mg-row sm"><span class="grow"><span>Ships from Miami, Florida</span><small>Shipping and sales tax included, as each listing states</small></span></div></li>`,
+      `<li><div class="mg-row sm"><span class="grow"><span>Ships from Miami, Florida</span><small>Prices in USD; sales tax and shipping calculated at checkout</small></span></div></li>`,
       `<li><div class="mg-row sm"><span class="grow"><span>Installments</span><small>Plans available through our support team</small></span></div></li>`,
       `<li><a class="mg-row sm" href="tel:+13053334374"><span class="grow"><span>Call +1 (305) 333-4374</span><small>Or WhatsApp a specialist</small></span></a></li>`,
       `<li><a class="mg-row sm" href="pro.html"><span class="grow"><span>Buying for an organisation?</span><small>Switch to Pro: solutions, setups, quotes for a PO</small></span></a></li>`])}`,

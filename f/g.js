@@ -91,7 +91,10 @@
       const pcs = n === 1 ? '1 piece' : n + ' pieces';
       $('#co-n').textContent = 'Order · ' + pcs; $('#co-t').textContent = usd(sum);
       $('#co-sub').textContent = usd(sum); $('#co-tot').textContent = usd(sum);
-      const pay = $('#co-pay'); pay.textContent = ls.length ? 'Pay ' + usd(sum) : 'Your bag is empty'; pay.disabled = !ls.length;
+      const pay = $('#co-pay'); /* OWNER 25 NOV: tax not included. The subtotal is not the figure you pay, so Pay carries no amount; tax.js fills the
+         shipping and tax lines (ZIP, exemption). */
+      pay.textContent = ls.length ? 'Pay' : 'Your bag is empty'; pay.disabled = !ls.length;
+      document.dispatchEvent(new CustomEvent('i9:co-paint', { detail: { sum, n: ls.length } }));
       /* Everyday-only bag (every line from I9.EVERYDAY): express pay placeholders, no quote / PO line, no organisation
          field, "Keep shopping" back to Everyday. Any Professional line brings the quote route back. */
       const EV = window.I9.EVERYDAY, evOnly = !!(EV && ls.length && ls.every(l => EV.isEveryday(l.id)));

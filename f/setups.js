@@ -102,7 +102,7 @@
     const n = S.items.length - off.size, t = usd(sum());
     $('#d-count').textContent = off.size ? `${n} of ${S.items.length} items · ${pcs()} pieces` : `Whole setup · ${S.items.length} items · ${S.pieces} pieces`;
     $('#d-total').textContent = t; $('#d-tot').textContent = t;
-    $('#d-tot-n').textContent = off.size ? `${n} of ${S.items.length} items` : 'Total, whole setup';
+    $('#d-tot-n').textContent = off.size ? `${n} of ${S.items.length} items · subtotal before tax and shipping` : 'Subtotal, whole setup · before tax and shipping';
     const b = $('#d-addall'); b.classList.remove('done'); b.disabled = !n;
     b.textContent = !n ? 'Nothing selected' : off.size ? `Add ${pcs()} pieces to bag` : 'Add the whole setup';
     $('#bar-n').textContent = off.size ? `${pcs()} pieces selected` : `Whole setup · ${S.pieces} pieces`;

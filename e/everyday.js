@@ -262,7 +262,7 @@
       const ids = s.ids.filter(id => P[id].usd < max);
       $('#ev-sh').innerHTML = `${esc(s.label)}. <span class="dim">${esc(s.line)}</span>`;
       $('#ev-stab').textContent = s.label;
-      $('#ev-sp').textContent = `${ids.length} of ${s.ids.length} on this shelf${cap === 'any' ? '' : ' ' + PRICES.find(p => p[0] === cap)[1].toLowerCase()}. Real listings; prices include shipping and sales tax, as listed. Tap + to add; tap the name for colours and details.`;
+      $('#ev-sp').textContent = `${ids.length} of ${s.ids.length} on this shelf${cap === 'any' ? '' : ' ' + PRICES.find(p => p[0] === cap)[1].toLowerCase()}. Real listings; prices in USD, before sales tax and shipping. Tap + to add; tap the name for colours and details.`;
       $('#ev-tiles').innerHTML = ids.map(id => tile(id)).join('');
       $('#ev-empty').hidden = !!ids.length;
       $('#live').textContent = `${s.label}: ${ids.length} items`;

@@ -5,10 +5,11 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Camp Snap 2 — i9Store USA</title>
-<meta name="description" content="Camp Snap screen-free cameras at i9Store USA: pick the model and the colour, pay on one page. Prices include shipping and sales tax, as listed.">
+<meta name="description" content="Camp Snap screen-free cameras at i9Store USA: pick the model and the colour, pay on one page. Prices in USD; sales tax and shipping are calculated at checkout.">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=PT+Mono&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="g.css">
+<link rel="stylesheet" href="tax.css">
 <link rel="stylesheet" href="nav-mega.css">
 <link rel="stylesheet" href="everyday.css">
 <link rel="stylesheet" href="modes.css">
@@ -55,7 +56,18 @@
         <p class="ev-swnote meta-s" id="ev-swnote" hidden></p>
       </fieldset>
 
-      <div class="ev-pr"><span class="price" id="ev-price">$0.00</span><small class="meta-s">Shipping and sales tax included, as listed.</small></div>
+      <div class="ev-pr"><span class="price" id="ev-price">$0.00</span><small class="meta-s">Price in USD. Sales tax and shipping are calculated at checkout.</small></div>
+      <!-- Owner 25 Nov: the R$ price for buyers in Brazil is the USD price + card fees + sales tax + estimated shipping, converted
+           with Parcelow. It is a separate figure, tied to its own R$ value; the USD price above includes neither tax nor shipping.
+           No conversion data in this prototype: the value is "R$ —", never an invented number. -->
+      <details class="brl" data-for="store" lang="pt-BR">
+        <summary><span class="brl-v"><span class="meta">BR</span><b>R$ —</b></span><span class="brl-q">Comprando do Brasil? <u>Ver preço em R$</u></span><svg class="ic" aria-hidden="true"><use href="#ic-caret-down"/></svg></summary>
+        <div class="brl-b">
+          <p>Preço em R$ com frete estimado, sales tax e taxas do cartão, calculado via Parcelow. Pode mudar com o dólar.</p>
+          <p class="en" lang="en">For buyers in Brazil: the R$ figure adds estimated shipping, sales tax and card fees. The USD price above includes none of them.</p>
+          <span class="brl-ph">Design slot · sem dados de conversão neste protótipo</span>
+        </div>
+      </details>
 
       <div class="ev-addons" id="ev-addons" hidden></div>
 
@@ -70,6 +82,9 @@
         <div><span class="meta">Listing</span><span><a id="ev-url" href="#" rel="noopener">This colour on i9store.com</a></span></div>
         <div><span class="meta">Questions</span><span><a href="#">WhatsApp</a> or <a href="tel:+13053334374">+1 (305) 333-4374</a></span></div>
       </div>
+      <!-- Owner 25 Nov: "Part of a bigger project?" (project-cta.js): hidden on Camp Snap, one line on gift-shelf items,
+           the full block on mics, lights, recorders and anything used in a setup. Store only. -->
+      <div class="pcta" data-pcta data-for="store"></div>
     </div>
   </section>
 
@@ -121,6 +136,7 @@
 <script src="browse-core.js"></script>
 <script src="nav-mega.js"></script>
 <script src="everyday.js"></script>
+<script src="project-cta.js"></script>
 <script src="../switcher.js"></script>
 </body>
 </html>

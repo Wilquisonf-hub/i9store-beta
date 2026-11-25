@@ -131,7 +131,7 @@
       const top3 = mine.filter(id => P[id].white !== 0).sort((x, y) => (setupsOf[y] ? 1 : 0) - (setupsOf[x] ? 1 : 0) || P[y].usd - P[x].usd).slice(0, 3);
       const sets = SETUPS.filter(s => s.items.some(it => P[it.id].brand === b));
       ctx.innerHTML = lit(top3, `${b} · three live listings · not a photo`);
-      $('#lede').innerHTML = `<p class="bx-lede">${mine.length} live listing${mine.length === 1 ? '' : 's'} from ${esc(b)} in ${depts.map(esc).join(', ').replace(/, ([^,]*)$/, ' and $1')}. Prices include shipping and sales tax.</p>
+      $('#lede').innerHTML = `<p class="bx-lede">${mine.length} live listing${mine.length === 1 ? '' : 's'} from ${esc(b)} in ${depts.map(esc).join(', ').replace(/, ([^,]*)$/, ' and $1')}. Prices in USD, before sales tax and shipping.</p>
         ${sets.length ? `<p class="bx-lede">In ${sets.length} of our setups: ${sets.map(s => `<a href="setups.html#${s.id}">${esc(s.title.toLowerCase())}</a>`).join(', ')}.</p>` : ''}`;
       const subs = [...new Set(mine.map(id => P[id].dept + '|' + P[id].subcat))];
       ch.innerHTML = top3.length ? `<p class="meta"><span>Choose what you need from ${esc(b)}</span><a href="shop.html?view=brands">All brands</a></p>
@@ -173,7 +173,7 @@
       <label class="sr" for="ffind">Find a brand</label><input class="ffind" id="ffind" type="search" placeholder="Find a brand" autocomplete="off">
       <div id="blist">${BRANDS.map(b => fo('checkbox', 'brand', b, b)).join('')}</div>
       <button type="button" class="fmore" id="bmore" aria-expanded="false"></button></fieldset>
-    <fieldset class="fg" data-g="price"><legend><span>Price</span><span>incl. shipping + tax</span></legend>
+    <fieldset class="fg" data-g="price"><legend><span>Price</span><span>USD, before tax</span></legend>
       ${PRICES.map(([k, l]) => fo('checkbox', 'price', k, l)).join('')}</fieldset>
     <fieldset class="fg" data-g="setup"><legend><span>Setups</span></legend>
       ${fo('checkbox', 'setup', '1', 'Only pieces in a setup')}</fieldset>

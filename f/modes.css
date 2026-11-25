@@ -208,3 +208,41 @@ html[data-mode="store"] .sheet{background:var(--panel)}
 /* the planner keeps its phone header lean (planner.css hides search + quote list below 700); keep that with the switch in place */
 @media (max-width:699px){.planner-page .gnav .right>.hsearch+a[href="shop.html"]{display:none}.planner-page .gnav .lang button{min-width:32px}}
 @media (max-width:389px){.gnav .wrap{gap:2px}.modesw{margin-right:4px}.gnav .logo{margin-right:6px}.gnav .ibtn{min-width:40px;padding:0 6px}}
+
+/* ---------- Store product pages: "Part of a bigger project?" (project-cta.js, owner 25 Nov) ----------
+   Below the buy box. No orange: it is an offer, not the act. An unlit tally = Pro is one step away (Pro lights it).
+   Each route says where it goes; "Take it along" says exactly what it writes (My plan). */
+.pcta{margin-top:28px}
+.pcta-box{border:1px solid #0a0a0a;background:#fff;color:#0a0a0a}
+.pcta-hd{padding:18px 18px 16px}
+.pcta-hd .meta{display:flex;align-items:center;gap:10px;margin:0 0 10px;color:var(--ink-3)}
+.pcta-hd .tl{width:7px;height:7px;border:1px solid currentColor;flex:none}
+.pcta-hd h2{margin:0 0 6px;font-size:24px;line-height:1.05;font-weight:700;letter-spacing:-.03em}
+.pcta-hd p{margin:0;font-size:14.5px;line-height:1.5;color:var(--ink-2)}
+.pcta-r{list-style:none;margin:0;padding:0;border-top:1px solid var(--rule-2)}
+.pcta-r a{display:grid;grid-template-columns:30px minmax(0,1fr) 16px;gap:10px;align-items:center;min-height:56px;padding:12px 18px;border-bottom:1px solid var(--rule);text-decoration:none;color:#0a0a0a;transition:background .15s}
+.pcta-r a:hover{background:#f7f6f2}
+.pcta-r a:hover .ic{transform:translateX(3px)}
+.pcta-r a:focus-visible{outline:2px solid var(--signal);outline-offset:-2px}
+.pcta-r .n{color:var(--ink-3)}
+.pcta-r b{display:block;font-size:15.5px;font-weight:600;letter-spacing:-.01em;line-height:1.25}
+.pcta-r small{display:block;margin-top:3px;font-size:12.5px;line-height:1.4;color:var(--ink-3)}
+.pcta-r .ic{width:16px;height:16px;transition:transform .2s}
+.pcta-ft{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px 16px;padding:12px 18px 14px}
+.pcta-ft .meta-s{color:var(--ink-3)}
+.pcta-take{position:relative;display:flex;align-items:center;gap:10px;min-height:32px;font-size:13.5px;color:var(--ink-2);cursor:pointer}
+.pcta-take input{position:absolute;opacity:0;width:1px;height:1px}
+.pcta-take .box{width:16px;height:16px;border:1px solid #0a0a0a;display:grid;place-items:center;flex:none;background:#fff}
+.pcta-take input:checked+.box{background:#0a0a0a}
+.pcta-take input:checked+.box::after{content:"";width:8px;height:4px;border-left:2px solid #fff;border-bottom:2px solid #fff;transform:translateY(-1px) rotate(-45deg)}
+.pcta-take input:focus-visible+.box{outline:2px solid var(--signal);outline-offset:2px}
+.pcta-lite{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 12px;margin:18px 0 0;padding:0;font-size:14px;color:var(--ink-2)}
+.pcta-lite .meta{color:var(--ink-3)}
+.pcta-lite a{color:var(--ink);font-weight:600}
+.buy .pcta+.bizline{margin-top:12px}
+@media (max-width:699px){
+  .pcta-hd{padding:16px 14px 14px}
+  .pcta-hd h2{font-size:22px}
+  .pcta-r a{padding:12px 14px;grid-template-columns:26px minmax(0,1fr) 16px}
+  .pcta-ft{padding:12px 14px 14px}
+}

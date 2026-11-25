@@ -8,6 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=PT+Mono&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="g.css">
+<link rel="stylesheet" href="tax.css">
 </head>
 <body>
 <script src="../shared/icons.js"></script>
@@ -24,6 +25,27 @@
       <form class="co-main" onsubmit="return false" novalidate>
         <h1>Checkout.</h1>
         <p class="intro">One page, no account. Save a password after you pay, if you want one.</p>
+
+        <!-- OWNER 25 NOV: prices exclude sales tax, except for exempt buyers (resellers, 501(c)(3) and religious institutions).
+             Design only: the certificate is never uploaded or stored; choosing a file only shows its name on this page.
+             tax.js moves this block: near the top in Pro (churches are a key Pro audience), after Delivery in Store. -->
+        <section class="tx" id="exempt" aria-labelledby="tx-h">
+          <p class="tx-k meta"><span class="tally"></span><span>Churches, ministries, schools and resellers</span></p>
+          <label class="tx-opt"><input type="checkbox" id="tx-on" aria-controls="tx-more" aria-describedby="tx-d"><span class="box" aria-hidden="true"></span>
+            <span class="tx-t"><b id="tx-h">My organization is tax-exempt</b><span class="d" id="tx-d">Resellers with a resale certificate, and 501(c)(3) or religious institutions. We don’t charge sales tax once a specialist has reviewed your certificate.</span></span></label>
+          <div class="tx-more" id="tx-more" hidden>
+            <fieldset class="tx-kind"><legend class="meta">Exemption</legend>
+              <label><input type="radio" name="txk" value="resale" checked><span><b>Reseller</b><small>Resale certificate</small></span></label>
+              <label><input type="radio" name="txk" value="501c3"><span><b>501(c)(3) or religious institution</b><small>Exemption certificate</small></span></label>
+            </fieldset>
+            <div class="tx-up">
+              <input type="file" id="tx-file" accept=".pdf,.jpg,.jpeg,.png" class="sr" aria-describedby="tx-uph">
+              <label for="tx-file" class="tx-drop"><svg class="ic" aria-hidden="true"><use href="#ic-clipboard-text"/></svg>
+                <span><b id="tx-fname">Attach your certificate</b><small id="tx-uph">PDF, JPG or PNG. Design placeholder: nothing is uploaded or stored.</small></span><span class="tx-btn">Choose file</span></label>
+            </div>
+            <p class="tx-note"><svg class="ic" aria-hidden="true"><use href="#ic-shield-check"/></svg><span>A specialist confirms the exemption before your order ships. Until then, sales tax shows as <b>exempt, pending certificate review</b>.</span></p>
+          </div>
+        </section>
 
         <!-- Express pay: shown only when every line in the bag is an Everyday listing (g.js). Design placeholders:
              the live store would render Stripe's wallet buttons here; nothing in this prototype takes a payment. -->
@@ -43,10 +65,30 @@
 
         <fieldset class="grp">
           <legend><span><span class="n">02</span>Delivery</span><span class="meta">Ships from Miami</span></legend>
-          <div class="f full"><label for="ad">Street address</label><input id="ad" autocomplete="street-address" placeholder="Start typing; we’ll suggest matches"></div>
-          <div class="f"><label for="apt">Apt, suite, building <span>(optional)</span></label><input id="apt" autocomplete="address-line2"></div>
-          <div class="f org"><label for="org">Church, school or company <span>(optional)</span></label><input id="org" autocomplete="organization"></div>
-          <div class="dline"><span>Delivery date</span><span class="meta-s">Appears when your address is in</span></div>
+          <!-- Owner 25 Nov: US shipping options come live from i9's GoShippo integration (FedEx, UPS, USPS…), plus free pickup at
+               the Miami showroom. Design only: no carrier is called and no rate is shown; tax.js switches the states. -->
+          <div class="dm full" role="radiogroup" aria-label="How you get it">
+            <label class="dm-o"><input type="radio" name="dm" value="ship" checked><span class="dot" aria-hidden="true"></span><span><b>Ship to my address</b><small>FedEx · UPS · USPS, live rates from the carrier</small></span><svg class="ic" aria-hidden="true"><use href="#ic-truck"/></svg></label>
+            <label class="dm-o"><input type="radio" name="dm" value="pickup"><span class="dot" aria-hidden="true"></span><span><b>Pick up at our Miami showroom</b><small>Free · sales tax still applies</small></span><svg class="ic" aria-hidden="true"><use href="#ic-storefront"/></svg></label>
+          </div>
+          <div class="f full ship-f"><label for="ad">Street address</label><input id="ad" autocomplete="street-address" placeholder="Start typing; we’ll suggest matches"></div>
+          <div class="f ship-f"><label for="apt">Apt, suite, building <span>(optional)</span></label><input id="apt" autocomplete="address-line2"></div>
+          <div class="f ship-f"><label for="co-zip">ZIP code</label><input id="co-zip" inputmode="numeric" autocomplete="postal-code" maxlength="10" aria-describedby="co-ziph"><span class="h" id="co-ziph">Sales tax and shipping are calculated from it.</span></div>
+          <div class="carriers ship-f" id="co-carriers" aria-live="polite">
+            <p class="cz" id="co-cz">Enter ZIP to see FedEx · UPS · USPS options</p>
+            <ul class="cl" id="co-cl" hidden aria-label="Carrier options, design placeholder">
+              <li><span class="cn">FedEx</span><span class="cr">Rate —</span></li>
+              <li><span class="cn">UPS</span><span class="cr">Rate —</span></li>
+              <li><span class="cn">USPS</span><span class="cr">Rate —</span></li>
+            </ul>
+            <p class="cs meta-s" id="co-cs" hidden><span>Live rates from carrier</span><span>Design placeholder · no rates in this prototype</span></p>
+          </div>
+          <div class="pickup" id="co-pickup" hidden>
+            <svg class="ic" aria-hidden="true"><use href="#ic-map-pin"/></svg>
+            <div><b>i9Store showroom, Miami</b><span>20815 NE 16th Ave, STE B33, Miami, FL 33179</span><small>We tell you when your order is ready to collect.</small></div>
+          </div>
+          <div class="dline ship-f"><span>Delivery date</span><span class="meta-s">Appears when your address is in</span></div>
+          <div class="f full org"><label for="org">Church, school or company <span>(optional)</span></label><input id="org" autocomplete="organization"></div>
         </fieldset>
 
         <fieldset class="grp">
@@ -71,17 +113,19 @@
             <p class="links"><a href="everyday.html">Everyday gifts and first kits</a><a href="setups.html">Shop a setup</a><a href="shop.html">Browse all equipment</a><a href="planner.html">Plan your room</a></p>
           </div>
           <div class="totals">
-            <div class="sl meta"><span><span class="tally"></span>Total before you pay</span><span>USD</span></div>
-            <div class="sums">
-              <div><span>Subtotal</span><span class="num" id="co-sub">$0.00</span></div>
-              <div><span>Shipping</span><span>Included</span></div>
-              <div><span>Sales tax</span><span>Included</span></div>
-              <div class="g"><span>Total</span><span class="num" id="co-tot">$0.00</span></div>
-              <small>Listed prices include shipping and sales tax and may change with the dollar. This is the figure you pay.</small>
+            <div class="sl meta"><span><span class="tally"></span>Your order</span><span>USD</span></div>
+            <!-- OWNER 25 NOV: tax not included. No rate or shipping cost is invented: the two lines wait for a ZIP, then show a
+                 marked placeholder for the live calculation. -->
+            <div class="sums" id="co-sums" data-zip="" data-exempt="0">
+              <div><span>Subtotal <small class="sq">before tax and shipping</small></span><span class="num" id="co-sub">$0.00</span></div>
+              <div><span>Shipping</span><span class="calc" id="co-ship">Enter ZIP to calculate</span></div>
+              <div><span>Sales tax</span><span class="calc" id="co-tax">Enter ZIP to calculate</span></div>
+              <div class="g"><span>Total</span><span class="tt"><span class="num" id="co-tot">$0.00</span><small id="co-totq">+ shipping and sales tax</small></span></div>
+              <small id="co-note">Prices are in USD, before sales tax and shipping. Both are calculated from your ZIP; the total you pay shows here before you pay.</small>
             </div>
             <div class="assure">
               <div><span class="meta">Ships from</span><span>I9Store USA LLC, Miami, FL</span></div>
-              <div><span class="meta">Warranty</span><span>The manufacturer’s, as on each listing</span></div>
+              <div><span class="meta">Warranty</span><span>i9Store USA · terms as on each listing</span></div>
               <div><span class="meta">People</span><span>WhatsApp or <a href="tel:+13053334374">+1 (305) 333-4374</a></span></div>
             </div>
           </div>
@@ -96,6 +140,7 @@
 <script src="../shared/catalog-everyday.js"></script>
 <script src="bag.js"></script>
 <script src="g.js"></script>
+<script src="tax.js"></script>
 <script src="../switcher.js"></script>
 </body>
 </html>
