@@ -4,7 +4,7 @@
   var file = parts.pop() || 'index.html';
   var cur = parts.pop();
   var common = ['index.html', 'product.html', 'checkout.html'];
-  var versions = [['a', 'A · On Air'], ['b', 'B · Hey Will'], ['c', 'C · Hybrid'], ['d', 'D · Daylight'], ['e', 'E · Solutions']];
+  var versions = [['a', 'A · On Air'], ['b', 'B · Hey Will'], ['c', 'C · Hybrid'], ['d', 'D · Daylight'], ['e', 'E · Solutions'], ['f', 'F · Store + Pro']];
   var css = '#i9beta{position:fixed;left:16px;bottom:16px;z-index:2147483000;display:flex;align-items:center;gap:2px;' +
     'background:#0A0A0A;color:#F7F6F2;font:500 12px/1 "PT Mono",ui-monospace,Menlo,monospace;letter-spacing:.04em;' +
     'border:1px solid rgba(247,246,242,.28);box-shadow:0 4px 8px rgba(0,0,0,.25)}' +

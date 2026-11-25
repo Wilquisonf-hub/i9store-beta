@@ -1,0 +1,210 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta name="robots" content="noindex, nofollow">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Plan your room — i9Store USA</title>
+<meta name="description" content="Plan a church, podcast, studio, event, school or corporate room step by step: what you have, your budget, the cameras and signal that fit, a 2D plan, a 3D view and the equipment list with live USA prices.">
+<link rel="icon" href="../shared/i9-seal.webp">
+<!-- guided (wizard) or advanced view, decided before first paint so neither flashes: #tpl= and plans saved before the
+     wizard open the advanced editor; a plan saved by the wizard reopens on its step; ?template= lands on step 5 -->
+<script>(function(){var h=location.hash,a=/^#(tpl|for)/.test(h),s=0,m=h.match(/^#p=([\w-]+)/);if(m){try{var o=JSON.parse(decodeURIComponent(escape(atob(m[1].replace(/-/g,'+').replace(/_/g,'/')))));a=!(o.z&&o.z.v==='w');s=o.z&&+o.z.s}catch(e){}}var r=document.documentElement;r.className+=a?' pl-adv':' pl-wiz';if(!a)r.setAttribute('data-wzs',s||(/[?&]template=/.test(location.search)?5:1))})();</script>
+<!-- three.js for the 3D step only: planner-3d.js is imported when step 6 opens, never before -->
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"}}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=PT+Mono&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="g.css">
+<link rel="stylesheet" href="nav-mega.css">
+<link rel="stylesheet" href="planner.css">
+<link rel="stylesheet" href="planner-wizard.css">
+<link rel="stylesheet" href="modes.css">
+<script src="mode.js"></script>
+</head>
+<body class="planner-page">
+<script src="../shared/icons.js"></script>
+<a class="sr" href="#main" data-i18n="skip">Skip to content</a>
+<div id="live" class="sr" aria-live="polite"></div>
+
+<header class="gnav"><div class="wrap">
+  <button class="ibtn menu-btn" aria-label="Menu"><svg class="ic" aria-hidden="true"><use href="#ic-list"/></svg></button>
+  <a class="logo" href="index.html" aria-label="i9Store home"><img src="../shared/i9-seal.webp" alt=""><span><b>i9Store</b><small>i9 / Equipment</small></span></a>
+  <nav class="mega-bar" data-mega aria-label="Shop"></nav>
+  <div class="right">
+    <a class="ibtn srch" href="shop.html" aria-label="Search the catalogue"><svg class="ic" aria-hidden="true"><use href="#ic-magnifying-glass"/></svg></a>
+    <div class="lang" role="group" aria-label="Language"><button type="button" data-lang="en" aria-pressed="true">EN</button><button type="button" data-lang="pt" aria-pressed="false">PT</button></div>
+    <a class="ibtn qlist" href="pro.html#quote" aria-label="Quote list"><svg class="ic" aria-hidden="true"><use href="#ic-clipboard-text"/></svg><span class="ct" id="quote-ct">0</span></a>
+    <a class="ibtn" href="checkout.html" aria-label="Bag"><svg class="ic" aria-hidden="true"><use href="#ic-bag"/></svg><span class="ct" id="bag-ct">0</span></a>
+    <a class="talk" href="#"><svg class="ic" aria-hidden="true"><use href="#ic-whatsapp-logo"/></svg><span data-i18n="talk">Talk to a specialist</span></a>
+  </div>
+</div></header>
+
+<main id="main">
+  <!-- Guided planner (wizard): seven steps over the same plan the advanced editor edits. Rendered by planner-wizard.js -->
+  <section class="wz" id="wz" aria-labelledby="wz-h">
+    <div class="wrap">
+      <div class="wz-top">
+        <p class="meta kick"><span class="tally"></span><span id="wz-kick">Room planner · Guided</span></p>
+        <button type="button" class="wz-adv" id="to-adv"><span id="to-adv-l">Advanced editor</span><svg class="ic" aria-hidden="true"><use href="#ic-arrow-right"/></svg></button>
+      </div>
+      <nav class="wz-steps" aria-label="Steps"><ol id="wz-steps"></ol><div class="wz-prog" aria-hidden="true"><i id="wz-progbar"></i></div></nav>
+      <div class="wz-hd"><h1 id="wz-h">What are you making?</h1><p class="lede" id="wz-lede"></p></div>
+      <div class="wz-panel" id="wz-panel"></div>
+    </div>
+  </section>
+
+  <!-- Advanced editor bar: the same plan, every control -->
+  <div class="advbar" id="advbar"><div class="wrap">
+    <p class="meta"><span class="tally"></span><span id="advbar-k">Advanced editor</span></p>
+    <p class="advbar-t" id="advbar-t">The same plan as the guided steps, with every control.</p>
+    <button type="button" class="btn sm" id="to-wiz"><span id="to-wiz-l">Back to the guided steps</span></button>
+  </div></div>
+
+  <!-- Head: what this is, the template bus, the room size -->
+  <section class="phead" aria-labelledby="pl-h">
+    <div class="wrap phgrid">
+      <div class="copy">
+        <p class="meta kick"><span class="tally"></span><span data-i18n="kick">Room planner · i9 / Equipment</span></p>
+        <h1 id="pl-h" data-i18n="h1">Plan your room.</h1>
+        <p class="lede" data-i18n="lede">Lay out the space, place the cameras and see what each one frames. Pick SDI, HDMI or network, and get the parts list: every camera, cable length, mount and mic, priced from live USA listings.</p>
+      </div>
+      <div class="setup">
+        <fieldset class="bus tbus" id="tbus"><legend class="meta" data-i18n="tplLegend">Start from · Room template</legend></fieldset>
+        <div class="tconfirm" id="tconfirm" role="group" aria-labelledby="tc-msg" hidden><span class="tally" aria-hidden="true"></span><p id="tc-msg"></p><div class="tc-acts"><button type="button" class="btn sm sig" data-tc="yes" id="tc-yes">Replace my plan</button><button type="button" class="btn sm" data-tc="no" id="tc-no">Keep my plan</button></div></div>
+        <div class="dims" role="group" aria-labelledby="dims-l">
+          <span class="meta" id="dims-l" data-i18n="room">Room</span>
+          <label class="num-in"><span class="sr" data-i18n="width">Width</span><input id="room-w" type="text" inputmode="decimal" autocomplete="off" spellcheck="false"><i class="u">m</i></label>
+          <span class="x" aria-hidden="true">×</span>
+          <label class="num-in"><span class="sr" data-i18n="depth">Depth</span><input id="room-d" type="text" inputmode="decimal" autocomplete="off" spellcheck="false"><i class="u">m</i></label>
+          <div class="seg sm" role="group" aria-label="Units" id="units"><button type="button" data-unit="m" aria-pressed="true">m</button><button type="button" data-unit="ft" aria-pressed="false">ft</button></div>
+          <span class="hint meta-s" data-i18n="dimsHint">width × depth</span>
+        </div>
+        <p class="tset meta-s" id="tset" hidden></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- The desk: plan + camera views on the left, inspector on the right -->
+  <section class="desk" aria-label="Room plan">
+    <div class="wrap dgrid">
+      <div class="plancol">
+        <div class="tools" role="toolbar" aria-label="Plan tools">
+          <div class="addcam">
+            <button type="button" class="btn sm sig" id="add-cam" aria-haspopup="true" aria-expanded="false"><svg class="ic" aria-hidden="true"><use href="#ic-plus"/></svg><span data-i18n="addCam">Add camera</span></button>
+            <div class="menu" id="cam-menu" role="menu" hidden>
+              <button type="button" role="menuitem" data-add-cam="ptz" data-i18n="typePtz">PTZ (robotic)</button>
+              <button type="button" role="menuitem" data-add-cam="lens" data-i18n="typeLens">Camera + lens</button>
+              <button type="button" role="menuitem" data-add-cam="cc" data-i18n="typeCc">Camcorder</button>
+            </div>
+          </div>
+          <button type="button" class="tbtn" id="add-person"><svg class="ic" aria-hidden="true"><use href="#ic-user-circle"/></svg><span data-i18n="addPerson">Person</span></button>
+          <div class="addcam">
+            <button type="button" class="tbtn" id="add-furn" aria-haspopup="true" aria-expanded="false"><svg class="ic" aria-hidden="true"><use href="#ic-package"/></svg><span data-i18n="addFurn">Furniture</span></button>
+            <div class="menu" id="furn-menu" role="menu" hidden>
+              <button type="button" role="menuitem" data-add-furn="table" data-i18n="f_table">Table</button>
+              <button type="button" role="menuitem" data-add-furn="desk" data-i18n="f_desk">Desk</button>
+              <button type="button" role="menuitem" data-add-furn="pulpit" data-i18n="f_pulpit">Pulpit</button>
+              <button type="button" role="menuitem" data-add-furn="stage" data-i18n="f_stage">Stage</button>
+              <button type="button" role="menuitem" data-add-furn="seats" data-i18n="f_seats">Seating</button>
+              <button type="button" role="menuitem" data-add-furn="set" data-i18n="f_set">Set wall</button>
+            </div>
+          </div>
+          <p class="khint meta-s" data-i18n="keysHint">Drag to move · drag the dot to aim · arrows move · R / Shift+R rotate</p>
+        </div>
+        <div class="planbox" id="planbox">
+          <svg id="plan" role="application" aria-roledescription="room plan" aria-label="Top-down room plan" xmlns="http://www.w3.org/2000/svg"></svg>
+        </div>
+        <div class="mvh"><p class="meta"><span class="tally"></span><span data-i18n="mvTitle">Camera views · schematic</span></p><p class="meta-s dim" data-i18n="mvNote">How much of the subject fills each frame. Shapes, not a render.</p></div>
+        <div class="cviews" id="cviews"></div>
+        <section class="chkpanel p-chk" aria-labelledby="chk-h">
+          <h2 class="ih" id="chk-h"><span class="meta" data-i18n="chkKick">Checks</span><span data-i18n="chkH">What the plan needs to work</span></h2>
+          <ul class="checks" id="checks"></ul>
+        </section>
+      </div>
+
+      <aside class="insp" aria-label="Inspector">
+        <section class="ipanel p-sig" aria-labelledby="sig-h">
+          <h2 class="ih" id="sig-h"><span class="meta" data-i18n="sigKick">Signal</span><span data-i18n="sigH">How the cameras reach the switcher</span></h2>
+          <div class="seg" role="group" aria-label="Transport" id="transport">
+            <button type="button" data-tr="sdi" aria-pressed="false">SDI</button><button type="button" data-tr="hdmi" aria-pressed="false">HDMI</button><button type="button" data-tr="ip" aria-pressed="false">IP / NDI</button>
+          </div>
+          <p class="trnote meta-s" id="tr-note"></p>
+          <div class="rows">
+            <div class="row"><label for="fmt" data-i18n="format">Format</label><select id="fmt"><option value="hd">1080p (HD)</option><option value="uhd">2160p (UHD 4K)</option></select></div>
+            <div class="row"><label for="ctl" data-i18n="ptzCtl">PTZ control</label><select id="ctl"><option value="ip" data-i18n="ctlIp">IP (same network)</option><option value="422" data-i18n="ctl422">RS-422 serial</option></select></div>
+            <div class="row"><label for="ext" data-i18n="extIn">Other switcher inputs</label><div class="step"><button type="button" data-step="-1" aria-label="One fewer input"><svg class="ic" aria-hidden="true"><use href="#ic-minus"/></svg></button><input id="ext" type="number" min="0" max="8" inputmode="numeric"><button type="button" data-step="1" aria-label="One more input"><svg class="ic" aria-hidden="true"><use href="#ic-plus"/></svg></button></div></div>
+            <p class="meta-s dim" data-i18n="extHint">Computer, slides or playback that also goes into the switcher.</p>
+            <div class="row"><label for="xr" data-i18n="xrun">Cable beyond the room</label><label class="num-in xr-in"><input id="xr" type="text" inputmode="decimal" autocomplete="off" spellcheck="false"><i class="u xr-u">m</i></label></div>
+            <p class="meta-s dim" data-i18n="xrunHint">Extra metres to a booth or rack outside the room, added to every run.</p>
+          </div>
+        </section>
+        <section class="ipanel p-sel" id="sel-panel"></section>
+        <section class="ipanel p-own" aria-labelledby="own-h">
+          <h2 class="ih" id="own-h"><span class="meta" data-i18n="ownKick">Already have</span><span data-i18n="ownH">Left out of the shopping list</span></h2>
+          <div class="ownl" id="own-list"></div>
+          <p class="meta-s dim" data-i18n="ownP">Ticked items stay on the plan, marked “You have this” at $0.</p>
+        </section>
+
+      </aside>
+    </div>
+  </section>
+
+  <!-- The equipment list on the lit stage -->
+  <section class="stage bom" id="bom" aria-labelledby="bom-h" data-slate>
+    <div class="slate-tab" aria-hidden="true"><i></i><span>Cam 3</span><b data-i18n="bomTab">Equipment list</b></div>
+    <div class="wrap">
+      <div class="bhead">
+        <div>
+          <p class="meta" id="bom-m"></p>
+          <h2 class="h2" id="bom-h"><span data-i18n="bomH">The parts list.</span> <span class="dim" data-i18n="bomH2">What, how many, which length, why.</span></h2>
+          <p class="cp" data-i18n="bomP">Lines with a photo are live listings with today’s price, shipping and sales tax included. Lines marked “To quote” are sized from your plan (cable lengths, brackets, parts we don’t list yet); a specialist prices them. Nothing here is a package sales has confirmed.</p>
+        </div>
+        <div class="btot" id="btot"></div>
+      </div>
+      <div class="wzb" id="wz-budget" hidden></div>
+      <div id="bomlist"></div>
+      <p class="assume meta-s" data-i18n="assume">Cable lengths: routed along floor and walls (the dashed lines), plus the rise at each end, plus 20 %, plus 2 m. Angles of view are manufacturer figures; values marked “approx.” need checking before an order.</p>
+    </div>
+  </section>
+
+  <!-- Print-only header (the plan + list print together) -->
+
+  <!-- Guided planner: back / next, always in reach -->
+  <div class="wz-foot" id="wz-foot"><div class="wrap">
+    <button type="button" class="btn wz-back" id="wz-back"><span id="wz-back-l">Back</span></button>
+    <p class="wz-sum" id="wz-sum" aria-live="polite"></p>
+    <button type="button" class="btn sig wz-next" id="wz-next"><span id="wz-next-l">Next</span><svg class="ic" aria-hidden="true"><use href="#ic-arrow-right"/></svg></button>
+  </div></div>
+</main>
+
+<dialog id="quote-dlg" aria-labelledby="qd-h">
+  <div class="qd">
+    <div class="qd-top"><h2 id="qd-h" data-i18n="qdH">Request a quote for this plan</h2><button type="button" class="ibtn" id="qd-x" aria-label="Close"><svg class="ic" aria-hidden="true"><use href="#ic-x"/></svg></button></div>
+    <p class="qd-note meta-s"><span class="tally"></span><span data-i18n="qdNote">Prototype: nothing is sent. This is the summary a specialist would receive, with a link that reopens this exact plan.</span></p>
+    <pre id="qd-text" tabindex="0"></pre>
+    <div class="qd-acts"><button type="button" class="btn sig" id="qd-copy" data-i18n="qdCopy">Copy summary</button><button type="button" class="btn" id="qd-close" data-i18n="close">Close</button></div>
+  </div>
+</dialog>
+
+<footer class="foot-g"><div class="wrap">
+  <div class="top">
+    <div><p class="line" data-i18n-html="footLine">We supply the equipment.<br>i9 Studios and i9TV do the rest.</p><p>I9Store USA LLC · 20815 NE 16th Ave, STE B33, Miami, FL 33179<br><a href="tel:+13053334374">+1 (305) 333-4374</a> · <a href="mailto:contato@i9tv.com.br">contato@i9tv.com.br</a></p></div>
+    <div><h3 class="meta" data-i18n="fShop">Shop</h3><ul><li><a href="#">Cameras</a></li><li><a href="#">Lighting</a></li><li><a href="#">Audio</a></li><li><a href="#">Studio</a></li><li><a href="planner.html" data-i18n="navPlanner">Plan your room</a></li></ul></div>
+    <div><h3 class="meta" data-i18n="fHelp">Help</h3><ul><li><a href="pro.html#quote" data-i18n="fQuote">Request a quote</a></li><li><a href="#">WhatsApp</a></li><li><a href="#" data-i18n="fTerms">Terms and conditions</a></li></ul></div>
+    <div><h3 class="meta">i9</h3><ul><li><a href="#">i9 Studios</a></li><li><a href="#">i9TV</a></li><li><a href="#" lang="pt-BR">Loja Brasil</a></li></ul></div>
+  </div>
+  <div class="bot meta-s"><span data-i18n="footBot">Camera angles: manufacturer spec pages (sources in the data file). Prices: live i9store.com/usa listings.</span><span>Design direction G · Room planner · static prototype</span></div>
+</div></footer>
+<script src="../shared/catalog.js"></script>
+<script src="../shared/catalog-more.js"></script>
+<script src="../shared/catalog-browse.js"></script>
+<script src="../shared/planner-data.js"></script>
+<script src="bag.js"></script>
+<script src="browse-core.js"></script>
+<script src="nav-mega.js"></script>
+<script src="g.js"></script>
+<script src="planner.js"></script>
+<script src="planner-wizard.js"></script>
+<script src="../switcher.js"></script>
+</body>
+</html>

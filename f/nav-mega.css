@@ -1,0 +1,193 @@
+/* Direction G — mega menu (nav-mega.js). Drops into the existing .gnav header of g.css.
+   Desktop >= 1100: a bar of five tabs (Solutions · Categories · Brands · Setups · Plan your room); each opens a
+   full-width panel under the sticky header. Below 1100 (iPad portrait, phone) the header's menu button opens a drawer:
+   a side sheet on tablet, full screen on phone, that drills down one level at a time.
+   Same grammar as g.css: i9 Black chrome, white stages for packshots, zero radius, hairlines, PT Mono metadata,
+   orange only for open / selected. */
+
+/* ---------- the bar ---------- */
+.gnav .mega-bar{display:flex;align-items:stretch}
+.mg-tab{display:flex;align-items:center;gap:6px;min-height:72px;padding:0 14px;background:none;border:0;cursor:pointer;font:500 15px/1 var(--sans);color:var(--ink-2);text-decoration:none;white-space:nowrap}
+.mg-tab .ic{width:12px;height:12px;opacity:.6;transition:transform .25s var(--ease)}
+.mg-tab:hover,.mg-tab[aria-expanded="true"],.mg-tab[aria-current]{color:var(--ink)}
+.mg-tab[aria-expanded="true"]{box-shadow:inset 0 -2px 0 var(--signal)}
+.mg-tab[aria-expanded="true"] .ic{transform:rotate(180deg);opacity:1}
+.mg-tab[aria-current]:not([aria-expanded="true"]){box-shadow:inset 0 -2px 0 var(--ink-3)}
+.mg-tab:focus-visible{outline-offset:-4px}
+@media (max-width:1279px){.mg-tab{padding:0 10px;font-size:14.5px}}
+
+/* ---------- panels ---------- */
+.mg-panels{position:absolute;left:0;right:0;top:100%;z-index:41}
+.mg-panel{background:var(--black);border-bottom:1px solid var(--rule-2);max-height:calc(100vh - 72px);max-height:calc(100dvh - 72px);overflow:auto;overscroll-behavior:contain;animation:mg-in .28s var(--ease) both}
+.mg-panel[hidden]{display:none}
+@keyframes mg-in{from{opacity:0;transform:translateY(-6px)}}
+.mg-panel .wrap{display:block;min-height:0;padding-top:32px;padding-bottom:36px}
+.mg-head{display:flex;justify-content:space-between;align-items:baseline;gap:24px;margin:0 0 20px;padding-bottom:14px;border-bottom:1px solid var(--rule)}
+.mg-head .meta{color:var(--ink-3);display:flex;align-items:center;gap:10px}
+.mg-all{display:inline-flex;align-items:center;gap:8px;min-height:44px;font-weight:600;font-size:14px;text-decoration:none;color:var(--ink)}
+.mg-all:hover{text-decoration:underline}
+.mg-all .ic{width:16px;height:16px}
+.mg-scrim{position:fixed;inset:0;z-index:39;background:rgba(0,0,0,.56);animation:mg-fade .2s both}
+@keyframes mg-fade{from{opacity:0}}
+
+/* solutions: a small multiview of nine windows + a tenth cell */
+.mg-sol{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px}
+.mg-win{position:relative;display:flex;flex-direction:column;background:var(--win);text-decoration:none;color:var(--ink);min-width:0}
+.mg-win::after{content:"";position:absolute;inset:0;border:1px solid var(--rule);pointer-events:none;transition:border-color .2s}
+.mg-win:hover::after,.mg-win:focus-visible::after{border-color:var(--ink)}
+.mg-win:focus-visible{outline-offset:2px}
+.mg-scr{position:relative;display:block;aspect-ratio:16/9;overflow:hidden;background:#000}
+.mg-scr>img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:var(--pos,50% 50%);filter:saturate(.92) contrast(1.04);transition:transform .8s var(--ease)}
+.mg-win:hover .mg-scr>img{transform:scale(1.04)}
+.mg-scr.lit{background:var(--stage)}
+.mg-scr.lit .comp{padding:10% 8% 8%}
+.mg-osd{position:absolute;top:6px;left:6px;z-index:2;padding:3px 6px;background:rgba(0,0,0,.72);color:rgba(247,246,242,.86);font:400 10px/1.2 var(--mono);letter-spacing:.12em;text-transform:uppercase}
+.mg-umd{display:flex;flex-direction:column;gap:2px;padding:10px 12px 12px;border-top:1px solid var(--rule)}
+.mg-umd b{font-size:15px;font-weight:600;letter-spacing:-.015em;line-height:1.2}
+.mg-umd span{font-size:12.5px;line-height:1.4;color:var(--ink-3)}
+.mg-umd .meta-s{font-size:11px;color:var(--ink-3);margin-top:4px}
+.mg-spec{display:flex;flex-direction:column;justify-content:space-between;gap:12px;padding:14px;border:1px dashed var(--rule-2);text-decoration:none;color:var(--ink-2)}
+.mg-spec:hover{border-color:var(--ink);color:var(--ink)}
+.mg-spec b{font-size:17px;line-height:1.2;letter-spacing:-.02em;color:var(--ink)}
+
+/* categories: eight columns, packshot head on white + sub links with counts */
+.mg-cats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:0 28px}
+.mg-cat{padding:0 0 22px;min-width:0}
+.mg-cat:nth-child(n+5){padding-top:20px;border-top:1px solid var(--rule)}
+.mg-cath{display:grid;grid-template-columns:64px minmax(0,1fr);gap:12px;align-items:center;text-decoration:none;margin-bottom:8px}
+.mg-cath .pk{width:64px;height:52px;padding:4px}
+.mg-cath b{display:block;font-size:17px;letter-spacing:-.02em;line-height:1.15}
+.mg-cath .meta-s{color:var(--ink-3);font-size:11px}
+.mg-cath:hover b{color:var(--signal-hi)}
+.mg-subs{list-style:none;margin:0;padding:0}
+.mg-subs a{display:flex;justify-content:space-between;gap:10px;min-height:32px;align-items:center;font-size:14px;color:var(--ink-2);text-decoration:none}
+.mg-subs a:hover{color:var(--ink);text-decoration:underline}
+.mg-subs .n{font:400 11px/1 var(--mono);color:var(--ink-3)}
+
+/* brands: top brands as a ledger + A–Z */
+.mg-brands{display:grid;grid-template-columns:minmax(0,8fr) minmax(0,4fr);gap:48px}
+.mg-ledger{list-style:none;margin:0;padding:0;columns:3;column-gap:32px}
+.mg-ledger li{break-inside:avoid}
+.mg-ledger a{display:flex;align-items:baseline;gap:8px;min-height:36px;padding:6px 0;border-bottom:1px solid var(--rule);text-decoration:none;font-weight:500}
+.mg-ledger a::after{content:"";order:1;flex:1;border-bottom:1px dotted var(--rule-2);transform:translateY(-3px)}
+.mg-ledger .n{order:2;font:400 11px/1 var(--mono);color:var(--ink-3)}
+.mg-ledger a:hover{color:var(--signal-hi)}
+.mg-az{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px;margin:0 0 18px}
+.mg-az a,.mg-az span{display:grid;place-items:center;height:40px;border:1px solid var(--rule);font:400 13px/1 var(--mono);text-decoration:none}
+.mg-az a:hover{border-color:var(--ink);background:var(--ink);color:var(--black)}
+.mg-az span{color:rgba(247,246,242,.28);border-style:dashed}
+.mg-note{margin:0 0 14px;font-size:14px;color:var(--ink-2)}
+
+/* setups: featured kits on white + a list of all */
+.mg-setups{display:grid;grid-template-columns:repeat(4,minmax(0,1fr)) minmax(0,1.15fr);gap:8px}
+.mg-kit{position:relative;display:flex;flex-direction:column;text-decoration:none;color:var(--ink);background:var(--win);min-width:0}
+.mg-kit::after{content:"";position:absolute;inset:0;border:1px solid var(--rule);pointer-events:none}
+.mg-kit:hover::after,.mg-kit:focus-visible::after{border-color:var(--ink)}
+.mg-kit .kit{aspect-ratio:16/10}
+.mg-list{list-style:none;margin:0;padding:0 0 0 20px;border-left:1px solid var(--rule)}
+.mg-list a{display:grid;grid-template-columns:28px minmax(0,1fr);gap:4px 8px;padding:7px 0;border-bottom:1px solid var(--rule);text-decoration:none;font-size:14px;line-height:1.3}
+.mg-list a .meta-s{color:var(--ink-3);font-size:11px}
+.mg-list a span:last-child{grid-column:2;font:400 11px/1.3 var(--mono);color:var(--ink-3)}
+.mg-list a:hover b{text-decoration:underline}
+.mg-list b{font-weight:500}
+
+/* plan your room */
+.mg-plan{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:56px;align-items:start}
+.mg-plan h3{font:700 clamp(1.6rem,2.4vw,2.2rem)/1.04 var(--sans);letter-spacing:-.035em;margin:0 0 14px}
+.mg-plan p{margin:0 0 24px;color:var(--ink-2);max-width:32em}
+.mg-tpl{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:1fr 1fr;column-gap:28px;border-top:1px solid var(--rule)}
+.mg-tpl a{display:flex;justify-content:space-between;align-items:baseline;gap:12px;min-height:46px;padding:10px 0;border-bottom:1px solid var(--rule);text-decoration:none;font-size:14.5px}
+.mg-tpl a .meta-s{color:var(--ink-3);font-size:11px;white-space:nowrap}
+.mg-tpl a:hover b{text-decoration:underline}
+.mg-tpl b{font-weight:500}
+
+/* the kit composition, shared with setups.html (white stage, absolutely laid out by browse-core.js) */
+.kit{position:relative;display:block;background:var(--stage);overflow:hidden;container-type:inline-size}
+.kit-in{position:absolute;inset:0}
+.kit-i{position:absolute;display:block}
+.kit-i img{position:absolute;bottom:0;height:100%;object-fit:contain;object-position:50% 100%;transform-origin:50% 100%}
+
+/* ---------- drawer (tablet + phone) ---------- */
+.mg-drawer{position:fixed;inset:0;z-index:60;display:flex}
+.mg-drawer[hidden]{display:none}
+.mg-drawer .mg-dscrim{position:absolute;inset:0;background:rgba(0,0,0,.6);animation:mg-fade .2s both}
+.mg-sheet{position:relative;display:flex;flex-direction:column;width:min(100%,460px);height:100%;background:var(--black);color:var(--ink);border-right:1px solid var(--rule);animation:mg-slide .32s var(--ease) both}
+@keyframes mg-slide{from{transform:translateX(-24px);opacity:0}}
+.mg-dtop{display:flex;align-items:center;justify-content:space-between;gap:8px;min-height:60px;padding:0 8px 0 var(--g);border-bottom:1px solid var(--rule)}
+.mg-dtop .meta{color:var(--ink-3)}
+.mg-views{position:relative;flex:1;min-height:0;overflow:hidden}
+.mg-view{position:absolute;inset:0;overflow:auto;overscroll-behavior:contain;padding:8px var(--g) 32px;background:var(--black)}
+.mg-view[hidden]{display:none}
+.mg-view.in{animation:mg-push .3s var(--ease) both}
+.mg-view.back{animation:mg-pop .3s var(--ease) both}
+@keyframes mg-push{from{transform:translateX(28px);opacity:0}}
+@keyframes mg-pop{from{transform:translateX(-28px);opacity:0}}
+.mg-back{display:flex;align-items:center;gap:10px;width:100%;min-height:52px;padding:0;background:none;border:0;border-bottom:1px solid var(--rule);color:var(--ink-2);cursor:pointer;font:400 11px/1 var(--mono);letter-spacing:.14em;text-transform:uppercase}
+.mg-back .ic{width:16px;height:16px;transform:rotate(90deg)}
+.mg-back:hover{color:var(--ink)}
+.mg-vh{font:700 30px/1.02 var(--sans);letter-spacing:-.035em;margin:20px 0 8px}
+.mg-rows{list-style:none;margin:0;padding:0}
+.mg-row{display:flex;align-items:center;gap:14px;width:100%;min-height:60px;padding:8px 0;background:none;border:0;border-bottom:1px solid var(--rule);color:var(--ink);text-align:left;text-decoration:none;cursor:pointer;font:600 19px/1.2 var(--sans);letter-spacing:-.02em}
+.mg-row .grow{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
+.mg-row small{font:400 12px/1.35 var(--sans);letter-spacing:0;color:var(--ink-3)}
+.mg-row .n{font:400 11px/1 var(--mono);letter-spacing:.06em;color:var(--ink-3)}
+.mg-row>.ic{width:16px;height:16px;color:var(--ink-3);transform:rotate(-90deg);flex:none}
+.mg-row:hover .grow>span:first-child{text-decoration:underline}
+.mg-row.sm{min-height:48px;font-size:16px;font-weight:500}
+.mg-row .th{width:72px;height:45px;flex:none;overflow:hidden;background:#000;position:relative}
+.mg-row .th img{width:100%;height:100%;object-fit:cover;object-position:var(--pos,50% 50%)}
+.mg-row .th.lit{background:var(--stage);display:flex;align-items:center;justify-content:center;padding:4px}
+.mg-row .th.lit img{object-fit:contain}
+.mg-row .pk{width:56px;height:44px;flex:none;padding:3px}
+.mg-dfoot{border-top:1px solid var(--rule);padding:12px var(--g) calc(12px + env(safe-area-inset-bottom));display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.mg-dfoot a{display:flex;align-items:center;justify-content:center;gap:8px;min-height:48px;border:1px solid var(--rule-2);text-decoration:none;font-weight:600;font-size:14px}
+.mg-dfoot a:first-child{background:var(--signal);border-color:var(--signal);color:#000}
+.mg-chips{display:flex;flex-wrap:wrap;gap:6px;margin:14px 0 6px}
+.mg-chips a{display:inline-flex;align-items:center;gap:8px;min-height:40px;padding:0 12px;border:1px solid var(--rule);text-decoration:none;font-size:14px;font-weight:500}
+.mg-chips a .n{font:400 10.5px/1 var(--mono);color:var(--ink-3)}
+.mg-letter{position:sticky;top:-8px;z-index:1;margin:0;padding:14px 0 6px;background:var(--black);font:400 11px/1 var(--mono);letter-spacing:.14em;color:var(--signal-hi);border-bottom:1px solid var(--rule)}
+html.mg-lock,html.mg-lock body{overflow:hidden}
+
+@media (max-width:1099px){
+  .gnav .mega-bar,.mg-panels{display:none}
+}
+@media (max-width:699px){
+  .mg-sheet{width:100%;border-right:0}
+}
+@media (prefers-reduced-motion:reduce){.mg-panel,.mg-view.in,.mg-view.back,.mg-sheet,.mg-scrim,.mg-dscrim{animation:none!important}}
+.mg-setups{align-items:start}
+
+/* ---------- shared by every page with this header (moved from browse.css at integration, 25 Nov) ---------- */
+/* the hidden attribute must win over author display rules (menus, drawer, setup views, checkout empty state) */
+[hidden]{display:none!important}
+/* "Added to bag" toast, shown by bag.js */
+.bx-toast{position:fixed;left:50%;bottom:24px;z-index:70;display:flex;align-items:center;gap:14px;max-width:calc(100% - 32px);padding:12px 12px 12px 18px;background:var(--black);color:#f7f6f2;border:1px solid rgba(247,246,242,.3);transform:translate(-50%,140%);transition:transform .35s var(--ease);font-size:14px}
+.bx-toast.on{transform:translate(-50%,0)}
+.bx-toast b{font-weight:600}
+.bx-toast .meta-s{color:rgba(247,246,242,.6)}
+.bx-toast a{display:inline-flex;align-items:center;gap:6px;min-height:36px;padding:0 12px;background:var(--signal);color:#000;text-decoration:none;font-weight:600}
+.bx-toast a .ic{width:14px;height:14px}
+@media (prefers-reduced-motion:reduce){.bx-toast{transition:none}}
+
+/* ---------- Line 02 · Everyday (added 25 Nov): occasions + the Camp Snap family ---------- */
+#mg-t-everyday{margin-left:6px;position:relative}
+#mg-t-everyday::before{content:"";position:absolute;left:-4px;top:26px;bottom:26px;width:1px;background:var(--rule-2)}
+.mg-ev{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:40px}
+.mg-occ{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:1fr 1fr;gap:0 24px;align-content:start}
+.mg-occ a{display:grid;grid-template-columns:28px minmax(0,1fr);gap:2px 10px;padding:12px 0;border-bottom:1px solid var(--rule);text-decoration:none;color:var(--ink)}
+.mg-occ a:hover b{text-decoration:underline}
+.mg-occ .meta-s{grid-row:1/3;color:var(--ink-3);font-size:11px;padding-top:3px}
+.mg-occ b{font-size:16px;font-weight:600;letter-spacing:-.015em}
+.mg-occ span:last-child{font-size:12.5px;line-height:1.4;color:var(--ink-3)}
+.mg-evg{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+.mg-evc{position:relative;display:flex;flex-direction:column;background:var(--win);text-decoration:none;color:var(--ink);min-width:0}
+.mg-evc::after{content:"";position:absolute;inset:0;border:1px solid var(--rule);pointer-events:none;transition:border-color .2s}
+.mg-evc:hover::after,.mg-evc:focus-visible::after{border-color:var(--ink)}
+.mg-evc .pk{aspect-ratio:4/3;padding:8%}
+.mg-evc .pk.nw{padding:0}
+.mg-evc .pk.nw img{width:100%;height:100%;object-fit:cover}
+/* six tabs need room: below 1520 the region keeps only its globe and the tabs tighten; nothing in the header wraps */
+.gnav .talk,.gnav .logo small{white-space:nowrap}
+@media (max-width:1519px){.gnav .region .meta{display:none}.mg-tab{padding:0 11px}}
+@media (max-width:1279px){.mg-tab{padding:0 9px;font-size:14px}#mg-t-everyday{margin-left:4px}}
+@media (max-width:1359px){.gnav .talk{display:none}}

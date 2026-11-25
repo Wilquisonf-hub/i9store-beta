@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta name="robots" content="noindex, nofollow">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Shop — i9Store USA</title>
+<meta name="description" content="Browse live i9Store USA listings by solution, category and brand: cameras, lenses, lighting, audio, studio, monitoring, supports and accessories, shipped from Miami.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=PT+Mono&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="g.css">
+<link rel="stylesheet" href="nav-mega.css">
+<link rel="stylesheet" href="browse.css">
+<link rel="stylesheet" href="modes.css">
+<script src="mode.js"></script>
+</head>
+<body>
+<script src="../shared/icons.js"></script>
+<a class="sr" href="#main">Skip to content</a>
+<div id="live" class="sr" aria-live="polite"></div>
+
+<header class="gnav"><div class="wrap">
+  <button class="ibtn menu-btn" aria-label="Menu"><svg class="ic" aria-hidden="true"><use href="#ic-list"/></svg></button>
+  <a class="logo" href="index.html" aria-label="i9Store home"><img src="../shared/i9-seal.webp" alt=""><span><b>i9Store</b><small>i9 / Equipment</small></span></a>
+  <nav class="mega-bar" data-mega aria-label="Shop"></nav>
+  <div class="right">
+    <a class="ibtn" href="shop.html" aria-label="Search the catalogue"><svg class="ic" aria-hidden="true"><use href="#ic-magnifying-glass"/></svg></a>
+    <button class="ibtn region" aria-label="Region: USA, US dollars"><svg class="ic" aria-hidden="true"><use href="#ic-globe"/></svg><span class="meta">US · USD</span></button>
+    <a class="ibtn" href="pro.html#quote" aria-label="Quote list"><svg class="ic" aria-hidden="true"><use href="#ic-clipboard-text"/></svg><span class="ct" id="quote-ct">0</span></a>
+    <a class="ibtn" href="checkout.html" aria-label="Bag"><svg class="ic" aria-hidden="true"><use href="#ic-bag"/></svg><span class="ct" id="bag-ct">0</span></a>
+    <a class="talk" href="#"><svg class="ic" aria-hidden="true"><use href="#ic-whatsapp-logo"/></svg>Talk to a specialist</a>
+  </div>
+</div></header>
+
+<main id="main">
+  <section class="bx-top" id="top" aria-labelledby="bx-h">
+    <div class="wrap">
+      <nav class="crumbs" aria-label="Breadcrumb" id="crumbs"></nav>
+      <div class="bx-hgrid" id="hgrid">
+        <div><p class="meta kick"><span class="tally"></span><span id="kick">Shop</span></p>
+          <h1 class="bx-h1" id="bx-h">All equipment.</h1>
+          <div class="bx-ledes" id="lede"></div>
+          <p class="bx-stats meta-s" id="stats"></p></div>
+        <div class="bx-ctxw" id="ctx"></div>
+      </div>
+      <div class="bx-choose" id="choose"></div>
+    </div>
+  </section>
+
+  <section class="stage bx-body on-air" id="results" aria-label="Listings">
+    <div class="slate-tab" aria-hidden="true"><i></i><span>Listings</span><b id="slate">All equipment</b></div>
+    <div class="wrap bx-grid" id="bx-grid">
+      <aside class="bx-facets" id="facets" aria-label="Filters">
+        <div class="bx-fhead"><b id="fh">Filter</b><button type="button" class="ibtn" data-fclose aria-label="Close filters" style="color:var(--s-ink)"><svg class="ic" aria-hidden="true"><use href="#ic-x"/></svg></button></div>
+        <div class="bx-fbody" id="fbody"></div>
+        <div class="bx-ffoot"><button type="button" class="btn" data-fclear>Clear</button><button type="button" class="btn solid" data-fclose id="fshow">Show listings</button></div>
+      </aside>
+      <div class="bx-res">
+        <div class="bx-bar">
+          <h2 class="bx-count" id="count" aria-live="polite"></h2>
+          <div class="bx-tools">
+            <button type="button" class="btn bx-filt" id="filt" aria-controls="facets" aria-expanded="false">Filter</button>
+            <button type="button" class="btn bx-hide" id="hidef" aria-controls="facets" aria-expanded="true">Hide filters</button>
+            <div class="bx-sort"><label for="sort">Sort</label><select id="sort"><option value="rec">Recommended</option><option value="low">Price, low to high</option><option value="high">Price, high to low</option><option value="az">Brand, A–Z</option></select><svg class="ic" aria-hidden="true"><use href="#ic-caret-down"/></svg></div>
+          </div>
+          <div class="chips" id="chips" aria-label="Active filters"></div>
+        </div>
+        <div class="bx-tiles" id="tiles"></div>
+        <div class="bx-empty" id="empty" hidden></div>
+        <div class="bx-more" id="more" hidden><button type="button" class="btn" id="morebtn">Show more</button><span class="meta-s" id="moren"></span></div>
+        <p class="bx-legal">Live i9store.com/usa listings, read 23 and 25 Nov 2026. Prices are the listed USD prices and include shipping and sales tax. Product names open the live listing; the LS 600d Pro and the Everyday items (Camp Snap, small mics, lights, recorders) open a designed product page in this prototype. “In a setup” and “Picked” are i9’s suggestions, not packages sales has confirmed.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="stage" id="index" hidden aria-label="Index"></section>
+</main>
+
+<footer class="foot-g"><div class="wrap">
+  <div class="top">
+    <div><p class="line">We supply the equipment.<br>i9 Studios and i9TV do the rest.</p><p>I9Store USA LLC · 20815 NE 16th Ave, STE B33, Miami, FL 33179<br><a href="tel:+13053334374">+1 (305) 333-4374</a> · <a href="mailto:contato@i9tv.com.br">contato@i9tv.com.br</a></p></div>
+    <div><h3 class="meta">Shop</h3><ul><li><a href="shop.html?view=categories">Categories</a></li><li><a href="shop.html?view=brands">Brands</a></li><li><a href="setups.html">Setups</a></li><li><a href="planner.html">Plan your room</a></li></ul></div>
+    <div><h3 class="meta">Help</h3><ul><li><a href="pro.html#quote">Request a quote</a></li><li><a href="#">WhatsApp</a></li><li><a href="#">Terms and conditions</a></li><li><a href="#">Privacy policy</a></li></ul></div>
+    <div><h3 class="meta">i9</h3><ul><li><a href="#">i9 Studios</a></li><li><a href="#">i9TV</a></li><li><a href="#" lang="pt-BR">Loja Brasil</a></li></ul></div>
+  </div>
+  <div class="bot meta-s"><span>Listings and prices read from i9store.com/usa. Product names link to the live listing.</span><span>Design direction G · Shop · static prototype</span></div>
+</div></footer>
+<script src="../shared/catalog.js"></script>
+<script src="../shared/catalog-more.js"></script>
+<script src="../shared/catalog-browse.js"></script>
+<script src="../shared/catalog-everyday.js"></script>
+<script src="bag.js"></script>
+<script src="browse-core.js"></script>
+<script src="nav-mega.js"></script>
+<script src="shop.js"></script>
+<script src="../switcher.js"></script>
+</body>
+</html>
