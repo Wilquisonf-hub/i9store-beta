@@ -1,6 +1,6 @@
 /* Direction G — mega menu. Needs ../shared/icons.js, catalog*.js, browse-core.js. Drop-in for the .gnav header:
    put <nav class="mega-bar" data-mega aria-label="Shop"></nav> where the department links were, keep the header's
-   .menu-btn. Desktop (>= 1100): five disclosure tabs, each opening a full-width panel. Keyboard: Left/Right move
+   .menu-btn. Desktop (>= 1100): six disclosure tabs (the sixth, Everyday, is the simple-products line), each opening a full-width panel. Keyboard: Left/Right move
    between tabs, Down/Enter/Space open and enter a panel, arrows move inside it, Home/End, Esc closes and returns focus
    to the tab; focus leaving the header closes it. Hover opens on fine pointers only; touch (iPad landscape) taps
    toggle and a tap outside closes. Below 1100 the .menu-btn opens a drawer (side sheet on tablet, full screen on
@@ -75,6 +75,19 @@
         <div><p class="meta" style="color:var(--ink-3);margin:0 0 10px">Start from a setup</p>
           <ul class="mg-tpl">${SETUPS.map(s => `<li><a href="planner.html?template=${s.id}"><b>${esc(s.title)}</b><span class="meta-s">${s.pieces} pcs</span></a></li>`).join('')}</ul></div>
       </div>` },
+    /* Line 02 · Everyday (everyday.html, product-simple.html). Data: I9.EVERYDAY from ../shared/catalog-everyday.js,
+       which bag.js loads on pages that do not include it; the panel fills when it is first opened. */
+    { id:'everyday', label:'Everyday', html: () => { const E = I9.EVERYDAY;
+      if (!E) return `<div class="mg-head"><p class="meta"><span class="tally"></span>Line 02 · Everyday</p><a class="mg-all" href="everyday.html">Gifts and first kits ${icon('arrow-right')}</a></div>`;
+      return `
+      <div class="mg-head"><p class="meta"><span class="tally"></span>Line 02 · Everyday · gifts and first kits, most under $300</p><a class="mg-all" href="everyday.html">All of Everyday ${icon('arrow-right')}</a></div>
+      <div class="mg-ev">
+        <ul class="mg-occ">${E.SHELVES.map(s => `<li><a href="everyday.html#${s.id}"><span class="meta-s">${s.n}</span><b>${esc(s.label)}</b><span>${esc(s.line)}</span></a></li>`).join('')}</ul>
+        <div class="mg-evcs"><p class="meta" style="color:var(--ink-3);margin:0 0 12px">Camp Snap · pick a model, then a colour</p>
+          <div class="mg-evg">${E.FAMILY.campsnap.map(k => { const m = E.PROD[k], d = P[m.def];
+            return `<a class="mg-evc" href="product-simple.html?id=${m.def}"><span class="pk${d.white === 0 ? ' nw' : ''}"><img src="${d.thumb || d.src}" alt="" loading="lazy"></span>
+              <span class="mg-umd"><b>${esc(m.short)}</b><span class="meta-s">${esc(m.does)} · ${m.variants.length > 1 ? 'from ' : ''}${usd(E.minPrice(m))}</span></span></a>`; }).join('')}</div></div>
+      </div>`; } },
   ];
 
   /* ---------- desktop bar + panels ---------- */
@@ -84,7 +97,7 @@
   header.appendChild(panels);
   const tabs = $$('.mg-tab', bar);
   /* the page we're on marks its tab */
-  const cur = here === 'setups.html' ? 'setups' : here === 'planner.html' ? 'plan' : here === 'shop.html' ? (new URLSearchParams(location.search).get('solution') ? 'solutions' : new URLSearchParams(location.search).get('brand') || new URLSearchParams(location.search).get('view') === 'brands' ? 'brands' : 'categories') : '';
+  const cur = here === 'everyday.html' || here === 'product-simple.html' ? 'everyday' : here === 'setups.html' ? 'setups' : here === 'planner.html' ? 'plan' : here === 'shop.html' ? (new URLSearchParams(location.search).get('solution') ? 'solutions' : new URLSearchParams(location.search).get('brand') || new URLSearchParams(location.search).get('view') === 'brands' ? 'brands' : 'categories') : '';
   if (cur) $('#mg-t-' + cur).setAttribute('aria-current', 'page');
 
   let open = null, scrim = null, hoverT = null;
@@ -146,7 +159,7 @@
   const rows = (items) => `<ul class="mg-rows">${items.join('')}</ul>`;
   const VIEWS = {
     root: () => `<h2 class="mg-vh sr">Menu</h2>${rows([
-      ...TABS.map(t => `<li><button type="button" class="mg-row" data-go="${t.id}"><span class="grow"><span>${esc(t.label)}</span><small>${esc(({ solutions:'9 kinds of room, each with a setup', categories: DEPTS.length + ' departments, ' + ALL.length + ' listings', brands: BRANDS.length + ' brands, A–Z', setups: SETUPS.length + ' complete rooms with every piece', plan:'Lay out your room, start from a setup' })[t.id])}</small></span>${caret}</button></li>`),
+      ...TABS.map(t => `<li><button type="button" class="mg-row" data-go="${t.id}"><span class="grow"><span>${esc(t.label)}</span><small>${esc(({ solutions:'9 kinds of room, each with a setup', categories: DEPTS.length + ' departments, ' + ALL.length + ' listings', brands: BRANDS.length + ' brands, A–Z', setups: SETUPS.length + ' complete rooms with every piece', plan:'Lay out your room, start from a setup', everyday:'Gifts and first kits, two taps' })[t.id])}</small></span>${caret}</button></li>`),
       `<li><a class="mg-row sm" href="checkout.html"><span class="grow"><span>Bag</span></span><span class="n">${X.bag.count()} pcs</span></a></li>`,
       `<li><a class="mg-row sm" href="index.html#quote"><span class="grow"><span>Request a quote</span></span></a></li>`])}`,
     solutions: () => `<h2 class="mg-vh">Solutions</h2>${rows(ORDER.map((k, i) => { const s = SOL[k];
@@ -162,6 +175,12 @@
       ${LETTERS.map(L => `<h3 class="mg-letter">${L}</h3>${rows(BRANDS.filter(b => letter(b) === L).map(b => `<li><a class="mg-row sm" href="${shop('brand=' + enc(b))}"><span class="grow"><span>${esc(b)}</span></span><span class="n">${brandN[b]}</span></a></li>`))}`).join('')}`,
     setups: () => `<h2 class="mg-vh">Setups</h2>${rows(SETUPS.map(s => `<li><a class="mg-row" href="setups.html#${s.id}"><span class="th lit"><img src="${P[s.items.find(it => it.g === 'picture')?.id || s.items[0].id].src}" alt=""></span><span class="grow"><span>${esc(s.title)}</span><small>${esc(SOL[s.sol].short)} · ${s.pieces} pieces · ${usd(s.total)}</small></span></a></li>`))}
       <p style="margin:18px 0 0"><a class="mg-all" href="setups.html">All setups ${icon('arrow-right')}</a></p>`,
+    everyday: () => { const E = I9.EVERYDAY; if (!E) return `<h2 class="mg-vh">Everyday</h2><a class="btn sig" href="everyday.html" style="width:100%">Gifts and first kits</a>`;
+      return `<h2 class="mg-vh">Everyday</h2><p style="color:var(--ink-2);margin:0 0 8px">Gifts and first kits, most under $300. One-page checkout.</p>${rows([
+      `<li><a class="mg-row sm" href="everyday.html"><span class="grow"><span>All of Everyday</span></span></a></li>`,
+      ...E.SHELVES.map(s => `<li><a class="mg-row sm" href="everyday.html#${s.id}"><span class="grow"><span>${esc(s.label)}</span><small>${esc(s.line)}</small></span></a></li>`)])}
+      <p class="meta" style="color:var(--ink-3);margin:24px 0 4px">Camp Snap</p>${rows(E.FAMILY.campsnap.map(k => { const m = E.PROD[k], d = P[m.def];
+        return `<li><a class="mg-row" href="product-simple.html?id=${m.def}"><span class="th lit"><img src="${d.thumb || d.src}" alt=""></span><span class="grow"><span>${esc(m.short)}</span><small>${esc(m.does)} · ${m.variants.length > 1 ? m.variants.length + ' colours · from ' : ''}${usd(E.minPrice(m))}</small></span></a></li>`; }))}`; },
     plan: () => `<h2 class="mg-vh">Plan your room</h2><p style="color:var(--ink-2);margin:0 0 16px">Start from a setup or an empty room. Every piece is a live listing.</p>
       <a class="btn sig" href="planner.html" style="width:100%">Open the room planner</a>
       <p class="meta" style="color:var(--ink-3);margin:24px 0 4px">Start from a setup</p>${rows(SETUPS.map(s => `<li><a class="mg-row sm" href="planner.html?template=${s.id}"><span class="grow"><span>${esc(s.title)}</span></span><span class="n">${s.pieces} pcs</span></a></li>`))}`,

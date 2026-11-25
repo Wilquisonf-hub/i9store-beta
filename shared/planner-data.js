@@ -109,5 +109,27 @@ window.I9PLAN = (function () {
     frameFor: { cu:0.6, mcu:1.0, med:1.8 },  /* frame width the "Frame" buttons aim for */
   };
 
-  return { FORMATS, PTZ, CAMCORDER, BODIES, LENSES, OTHER_LENS, SWITCHERS, NETSW, RULES };
+  /* Guided wizard (planner-wizard.js) and 3D view (planner-3d.js), added 25 Nov 2026.
+     ROOMS: typical room sizes offered as presets, width × depth in metres. Approx. — verify: planning defaults chosen by the
+     i9 team for a starting layout, not measured rooms; the customer can type their own.
+     HEIGHTS: metres above the floor used only to draw the 3D model. Approx. — verify: common practice values, not
+     manufacturer data (camera lens height on each mount, people, furniture, a stage riser). The 2D cable rule keeps
+     RULES.rise above. */
+  const ROOMS = {
+    church:  [['s', 10, 14], ['m', 16, 24], ['l', 24, 36]],
+    podcast: [['s', 4, 3.5], ['m', 5.5, 4.5], ['l', 7, 6]],
+    studio:  [['s', 6, 5], ['m', 10, 8], ['l', 14, 10]],
+    event:   [['s', 15, 12], ['m', 30, 20], ['l', 40, 30]],
+    school:  [['s', 9, 7], ['m', 18, 22], ['l', 30, 25]],
+    corp:    [['s', 6, 5], ['m', 10, 8], ['l', 16, 12]],
+    approx: true,
+  };
+  const HEIGHTS = {
+    cam: { tripod:1.5, table:1.15, wall:2.6, ceiling:2.9 },
+    eyeStand:1.62, eyeSeat:1.2, stage:0.6, table:0.74, desk:0.76, pulpit:1.1, seat:0.45, set:2.4, lightStand:2.2,
+    wall:(w, d) => Math.min(7, Math.max(3, 0.18 * Math.max(w, d))),
+    approx: true,
+  };
+
+  return { FORMATS, PTZ, CAMCORDER, BODIES, LENSES, OTHER_LENS, SWITCHERS, NETSW, RULES, ROOMS, HEIGHTS };
 })();

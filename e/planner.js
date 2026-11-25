@@ -154,6 +154,17 @@
     q_title:['i9Store room plan — quote request','Plano de sala i9Store — pedido de cotação'], q_room:['Room','Sala'], q_cams:['Cameras','Câmeras'], q_sig:['Signal','Sinal'], q_list:['Equipment','Equipamentos'],
     q_priced:['Priced lines total','Total das linhas com preço'], q_quote:['Lines to quote','Linhas a cotar'], q_link:['Plan link','Link do plano'], q_checks:['Checks','Verificações'],
     live_tpl:['{0} template loaded: {1} cameras.','Modelo {0} carregado: {1} câmeras.'], live_added:['Camera {0} added.','Câmera {0} adicionada.'], live_removed:['Removed.','Removido.'],
+    /* owned items (wizard step 3, the "Already have" panel) */
+    youHave:['You have this','Você já tem'], ownedLines:['{0} you have','{0} você já tem'], ownCam:['You already have this camera','Você já tem esta câmera'],
+    ownKick:['Already have','Já tenho'], ownH:['Left out of the shopping list','Fora da lista de compras'],
+    ownP:['Ticked items stay on the plan, marked “You have this” at $0.','Itens marcados ficam no plano, como “Você já tem” a $0.'],
+    r_sw:['Video switcher','Switcher de vídeo'], r_pc:['Computer / streaming','Computador / streaming'], r_aud:['Mics & audio mixer','Microfones e mesa de som'], r_lit:['Lights','Iluminação'],
+    r_net:['Network / PoE switch','Rede / switch PoE'], r_tri:['Tripods','Tripés'], r_cab:['Cables','Cabos'],
+    xrun:['Cable beyond the room','Cabo além da sala'], xrunHint:['Extra metres to a booth or rack outside the room, added to every run.','Metros extras até uma cabine ou rack fora da sala, somados a cada cabo.'],
+    q_own:['You have (not counted)','Você já tem (não somado)'],
+    g_pc:['Computer for streaming and slides','Computador para transmissão e slides'], w_pc:['Slides, lyrics or playback into the switcher','Slides, letras ou playback no switcher'],
+    w_pcNdi:['Runs the NDI switching software','Roda o software de corte NDI'],
+    g_ndisoft:['NDI production software (vMix class), licence','Software de produção NDI (classe vMix), licença'], w_ndisoft:['Runs on your computer and takes every camera off the network','Roda no seu computador e recebe as câmeras pela rede'],
     camLabel:['CAM {0}','CAM {0}'], ctrlLabel:['CTRL · switcher','CTRL · switcher'], facing:['facing','virada para'],
   };
   let LANG = 'en';
@@ -211,23 +222,31 @@
   const isCamItem = id => !!camKind(id) || (P[id] && P[id].dept === 'Cameras' && !/controller|joystick/i.test((P[id].sub || '') + ' ' + P[id].name));
 
   /* ======================= state ======================= */
+  /* what the customer may already own (wizard step 3 / the "Already have" panel). Cameras are owned per camera (c.own). */
+  const ROLES = ['sw', 'pc', 'aud', 'lit', 'net', 'tri', 'cab'];
   let S, uid = 1, sel = null;
+  let Z = null;        /* the guided wizard's own state, kept in the same #p= hash (planner-wizard.js reads/writes it) */
+  let zGet = null;
   let SETUP = null;   /* { id, tpl, title, loaded:[{m,q}], missing:[{id,q}] } while the plan comes from a setup */
   let BASE = '';      /* the untouched plan for the current template / setup: an edit is any difference from it */
   const nid = () => uid++;
 
-  function fromTemplate(key) {
-    const T = TPL[key];
-    const s = { tpl:key, w:T.w, d:T.d, unit:S ? S.unit : 'm', tr:T.tr, fmt:T.fmt, ctl:'ip', ext:T.ext,
+  /* a plan from a spec: a template, or a layout the guided wizard composed (planner-wizard.js). key = the style template
+     (audio, lighting, labels). Optional: ctl, xr (cable metres beyond the room, e.g. a booth next door), own (roles the
+     customer already has), per camera own:true. */
+  function fromSpec(T, key) {
+    const s = { tpl:key, w:T.w, d:T.d, unit:S ? S.unit : 'm', tr:T.tr, fmt:T.fmt, ctl:T.ctl === '422' ? '422' : 'ip', ext:T.ext || 0, xr:T.xr || 0, own:(T.own || []).filter(r => ROLES.includes(r)),
       furn:T.furn.map(f => ({ id:nid(), ...f })), ppl:T.ppl.map(p => ({ id:nid(), ...p })), ctrl:{ ...T.ctrl }, cams:[] };
     T.cams.forEach(c => {
       const cam = newCam(c.k, c.m, s, c);
+      if (c.own) cam.own = true;
       s.cams.push(cam);
     });
     S = s;
     T.cams.forEach((c, i) => frameCam(S.cams[i], c.shot, c.aim));
     return s;
   }
+  function fromTemplate(key) { return fromSpec(TPL[key], key); }
   function fromSetup(id) {
     const st = SETS()[id]; if (!st) return null;
     const key = tplForSetup(id), T = TPL[key];
@@ -258,7 +277,7 @@
     return info;
   }
   /* edits = any difference from the untouched template / setup plan (units are a display choice, not an edit) */
-  const planKey = () => { const o = pack(); delete o.u; return JSON.stringify(o); };
+  const planKey = () => { const o = packPlan(); o.u = null; return JSON.stringify(o); };
   function pristine(tpl, setupId) { const keep = S; if (setupId) fromSetup(setupId); else fromTemplate(tpl); const k = planKey(); S = keep; return k; }
   const fromThisSetup = () => SETUP && SETUP.tpl === S.tpl;
   function newCam(k, m, s, o = {}) {
@@ -341,7 +360,7 @@
   /* cable run: orthogonal route camera → control along floor/walls, + rise at each end, +20 %, +2 m */
   function runOf(c) {
     const flat = Math.abs(c.x - S.ctrl.x) + Math.abs(c.y - S.ctrl.y);
-    return (flat + R.rise[c.mnt] + R.riseCtrl) * (1 + R.slackPct) + R.slackM;
+    return (flat + R.rise[c.mnt] + R.riseCtrl + (S.xr || 0)) * (1 + R.slackPct) + R.slackM;
   }
   const lenTxt = m => S.unit === 'ft' ? Math.ceil(m * FT) + ' ft' : (m < 10 ? m.toFixed(1) : Math.round(m)) + ' m';
   const buyLen = m => S.unit === 'ft' ? Math.ceil(m * FT / 5) * 5 + ' ft' : Math.ceil(m) + ' m';
@@ -555,6 +574,7 @@
       h += `<div class="row"><label for="i-mnt">${t('mount')}</label><select id="i-mnt">${['tripod', 'wall', 'ceiling', 'table'].map(m => opt(m, t('m_' + m), c.mnt)).join('')}</select></div>
         <div class="row"><label for="i-tgt">${t('subject')}</label><select id="i-tgt">${opt(-1, t('auto'), c.tgt)}${S.ppl.map((p, j) => opt(j, pname(p.n), c.tgt)).join('')}</select></div>
         <label class="chk"><input type="checkbox" id="i-man"${c.man ? ' checked' : ''}><span>${t('manned')}</span></label>
+        <label class="chk"><input type="checkbox" id="i-own"${c.own ? ' checked' : ''}><span>${t('ownCam')}</span></label>
         </div>
         <div class="frm"><span class="meta-s">${t('aim')}</span><div class="seg sm" role="group" aria-label="${t('frame')}">${['wide', 'med', 'mcu', 'cu'].map(s => `<button type="button" data-frame="${s}">${t('sh_' + s)}</button>`).join('')}</div></div>
         <dl class="ro">
@@ -603,11 +623,15 @@
   let BOM = [], CHECKS = [];
   function build() {
     const out = [], chk = [];
+    /* role = what "I already have" covers (ROLES); an owned line stays in the plan, shows "You have this" and is never priced */
+    const own = S.own || [];
     const add = (g, o) => {
-      const key = o.id ? g + '|' + o.id : g + '|' + o.name + '|' + (o.spec || '');
+      const role = o.role || { cab:'cab', aud:'aud', lit:'lit' }[g] || null;
+      const owned = o.own != null ? !!o.own : !!(role && own.includes(role));
+      const key = (o.id ? g + '|' + o.id : g + '|' + o.name + '|' + (o.spec || '')) + (owned ? '|own' : '');
       const ex = out.find(l => l.key === key);
       if (ex) { ex.qty += o.qty; if (o.who) o.who.forEach(w => { if (!ex.who.includes(w)) ex.who.push(w); }); return ex; }
-      const l = { key, g, ...o, who: o.who ? [...o.who] : [] }; out.push(l); return l;
+      const l = { key, g, ...o, role, own:owned, who: o.who ? [...o.who] : [] }; out.push(l); return l;
     };
     const warn = (txt, lvl = 'warn') => chk.push({ lvl, txt });
     const cams = S.cams, nC = cams.length, hd = S.fmt === 'hd';
@@ -618,11 +642,11 @@
     const encCams = [], apx = [], cpoe = [];
     cams.forEach((c, i) => {
       const lab = labs[i];
-      add('cam', { id:c.m, qty:1, why:t('w_cam'), who:[lab] });
+      add('cam', { id:c.m, qty:1, why:t('w_cam'), who:[lab], own:!!c.own });
       if (c.k === 'lens') {
         const b = D.BODIES[c.m];
-        if (D.LENSES[c.lens]) add('cam', { id:c.lens, qty:1, why:t('w_lensFor'), who:[lab] });
-        else if (c.lens === 'other') { const [lo, hi] = lensRange(c); add('cam', { name:t('g_lens', b.mount), spec:t('g_lensSpec', lo, hi), qty:1, why:t('w_lensFor'), who:[lab], code:'LENS' }); }
+        if (D.LENSES[c.lens]) add('cam', { id:c.lens, qty:1, why:t('w_lensFor'), who:[lab], own:!!c.own });
+        else if (c.lens === 'other') { const [lo, hi] = lensRange(c); add('cam', { name:t('g_lens', b.mount), spec:t('g_lensSpec', lo, hi), qty:1, why:t('w_lensFor'), who:[lab], code:'LENS', own:!!c.own }); }
       }
       const z = zspec(c);
       if (S.tr === 'ip') {
@@ -643,15 +667,21 @@
     /* --- switching & streaming --- */
     const nIn = nC + S.ext;
     let sw = null;
-    if (S.tr === 'ip') add('sw', { name:t('g_ndisw'), spec:t('g_ndiswSpec', nIn), qty:1, why:t('w_ndisw'), code:'NDI' });
+    const ownPc = own.includes('pc');
+    /* a computer the customer already has: it stays on the plan at $0; on IP it runs the NDI switching software */
+    if (ownPc) add('sw', { name:t('g_pc'), spec:'', qty:1, why:t(S.tr === 'ip' ? 'w_pcNdi' : 'w_pc'), code:'PC', role:'pc' });
+    if (S.tr === 'ip') {
+      if (ownPc) add('sw', { name:t('g_ndisoft'), spec:t('g_ndiswSpec', nIn), qty:1, why:t('w_ndisoft'), code:'NDI', role:'sw', own:false });
+      else add('sw', { name:t('g_ndisw'), spec:t('g_ndiswSpec', nIn), qty:1, why:t('w_ndisw'), code:'NDI', role:'sw' });
+    }
     else {
       const list = S.tr === 'hdmi' ? (hd ? D.SWITCHERS.hdmi : null) : (hd ? D.SWITCHERS.sdi : D.SWITCHERS.sdiUHD);
-      if (!list) { add('sw', { name:t('g_uhdhdmi'), spec:t('g_bigsw', nIn), qty:1, why:t('w_uhdhdmi'), code:'SW' }); warn(t('c_uhdHdmi')); }
+      if (!list) { add('sw', { name:t('g_uhdhdmi'), spec:t('g_bigsw', nIn), qty:1, why:t('w_uhdhdmi'), code:'SW', role:'sw' }); warn(t('c_uhdHdmi')); }
       else {
         sw = list.find(s => s.inp >= nIn);
-        if (sw) add('sw', { id:sw.id, qty:1, why:t(sw.stream ? 'w_switch' : 'w_switchNS', nC, S.ext, nIn), approx:!!sw.approx });
-        else { add('sw', { name:t('g_bigsw', nIn), spec:'', qty:1, why:t('w_bigsw'), code:'SW' }); warn(t('c_inputs', nIn, list[list.length - 1].inp)); }
-        if (sw && !sw.stream) add('sw', { id:D.SWITCHERS.encoder, qty:1, why:t('w_enc') });
+        if (sw) add('sw', { id:sw.id, qty:1, why:t(sw.stream ? 'w_switch' : 'w_switchNS', nC, S.ext, nIn), approx:!!sw.approx, role:'sw' });
+        else { add('sw', { name:t('g_bigsw', nIn), spec:'', qty:1, why:t('w_bigsw'), code:'SW', role:'sw' }); warn(t('c_inputs', nIn, list[list.length - 1].inp)); }
+        if (sw && !sw.stream) add('sw', { id:D.SWITCHERS.encoder, qty:1, why:t('w_enc'), role:'pc' });
       }
     }
     encCams.forEach(i => add('sw', { name:t('g_ndienc'), spec:(cams[i].k === 'lens' && !D.BODIES[cams[i].m].sdi ? 'HDMI' : 'SDI/HDMI') + ' → NDI|HX, PoE', qty:1, why:t('w_ndienc'), who:[labs[i]], code:'NDI' }));
@@ -712,11 +742,11 @@
       const pref = S.tr === 'ip' ? fits.sort((a, b) => (b.managed - a.managed) || P[a.id].usd - P[b.id].usd) : fits.sort((a, b) => P[a.id].usd - P[b.id].usd);
       netsw = pref[0];
       if (netsw) {
-        add('net', { id:netsw.id, qty:1, why:t('w_net', ports, netsw.ports, poeW, netsw.budget) });
+        add('net', { id:netsw.id, qty:1, why:t('w_net', ports, netsw.ports, poeW, netsw.budget), role:'net' });
         warn(t('c_poe', poeW, netsw.budget, P[netsw.id].name), 'ok');
         if (S.tr === 'ip' && !netsw.managed) warn(t('c_unmanaged'), 'info');
       } else {
-        add('net', { name:t('g_poesw'), spec:t('g_poeswSpec', ports, Math.ceil(poeW * 1.25 / 10) * 10), qty:1, why:t('w_poesw'), code:'NET' });
+        add('net', { name:t('g_poesw'), spec:t('g_poeswSpec', ports, Math.ceil(poeW * 1.25 / 10) * 10), qty:1, why:t('w_poesw'), code:'NET', role:'net' });
         warn(t('c_poeNo', poeW, poePP));
       }
     }
@@ -726,7 +756,7 @@
     /* --- mounts --- */
     cams.forEach((c, i) => {
       const lab = labs[i], heavy = c.k === 'lens' && D.BODIES[c.m].studio;
-      if (c.mnt === 'tripod') add('mnt', { id: heavy ? 'focus12' : 'ad01', qty:1, why:t(heavy ? 'w_tripodHeavy' : 'w_tripod'), who:[lab] });
+      if (c.mnt === 'tripod') add('mnt', { id: heavy ? 'focus12' : 'ad01', qty:1, why:t(heavy ? 'w_tripodHeavy' : 'w_tripod'), who:[lab], role:'tri' });
       else if (c.mnt === 'wall' || c.mnt === 'ceiling') add('mnt', { name:t(c.mnt === 'wall' ? 'g_wall' : 'g_ceil', modelName(c)), spec:'', qty:1, why:t('w_bracket'), who:[lab], code:'BRKT' });
     });
 
@@ -781,19 +811,26 @@
     BOM = out.filter(l => !l.info || true); CHECKS = chk;
   }
 
-  const CODEGLYPH = { SDI:'SDI', CAT6:'CAT6', XLR:'XLR', AUD:'AUD', HDMI:'HDMI', FIBER:'FIBER', BNC:'BNC', NET:'NET', AC:'AC', UPS:'UPS', BRKT:'BRKT', ARM:'ARM', LENS:'LENS', NDI:'NDI', SW:'SW', CTRL:'CTRL', DMX:'DMX', MON:'MON', ICOM:'ICOM' };
-  function renderBOM() {
-    const lines = BOM.filter(l => !l.info);
-    const priced = lines.filter(l => l.id && P[l.id]), quote = lines.filter(l => !(l.id && P[l.id]));
+  /* the one place totals are made: owned lines are never priced, "to quote" lines never get a number */
+  function tally(bom) {
+    const lines = bom.filter(l => !l.info);
+    const owned = lines.filter(l => l.own), buy = lines.filter(l => !l.own);
+    const priced = buy.filter(l => l.id && P[l.id]), quote = buy.filter(l => !(l.id && P[l.id]));
     const total = priced.reduce((a, l) => a + P[l.id].usd * l.qty, 0);
+    const ownedValue = owned.filter(l => l.id && P[l.id]).reduce((a, l) => a + P[l.id].usd * l.qty, 0);
+    return { lines, priced, quote, owned, total, ownedValue };
+  }
+  const CODEGLYPH = { SDI:'SDI', CAT6:'CAT6', XLR:'XLR', AUD:'AUD', HDMI:'HDMI', FIBER:'FIBER', BNC:'BNC', NET:'NET', AC:'AC', UPS:'UPS', BRKT:'BRKT', ARM:'ARM', LENS:'LENS', NDI:'NDI', SW:'SW', CTRL:'CTRL', DMX:'DMX', MON:'MON', ICOM:'ICOM', PC:'PC' };
+  function renderBOM() {
+    const { priced, quote, owned, total } = tally(BOM);
     $('#bom-m').textContent = `${t('t_' + S.tpl)} · ${lenTxt(S.w)} × ${lenTxt(S.d)} · ${S.cams.length} ${t('q_cams').toLowerCase()} · ${S.tr === 'ip' ? 'IP / NDI' : S.tr.toUpperCase()} · ${S.fmt === 'hd' ? '1080p' : '2160p'}`;
     $('#btot').innerHTML = `<div class="tp"><span class="meta">${t('totalPriced')}</span><span class="price" id="ptotal">${usd(total)}</span>
-      <span class="meta-s cnt"><span>${t('pricedLines', priced.length)}</span><span><i class="qd"></i>${t('quoteLines', quote.length)}</span></span></div>
+      <span class="meta-s cnt"><span>${t('pricedLines', priced.length)}</span><span><i class="qd"></i>${t('quoteLines', quote.length)}</span>${owned.length ? `<span><i class="ow"></i>${t('ownedLines', owned.length)}</span>` : ''}</span></div>
       <div class="acts"><button type="button" class="btn sig" id="b-quote">${t('reqQuote')}</button><button type="button" class="btn solid" id="b-addall">${t('addAll')}</button>
       <button type="button" class="btn" id="b-print">${t('print')}</button><button type="button" class="btn" id="b-link">${t('copyLink')}</button></div>`;
     $('#bomlist').innerHTML = GROUPS.map((g, gi) => {
       const ls = BOM.filter(l => l.g === g); if (!ls.length) return '';
-      const sub = ls.filter(l => l.id && P[l.id]).reduce((a, l) => a + P[l.id].usd * l.qty, 0);
+      const sub = ls.filter(l => !l.own && l.id && P[l.id]).reduce((a, l) => a + P[l.id].usd * l.qty, 0);
       return `<section class="bgrp" aria-labelledby="bg-${g}"><h3 class="gh" id="bg-${g}"><span class="n meta">${String(gi + 1).padStart(2, '0')}</span><b>${t('g_' + g)}</b><span class="meta-s">${(n => n === 1 ? t('line1') : t('lines', n))(ls.filter(l => !l.info).length)}${sub ? ' · ' + usd(sub) : ''}</span></h3>
         ${ls.map(l => row(l)).join('')}</section>`;
     }).join('');
@@ -802,6 +839,12 @@
     if (l.info) return `<div class="brow info"><span class="gl"><b>i</b></span><div class="bi"><b>${esc(l.name)}</b></div></div>`;
     const p = l.id && P[l.id];
     const who = l.who && l.who.length ? `<span class="who">${l.who.map(esc).join(' · ')}</span>` : '';
+    if (l.own) {
+      return `<div class="brow own">${p ? `<span class="pk"><img src="${p.src}" alt="" loading="lazy"></span>` : `<span class="gl"><b>${CODEGLYPH[l.code] || '—'}</b>${l.len ? `<i>${esc(l.len)}</i>` : ''}</span>`}
+        <div class="bi">${p ? `<span class="br meta-s">${esc(p.brand)}</span><b>${esc(p.name)}</b>` : `<b>${esc(l.name)}</b>`}<span class="why meta-s">${esc(l.why)}${who ? ' · ' : ''}${who}</span></div>
+        <span class="q"><span class="meta">${t('qty')}</span><b>${l.qty}</b></span>
+        <span class="pr"><b class="price">${usd(0)}</b></span><span class="ac"><span class="tag own meta">${t('youHave')}</span></span></div>`;
+    }
     if (p) {
       return `<div class="brow"><span class="pk"><img src="${p.src}" alt="" loading="lazy"></span>
         <div class="bi"><span class="br meta-s">${esc(p.brand)}</span><b>${esc(p.name)}</b><span class="sp">${esc(p.sub)}</span><span class="why meta-s">${esc(l.why)}${l.approx ? ' · <span class="ax">' + t('approxShort') + '</span>' : ''}${who ? ' · ' : ''}${who}</span></div>
@@ -840,6 +883,14 @@
     $('#tr-note').textContent = t('tr_' + S.tr);
     $('#fmt').value = S.fmt; $('#ctl').value = S.ctl;
     if (document.activeElement !== $('#ext')) $('#ext').value = S.ext;
+    const xr = $('#xr'); if (xr && document.activeElement !== xr) xr.value = S.unit === 'ft' ? Math.round((S.xr || 0) * FT) : r2(S.xr || 0);
+    $$('.xr-u').forEach(e => { e.textContent = S.unit; });
+    const op = $('#own-list');
+    if (op) {
+      if (!op.firstChild) op.innerHTML = ROLES.map(r => `<label class="chk"><input type="checkbox" data-own="${r}"><span data-ownl="${r}"></span></label>`).join('');
+      $$('[data-own]', op).forEach(i => { i.checked = (S.own || []).includes(i.dataset.own); });
+      $$('[data-ownl]', op).forEach(e => { e.textContent = t('r_' + e.dataset.ownl); });
+    }
     const ts = $('#tset'), sid = fromThisSetup() ? SETUP.id : TPL_SETUP[S.tpl], st = sid && SETS()[sid];
     if (ts) {
       ts.hidden = !st;
@@ -865,22 +916,36 @@
     renderPlan(); renderViews(); renderInspector(o.force);
     build(); renderBOM(); renderChecks(); renderHead();
     clearTimeout(hashT); hashT = setTimeout(saveHash, o.now ? 0 : 300);
+    document.dispatchEvent(new CustomEvent('i9plan:update'));
   }
-  function pack() {
-    return { v:1, t:S.tpl, w:r2(S.w), d:r2(S.d), u:S.unit, tr:S.tr, fm:S.fmt, ct:S.ctl, e:S.ext, c:[r2(S.ctrl.x), r2(S.ctrl.y)],
+  function pack(noZ) {
+    const o = packPlan();
+    const z = noZ ? null : (zGet ? zGet() : Z);
+    if (z) o.z = z;
+    return o;
+  }
+  function packPlan() {
+    const o = { v:1, t:S.tpl, w:r2(S.w), d:r2(S.d), u:S.unit, tr:S.tr, fm:S.fmt, ct:S.ctl, e:S.ext, c:[r2(S.ctrl.x), r2(S.ctrl.y)],
       f:S.furn.map(f => [f.k, r2(f.x), r2(f.y), r2(f.w), r2(f.h)]), p:S.ppl.map(p => [p.n, r2(p.x), r2(p.y), Math.round(p.a)]),
-      k:S.cams.map(c => [c.k, c.m, r2(c.x), r2(c.y), Math.round(c.a * 10) / 10, Math.round(c.z * 1000) / 1000, r2(c.f), c.lens, c.sf, c.mnt, c.man ? 1 : 0, c.tgt]) };
+      k:S.cams.map(c => { const a = [c.k, c.m, r2(c.x), r2(c.y), Math.round(c.a * 10) / 10, Math.round(c.z * 1000) / 1000, r2(c.f), c.lens, c.sf, c.mnt, c.man ? 1 : 0, c.tgt]; if (c.own) a.push(1); return a; }) };
+    /* only when used, so plans saved before the wizard keep the same link */
+    if (S.xr) o.x = r2(S.xr);
+    if (S.own && S.own.length) o.o = S.own.slice();
+    return o;
   }
   function unpack(o) {
     if (!o || o.v !== 1 || !TPL[o.t]) return false;
     S = { tpl:o.t, w:clamp(+o.w, 2, 80), d:clamp(+o.d, 2, 80), unit:o.u === 'ft' ? 'ft' : 'm', tr:['sdi', 'hdmi', 'ip'].includes(o.tr) ? o.tr : 'sdi', fmt:o.fm === 'uhd' ? 'uhd' : 'hd', ctl:o.ct === '422' ? '422' : 'ip', ext:clamp(+o.e || 0, 0, 8),
       ctrl:{ x:+o.c[0], y:+o.c[1] }, furn:(o.f || []).filter(f => FURN[f[0]]).map(f => ({ id:nid(), k:f[0], x:+f[1], y:+f[2], w:+f[3], h:+f[4] })),
-      ppl:(o.p || []).map(p => ({ id:nid(), n:String(p[0]).slice(0, 28), x:+p[1], y:+p[2], a:+p[3] || 0 })), cams:[] };
+      ppl:(o.p || []).map(p => ({ id:nid(), n:String(p[0]).slice(0, 28), x:+p[1], y:+p[2], a:+p[3] || 0 })), cams:[],
+      xr:clamp(+o.x || 0, 0, 200), own:Array.isArray(o.o) ? o.o.filter(r => ROLES.includes(r)) : [] };
+    Z = o.z && typeof o.z === 'object' ? o.z : null;
     (o.k || []).forEach(a => {
       const [kk, m] = a; const ok = kk === 'ptz' ? D.PTZ[m] : kk === 'cc' ? D.CAMCORDER[m] : kk === 'lens' ? D.BODIES[m] : null; if (!ok || !P[m]) return;
       const c = newCam(kk, m, S, { x:+a[2], y:+a[3], a:+a[4], mnt:a[9], man:!!a[10], lens:a[7] });
       c.z = clamp(+a[5] || 0, 0, 1); if (kk === 'lens') { c.sf = D.FORMATS[a[8]] ? a[8] : c.sf; const [lo, hi] = lensRange(c); c.f = clamp(+a[6] || lo, lo, hi); }
       c.tgt = Number.isInteger(a[11]) ? a[11] : -1; if (!R.rise[c.mnt]) c.mnt = 'tripod';
+      if (a[12]) c.own = true;
       S.cams.push(c);
     });
     return true;
@@ -891,6 +956,7 @@
   function saveHash() { try { history.replaceState(null, '', '#p=' + b64e(JSON.stringify(pack()))); } catch (e) {} }
   function loadHash() {
     const h = location.hash;
+    Z = null;
     const m = h.match(/^#p=([\w-]+)/);
     if (m) { try { if (unpack(JSON.parse(b64d(m[1])))) return true; } catch (e) {} }
     const tm = h.match(/^#(?:tpl|for)=?-?([\w-]+)/);
@@ -983,6 +1049,7 @@
     else if (id === 'i-mnt') { c.mnt = v; update(); }
     else if (id === 'i-tgt') { c.tgt = +v; update(); }
     else if (id === 'i-man') { c.man = e.target.checked; update(); }
+    else if (id === 'i-own') { c.own = e.target.checked; update(); }
   });
   selPanel.addEventListener('click', e => {
     const b = e.target.closest('button'); if (!b || !sel) return;
@@ -1066,6 +1133,8 @@
   $('#fmt').addEventListener('change', e => { S.fmt = e.target.value; update(); });
   $('#ctl').addEventListener('change', e => { S.ctl = e.target.value; update(); });
   $('#ext').addEventListener('change', e => { S.ext = clamp(Math.round(+e.target.value || 0), 0, 8); update(); });
+  $('#xr')?.addEventListener('change', e => { const v = parseFloat(String(e.target.value).replace(',', '.')) / (S.unit === 'ft' ? FT : 1); S.xr = clamp(Math.round((v || 0) * 10) / 10, 0, 200); update(); });
+  $('#own-list')?.addEventListener('change', e => { const r = e.target.dataset.own; if (!r) return; const o = new Set(S.own || []); if (e.target.checked) o.add(r); else o.delete(r); S.own = ROLES.filter(x => o.has(x)); update(); });
   $$('.step [data-step]').forEach(b => b.addEventListener('click', () => { S.ext = clamp(S.ext + (+b.dataset.step), 0, 8); update(); }));
   $$('.lang button').forEach(b => b.addEventListener('click', () => { LANG = b.dataset.lang; try { localStorage.setItem('i9g-lang', LANG); } catch (e) {} applyLang(); update({ stat:true, force:true }); }));
   $('#cviews').addEventListener('click', e => { const b = e.target.closest('[data-cam]'); if (b) select('cam', +b.dataset.cam); });
@@ -1083,15 +1152,14 @@
   });
   function copy(s) { try { if (navigator.clipboard && window.isSecureContext) return navigator.clipboard.writeText(s); } catch (e) {} const ta = document.createElement('textarea'); ta.value = s; ta.style.position = 'fixed'; ta.style.opacity = '0'; document.body.appendChild(ta); ta.select(); try { document.execCommand('copy'); } catch (e) {} ta.remove(); return Promise.resolve(); }
   function summary() {
-    const lines = BOM.filter(l => !l.info), priced = lines.filter(l => l.id && P[l.id]), quote = lines.filter(l => !(l.id && P[l.id]));
-    const total = priced.reduce((a, l) => a + P[l.id].usd * l.qty, 0);
+    const lines = BOM.filter(l => !l.info), { quote, owned, total } = tally(BOM);
     let s = t('q_title') + '\n' + '='.repeat(t('q_title').length) + '\n\n';
     s += `${t('q_room')}: ${t('t_' + S.tpl)} · ${lenTxt(S.w)} × ${lenTxt(S.d)}\n${t('q_sig')}: ${S.tr === 'ip' ? 'IP / NDI' : S.tr.toUpperCase()} · ${S.fmt === 'hd' ? '1080p' : '2160p'} · PTZ ${S.ctl === 'ip' ? 'IP' : 'RS-422'}\n\n${t('q_cams')}:\n`;
     S.cams.forEach((c, i) => { const v = view(c); s += `  ${camLab(i)}  ${modelName(c)}${c.k === 'lens' ? ' + ' + (D.LENSES[c.lens] ? P[c.lens].name : c.lens === 'kit' ? D.BODIES[c.m].kit.name : t('otherLens')) + ' @ ' + c.f.toFixed(0) + ' mm' : ' @ ' + zoomX(c).toFixed(1) + '×'} · ${v.h.toFixed(1)}° · ${v.cls ? t('s_' + v.cls) + ' ' + lenTxt(v.fw) : t('noTarget')} · ${t('m_' + c.mnt)} · ${runCable(c)} ${lenTxt(runOf(c))}\n`; });
     s += `\n${t('q_list')}:\n`;
     GROUPS.forEach(g => { const ls = lines.filter(l => l.g === g); if (!ls.length) return; s += `  [${t('g_' + g)}]\n`;
-      ls.forEach(l => { const p = l.id && P[l.id]; s += `   ${String(l.qty).padStart(2)} × ${p ? p.brand + ' ' + p.name : l.name}${l.spec ? ' — ' + l.spec : ''}  ${p ? usd(p.usd * l.qty) : '(' + t('toQuote') + ')'}\n`; }); });
-    s += `\n${t('q_priced')}: ${usd(total)}\n${t('q_quote')}: ${quote.length}\n`;
+      ls.forEach(l => { const p = l.id && P[l.id]; s += `   ${String(l.qty).padStart(2)} × ${p ? p.brand + ' ' + p.name : l.name}${l.spec ? ' — ' + l.spec : ''}  ${l.own ? '(' + t('youHave') + ')' : p ? usd(p.usd * l.qty) : '(' + t('toQuote') + ')'}\n`; }); });
+    s += `\n${t('q_priced')}: ${usd(total)}\n${t('q_quote')}: ${quote.length}\n${owned.length ? t('q_own') + ': ' + owned.length + '\n' : ''}`;
     const w = CHECKS.filter(c => c.lvl === 'warn'); if (w.length) { s += `\n${t('q_checks')}:\n` + w.map(c => '  ! ' + c.txt).join('\n') + '\n'; }
     s += `\n${t('q_link')}: ${planURL()}\n`;
     return s;
@@ -1107,12 +1175,50 @@
 
   /* ======================= boot ======================= */
   layers();
+  const BOOT_HASH = location.hash;   /* the wizard boots later (its script may still be loading when the first save runs) */
   loadHash(); settle();
   sel = S.cams.length ? { kind:'cam', i:0 } : null;
   applyLang();
   update({ stat:true, force:true, now:true });
   if ('ResizeObserver' in window) { let rt = 0; new ResizeObserver(() => { clearTimeout(rt); rt = setTimeout(() => { renderStatic(); renderPlan(); }, 60); }).observe(box); }
-  window.addEventListener('hashchange', () => { const h = location.hash; if (/^#p=/.test(h) && h === '#p=' + b64e(JSON.stringify(pack()))) return; if (/^#(p|tpl)=/.test(h)) { Object.values(pool).forEach(m => { m.forEach(x => x.remove()); m.clear(); }); L.ctrl.innerHTML = ''; hideConfirm(); loadHash(); settle(); sel = S.cams.length ? { kind:'cam', i:0 } : null; update({ stat:true, force:true }); } });
+  const clearPools = () => { Object.values(pool).forEach(m => { m.forEach(x => x.remove()); m.clear(); }); L.ctrl.innerHTML = ''; };
+  window.addEventListener('hashchange', () => { const h = location.hash; if (/^#p=/.test(h) && h === '#p=' + b64e(JSON.stringify(pack()))) return; if (/^#(p|tpl)=/.test(h)) { clearPools(); hideConfirm(); loadHash(); settle(); sel = S.cams.length ? { kind:'cam', i:0 } : null; update({ stat:true, force:true }); document.dispatchEvent(new CustomEvent('i9plan:load')); } });
+
+  /* ======================= API for the guided wizard (planner-wizard.js) and the 3D view (planner-3d.js) =======================
+     compose(spec)  -> a packed plan from a layout spec (fromSpec), without touching the open plan
+     evaluate(o)    -> the parts list + totals for a packed plan ({ setup:id } for a setup), without touching the open plan
+     loadPlan(o) / loadSetup(id) -> replace the open plan (both views read and write this one plan) */
+  function evaluate(o) {
+    const keep = { S, SETUP, BOM, CHECKS, Z };
+    try {
+      if (o && o.setup) { if (!SETS()[o.setup]) return null; SETUP = fromSetup(o.setup); } else if (!unpack(o)) return null;
+      build();
+      const tt = tally(BOM);
+      return { ...tt, bom:BOM, checks:CHECKS, tr:S.tr, fmt:S.fmt, n:S.cams.length, maxRun:S.cams.length ? Math.max(...S.cams.map(runOf)) : 0,
+        cams:S.cams.map(c => ({ k:c.k, m:c.m, own:!!c.own, lens:c.lens, man:c.man })), packed:packPlan() };
+    } finally { S = keep.S; SETUP = keep.SETUP; BOM = keep.BOM; CHECKS = keep.CHECKS; Z = keep.Z; }
+  }
+  function compose(spec) { const keep = S; try { fromSpec(spec, spec.tpl); return packPlan(); } finally { S = keep; } }
+  function loadPlan(o) {
+    SETUP = null;
+    if (location.search) { try { history.replaceState(null, '', location.pathname + location.hash); } catch (e) {} }
+    const z = zGet ? zGet() : Z;
+    clearPools(); hideConfirm(); unpack(o); Z = z; BASE = planKey();
+    sel = S.cams.length ? { kind:'cam', i:0 } : null;
+    update({ stat:true, force:true, now:true });
+  }
+  function loadSetup(id) {
+    if (!SETS()[id]) return false;
+    clearPools(); hideConfirm(); SETUP = fromSetup(id); BASE = planKey();
+    sel = S.cams.length ? { kind:'cam', i:0 } : null;
+    update({ stat:true, force:true, now:true });
+    return true;
+  }
   window.I9PLANNER = { get state() { return S; }, view, hfov, runOf, get bom() { return BOM; }, get checks() { return CHECKS; }, select, update,
-    get setup() { return fromThisSetup() ? SETUP : null; }, get edited() { return planKey() !== BASE; } };
+    get setup() { return fromThisSetup() ? SETUP : null; }, get edited() { return planKey() !== BASE; },
+    /* wizard + 3D */
+    evaluate, compose, loadPlan, loadSetup, tally: () => tally(BOM), TPL, ROLES, t, lenTxt, modelName, camLab, runCable, pname,
+    get lang() { return LANG; }, get z() { return Z; }, set zGet(f) { zGet = f; }, save: () => { clearTimeout(hashT); saveHash(); }, planKey,
+    get sel() { return sel; }, get queryTemplate() { return queryTemplate(); }, get hashKind() { return /^#p=/.test(BOOT_HASH) ? 'p' : /^#(tpl|for)/.test(BOOT_HASH) ? 'tpl' : ''; },
+    setUnit(u) { S.unit = u === 'ft' ? 'ft' : 'm'; update({ stat:true, force:true }); }, renderPlanNow() { renderStatic(); renderPlan(); } };
 })();

@@ -25,6 +25,15 @@
         <h1>Checkout.</h1>
         <p class="intro">One page, no account. Save a password after you pay, if you want one.</p>
 
+        <!-- Express pay: shown only when every line in the bag is an Everyday listing (g.js). Design placeholders:
+             the live store would render Stripe's wallet buttons here; nothing in this prototype takes a payment. -->
+        <div class="xpay" id="xpay" hidden>
+          <div class="xh"><span>Express checkout</span><span class="meta">Design placeholder</span></div>
+          <div class="xb" role="note" aria-label="Express pay buttons, design placeholder, not live"><span>Apple Pay</span><span>Google Pay</span></div>
+          <p>Wallet buttons come from Stripe and appear only on devices that support them. Not live in this prototype.</p>
+          <p class="or">Or pay by card</p>
+        </div>
+
         <fieldset class="grp">
           <legend><span><span class="n">01</span>Contact</span><span class="meta">For the receipt</span></legend>
           <div class="f full"><label for="em">E-mail</label><input id="em" type="email" autocomplete="email" placeholder="you@yourorganization.org"><span class="h">Your receipt and order link go here.</span></div>
@@ -36,7 +45,7 @@
           <legend><span><span class="n">02</span>Delivery</span><span class="meta">Ships from Miami</span></legend>
           <div class="f full"><label for="ad">Street address</label><input id="ad" autocomplete="street-address" placeholder="Start typing; we’ll suggest matches"></div>
           <div class="f"><label for="apt">Apt, suite, building <span>(optional)</span></label><input id="apt" autocomplete="address-line2"></div>
-          <div class="f"><label for="org">Church, school or company <span>(optional)</span></label><input id="org" autocomplete="organization"></div>
+          <div class="f org"><label for="org">Church, school or company <span>(optional)</span></label><input id="org" autocomplete="organization"></div>
           <div class="dline"><span>Delivery date</span><span class="meta-s">Appears when your address is in</span></div>
         </fieldset>
 
@@ -50,7 +59,7 @@
         </fieldset>
 
         <button class="btn sig pay" type="submit" id="co-pay">Pay</button>
-        <p class="alt">Need an invoice or a PO instead? <a href="index.html#quote">Send this bag as a quote request</a></p>
+        <p class="alt" id="co-alt">Need an invoice or a PO instead? <a href="index.html#quote">Send this bag as a quote request</a></p>
       </form>
 
       <aside class="order" id="order" aria-labelledby="ord-h">
@@ -59,7 +68,7 @@
           <div id="co-lines"></div>
           <div class="co-empty" id="co-empty" hidden>
             <p><b>Your bag is empty.</b> Add a piece, a five-piece chain, a whole setup or a planned room, and it shows up here.</p>
-            <p class="links"><a href="setups.html">Shop a setup</a><a href="shop.html">Browse all equipment</a><a href="planner.html">Plan your room</a></p>
+            <p class="links"><a href="everyday.html">Everyday gifts and first kits</a><a href="setups.html">Shop a setup</a><a href="shop.html">Browse all equipment</a><a href="planner.html">Plan your room</a></p>
           </div>
           <div class="totals">
             <div class="sl meta"><span><span class="tally"></span>Total before you pay</span><span>USD</span></div>
@@ -84,6 +93,7 @@
 <script src="../shared/catalog.js"></script>
 <script src="../shared/catalog-more.js"></script>
 <script src="../shared/catalog-browse.js"></script>
+<script src="../shared/catalog-everyday.js"></script>
 <script src="bag.js"></script>
 <script src="g.js"></script>
 <script src="../switcher.js"></script>

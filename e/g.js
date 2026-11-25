@@ -69,23 +69,32 @@
 
   /* ================= checkout: the saved bag, line by line ================= */
   const coLines = $('#co-lines');
+  const full = p => p.name.startsWith(p.brand) ? p.name : p.brand + ' ' + p.name;   /* "Camp Snap 2", not "Camp Snap Camp Snap 2" */
   if (coLines && BAG) {
     const paintCo = () => {
       const ls = BAG.lines().filter(l => l.p), n = ls.reduce((a, l) => a + l.q, 0), sum = ls.reduce((a, l) => a + l.p.usd * l.q, 0);
       coLines.innerHTML = ls.map(({ id, q, p }) => `<div class="oline" data-id="${esc(id)}"><span class="pk"><img src="${p.src}" alt=""></span>
-        <div><b>${esc(p.brand + ' ' + p.name)}</b>${p.sub ? `<span class="s">${esc(p.sub)}</span>` : ''}<span class="q">${p.sku ? esc(p.sku) + ' · ' : ''}×${q}${q > 1 ? ' · ' + usd(p.usd) + ' each' : ''}</span>
-        <button type="button" class="co-rm" data-rm="${esc(id)}" aria-label="Remove ${esc(p.brand + ' ' + p.name)} from the bag">Remove</button></div>
+        <div><b>${esc(full(p))}</b>${p.sub ? `<span class="s">${esc(p.sub)}</span>` : ''}<span class="q">${p.sku ? esc(p.sku) + ' · ' : ''}×${q}${q > 1 ? ' · ' + usd(p.usd) + ' each' : ''}</span>
+        <button type="button" class="co-rm" data-rm="${esc(id)}" aria-label="Remove ${esc(full(p))} from the bag">Remove</button></div>
         <span class="price">${usd(p.usd * q)}</span></div>`).join('');
       $('#co-empty').hidden = ls.length > 0;
       const pcs = n === 1 ? '1 piece' : n + ' pieces';
       $('#co-n').textContent = 'Order · ' + pcs; $('#co-t').textContent = usd(sum);
       $('#co-sub').textContent = usd(sum); $('#co-tot').textContent = usd(sum);
       const pay = $('#co-pay'); pay.textContent = ls.length ? 'Pay ' + usd(sum) : 'Your bag is empty'; pay.disabled = !ls.length;
+      /* Everyday-only bag (every line from I9.EVERYDAY): express pay placeholders, no quote / PO line, no organisation
+         field, "Keep shopping" back to Everyday. Any Professional line brings the quote route back. */
+      const EV = window.I9.EVERYDAY, evOnly = !!(EV && ls.length && ls.every(l => EV.isEveryday(l.id)));
+      const xp = $('#xpay'); if (xp) xp.hidden = !evOnly;
+      const alt = $('#co-alt'); if (alt) alt.hidden = evOnly;
+      $('.co-main')?.classList.toggle('ev-only', evOnly);
+      const ks = $('#ord-h a'); if (ks) ks.href = evOnly ? 'everyday.html' : 'index.html';
+      const em = $('#em'); if (em) em.placeholder = evOnly ? 'you@example.com' : 'you@yourorganization.org';
     };
     coLines.addEventListener('click', e => {
       const r = e.target.closest('[data-rm]'); if (!r) return;
       const p = P[r.dataset.rm]; BAG.remove(r.dataset.rm);
-      BAG.say(`Removed ${p ? p.brand + ' ' + p.name : 'the line'}. Bag has ${BAG.count()} pieces.`);
+      BAG.say(`Removed ${p ? full(p) : 'the line'}. Bag has ${BAG.count()} pieces.`);
       ($('#co-lines [data-rm]') || $('#co-empty a'))?.focus();
     });
     BAG.onChange(paintCo); paintCo();

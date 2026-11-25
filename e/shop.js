@@ -11,7 +11,9 @@
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const desk = matchMedia('(min-width: 1100px)');
   const say = m => { const l = $('#live'); l.textContent = ''; setTimeout(() => { l.textContent = m; }, 30); };
-  const live = p => p.id === 'ls600d' ? 'product.html' : p.path ? 'https://i9store.com/usa/loja/' + p.path : '#';
+  const live = p => p.id === 'ls600d' ? 'product.html' : p.pdp ? p.pdp : p.path ? 'https://i9store.com/usa/loja/' + p.path : '#';   /* p.pdp: Everyday page (catalog-everyday.js) */
+  const EV = I9.EVERYDAY;   /* merged colour products: one tile, with its colour count */
+  const colours = id => { const pr = EV && P[id].product && EV.PROD[P[id].product]; return pr && pr.variants && pr.variants.length > 1 ? pr.variants.length : 0; };
 
   const ALL = (I9.BROWSE || Object.keys(P)).filter(id => P[id] && P[id].usd > 0);
   const ORD = Object.fromEntries(ALL.map((id, i) => [id, i]));
@@ -64,7 +66,11 @@
   };
   const pass = (id, except) => Object.keys(T).every(k => k === except || T[k](id));
   const results = () => ALL.filter(id => pass(id));
-  const rank = id => { let r = 0; if (st.solution) r += ({ setup: 30, picked: 20, fits: 0 })[X.solTie(id, st.solution)] || 0; if (setupsOf[id]) r += 10; if (P[id].white === 0) r -= 5; return r; };
+  /* search ranking: the whole phrase in the brand or the name beats words scattered through the description, so
+     "camp snap" puts Camp Snap first and a lens that only mentions "camp" never outranks it */
+  const qRank = id => { if (!st.q) return 0; const p = P[id], q = st.q.toLowerCase(), b = p.brand.toLowerCase(), n = p.name.toLowerCase();
+    return (b === q || n === q ? 60 : 0) + (b.startsWith(q) || n.startsWith(q) ? 40 : 0) + ((b + ' ' + n).includes(q) ? 20 : 0); };
+  const rank = id => { let r = qRank(id); if (st.solution) r += ({ setup: 30, picked: 20, fits: 0 })[X.solTie(id, st.solution)] || 0; if (setupsOf[id]) r += 10; if (P[id].white === 0) r -= 5; return r; };
   function sorted(L) {
     const s = st.sort;
     return L.slice().sort(s === 'low' ? (a, b) => P[a].usd - P[b].usd : s === 'high' ? (a, b) => P[b].usd - P[a].usd
@@ -247,7 +253,7 @@
   const tile = id => { const p = P[id];
     return `<article class="bt">${tag(id)}<span class="pk${p.white === 0 ? ' nw' : ''}" aria-hidden="true"><img src="${p.src}" alt="" loading="lazy" decoding="async"></span>
       <p class="cat meta">${esc(p.subcat || p.dept)}</p><p class="br meta-s">${esc(p.brand)}</p>
-      <h3><a href="${live(p)}">${esc(p.name)}</a></h3><p class="b">${esc(p.sub || '')}</p>
+      <h3><a href="${live(p)}">${esc(p.name)}</a></h3><p class="b">${esc(colours(id) ? (EV.PROD[p.product].kind + ' · ' + colours(id) + ' colours') : (p.sub || ''))}</p>
       <div class="row"><span class="price">${usd(p.usd)}</span><button type="button" class="add" data-add1="${id}" aria-label="Add ${esc(p.brand + ' ' + p.name)} to bag">${icon('plus')}</button></div></article>`; };
   function paintTiles(R) {
     const L = sorted(R), page = L.slice(0, shown);

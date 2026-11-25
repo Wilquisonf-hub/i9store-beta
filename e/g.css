@@ -582,3 +582,51 @@ button,input{font:inherit;color:inherit}
 .co-empty .links a{font-weight:600;color:var(--s-ink);min-height:32px;display:inline-flex;align-items:center}
 .co-empty[hidden]{display:none}
 .co-main .pay:disabled{opacity:.45;cursor:not-allowed}
+
+/* ---------- two lines, one store (25 Nov): the slim router under the home hero ---------- */
+.lines{border-bottom:1px solid var(--rule)}
+.lines-in{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+.ln{display:flex;align-items:center;gap:16px;min-height:80px;padding:12px 28px 12px 0;text-decoration:none;color:var(--ink);min-width:0}
+.ln+.ln{padding-left:28px;padding-right:0;border-left:1px solid var(--rule)}
+.ln .meta{color:var(--ink-3);display:flex;align-items:center;gap:10px;white-space:nowrap}
+.ln.pro .tally{background:transparent;border:1px solid var(--ink-3)}
+.ln b{font-size:18px;font-weight:700;letter-spacing:-.025em;white-space:nowrap}
+.ln .d{color:var(--ink-3);font-size:14px;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ln>.ic{margin-left:auto;width:18px;height:18px;flex:none;transition:transform .3s var(--ease)}
+.ln:hover b{text-decoration:underline;text-underline-offset:.2em}
+.ln.ev:hover>.ic{transform:translateX(3px)}
+.ln.pro:hover>.ic{transform:translateY(2px)}
+.ln .pks{display:flex;gap:3px;flex:none}
+.ln .pks span{width:44px;height:44px;background:var(--stage);display:flex;align-items:center;justify-content:center;padding:3px}
+.ln .pks img{max-width:100%;max-height:100%;object-fit:contain}
+@media (max-width:1279px){.ln .d{display:none}}
+@media (max-width:1099px){.ln{min-height:72px;gap:12px}.ln .meta{display:none}}
+@media (max-width:699px){
+  .lines-in{grid-template-columns:1fr}
+  .ln,.ln+.ln{padding:10px 0;border-left:0;min-height:64px}
+  .ln+.ln{border-top:1px solid var(--rule)}
+  .ln{display:grid;grid-template-columns:auto minmax(0,1fr) auto;column-gap:12px;row-gap:2px}
+  .ln .pks{grid-row:1/3}
+  .ln .meta{display:flex;grid-column:2}
+  .ln b{grid-column:2}
+  .ln>.ic{grid-column:3;grid-row:1/3}
+  .ln.pro{order:2;grid-template-columns:minmax(0,1fr) auto}
+  .ln.pro .meta,.ln.pro b{grid-column:1}
+  .ln.pro>.ic{grid-column:2}
+  .ln.ev{order:1}
+  .ln .pks span{width:40px;height:40px}
+  .ln .pks span:nth-child(n+3){display:none}
+}
+
+/* ---------- checkout: express pay for a small Everyday-only bag (design placeholders, nothing takes payment) ---------- */
+.xpay{margin:0 0 36px}
+.xpay[hidden]{display:none}
+.xpay .xh{display:flex;justify-content:space-between;align-items:baseline;padding:0 0 14px;margin-bottom:16px;border-bottom:1px solid var(--s-rule-2);font-size:22px;font-weight:700;letter-spacing:-.03em}
+.xpay .xh .meta{font-weight:400;color:var(--s-ink-3)}
+.xpay .xb{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.xpay .xb span{display:flex;align-items:center;justify-content:center;min-height:52px;border:1px dashed var(--s-rule-2);font:600 16px var(--sans);color:var(--s-ink-2);background:repeating-linear-gradient(135deg,transparent 0 10px,rgba(10,10,10,.03) 10px 20px)}
+.xpay p{margin:10px 0 0;font:400 12px/1.5 var(--mono);color:var(--s-ink-3)}
+.xpay .or{display:flex;align-items:center;gap:14px;margin:28px 0 0;font:400 11px/1 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--s-ink-3)}
+.xpay .or::before,.xpay .or::after{content:"";flex:1;height:1px;background:var(--s-rule)}
+.co-main.ev-only .f.org{display:none}
+@media (max-width:699px){.xpay .xb{grid-template-columns:1fr}}

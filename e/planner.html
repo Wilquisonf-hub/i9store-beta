@@ -5,12 +5,19 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Plan your room — i9Store USA</title>
-<meta name="description" content="Lay out a podcast, church, studio or event room, place cameras, see each camera's real field of view, pick SDI, HDMI or IP, and get the equipment list with live USA prices.">
+<meta name="description" content="Plan a church, podcast, studio, event, school or corporate room step by step: what you have, your budget, the cameras and signal that fit, a 2D plan, a 3D view and the equipment list with live USA prices.">
+<link rel="icon" href="../shared/i9-seal.webp">
+<!-- guided (wizard) or advanced view, decided before first paint so neither flashes: #tpl= and plans saved before the
+     wizard open the advanced editor; a plan saved by the wizard reopens on its step; ?template= lands on step 5 -->
+<script>(function(){var h=location.hash,a=/^#(tpl|for)/.test(h),s=0,m=h.match(/^#p=([\w-]+)/);if(m){try{var o=JSON.parse(decodeURIComponent(escape(atob(m[1].replace(/-/g,'+').replace(/_/g,'/')))));a=!(o.z&&o.z.v==='w');s=o.z&&+o.z.s}catch(e){}}var r=document.documentElement;r.className+=a?' pl-adv':' pl-wiz';if(!a)r.setAttribute('data-wzs',s||(/[?&]template=/.test(location.search)?5:1))})();</script>
+<!-- three.js for the 3D step only: planner-3d.js is imported when step 6 opens, never before -->
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"}}</script>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=PT+Mono&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="g.css">
 <link rel="stylesheet" href="nav-mega.css">
 <link rel="stylesheet" href="planner.css">
+<link rel="stylesheet" href="planner-wizard.css">
 </head>
 <body class="planner-page">
 <script src="../shared/icons.js"></script>
@@ -31,6 +38,26 @@
 </div></header>
 
 <main id="main">
+  <!-- Guided planner (wizard): seven steps over the same plan the advanced editor edits. Rendered by planner-wizard.js -->
+  <section class="wz" id="wz" aria-labelledby="wz-h">
+    <div class="wrap">
+      <div class="wz-top">
+        <p class="meta kick"><span class="tally"></span><span id="wz-kick">Room planner · Guided</span></p>
+        <button type="button" class="wz-adv" id="to-adv"><span id="to-adv-l">Advanced editor</span><svg class="ic" aria-hidden="true"><use href="#ic-arrow-right"/></svg></button>
+      </div>
+      <nav class="wz-steps" aria-label="Steps"><ol id="wz-steps"></ol><div class="wz-prog" aria-hidden="true"><i id="wz-progbar"></i></div></nav>
+      <div class="wz-hd"><h1 id="wz-h">What are you making?</h1><p class="lede" id="wz-lede"></p></div>
+      <div class="wz-panel" id="wz-panel"></div>
+    </div>
+  </section>
+
+  <!-- Advanced editor bar: the same plan, every control -->
+  <div class="advbar" id="advbar"><div class="wrap">
+    <p class="meta"><span class="tally"></span><span id="advbar-k">Advanced editor</span></p>
+    <p class="advbar-t" id="advbar-t">The same plan as the guided steps, with every control.</p>
+    <button type="button" class="btn sm" id="to-wiz"><span id="to-wiz-l">Back to the guided steps</span></button>
+  </div></div>
+
   <!-- Head: what this is, the template bus, the room size -->
   <section class="phead" aria-labelledby="pl-h">
     <div class="wrap phgrid">
@@ -105,9 +132,16 @@
             <div class="row"><label for="ctl" data-i18n="ptzCtl">PTZ control</label><select id="ctl"><option value="ip" data-i18n="ctlIp">IP (same network)</option><option value="422" data-i18n="ctl422">RS-422 serial</option></select></div>
             <div class="row"><label for="ext" data-i18n="extIn">Other switcher inputs</label><div class="step"><button type="button" data-step="-1" aria-label="One fewer input"><svg class="ic" aria-hidden="true"><use href="#ic-minus"/></svg></button><input id="ext" type="number" min="0" max="8" inputmode="numeric"><button type="button" data-step="1" aria-label="One more input"><svg class="ic" aria-hidden="true"><use href="#ic-plus"/></svg></button></div></div>
             <p class="meta-s dim" data-i18n="extHint">Computer, slides or playback that also goes into the switcher.</p>
+            <div class="row"><label for="xr" data-i18n="xrun">Cable beyond the room</label><label class="num-in xr-in"><input id="xr" type="text" inputmode="decimal" autocomplete="off" spellcheck="false"><i class="u xr-u">m</i></label></div>
+            <p class="meta-s dim" data-i18n="xrunHint">Extra metres to a booth or rack outside the room, added to every run.</p>
           </div>
         </section>
         <section class="ipanel p-sel" id="sel-panel"></section>
+        <section class="ipanel p-own" aria-labelledby="own-h">
+          <h2 class="ih" id="own-h"><span class="meta" data-i18n="ownKick">Already have</span><span data-i18n="ownH">Left out of the shopping list</span></h2>
+          <div class="ownl" id="own-list"></div>
+          <p class="meta-s dim" data-i18n="ownP">Ticked items stay on the plan, marked “You have this” at $0.</p>
+        </section>
 
       </aside>
     </div>
@@ -125,12 +159,20 @@
         </div>
         <div class="btot" id="btot"></div>
       </div>
+      <div class="wzb" id="wz-budget" hidden></div>
       <div id="bomlist"></div>
       <p class="assume meta-s" data-i18n="assume">Cable lengths: routed along floor and walls (the dashed lines), plus the rise at each end, plus 20 %, plus 2 m. Angles of view are manufacturer figures; values marked “approx.” need checking before an order.</p>
     </div>
   </section>
 
   <!-- Print-only header (the plan + list print together) -->
+
+  <!-- Guided planner: back / next, always in reach -->
+  <div class="wz-foot" id="wz-foot"><div class="wrap">
+    <button type="button" class="btn wz-back" id="wz-back"><span id="wz-back-l">Back</span></button>
+    <p class="wz-sum" id="wz-sum" aria-live="polite"></p>
+    <button type="button" class="btn sig wz-next" id="wz-next"><span id="wz-next-l">Next</span><svg class="ic" aria-hidden="true"><use href="#ic-arrow-right"/></svg></button>
+  </div></div>
 </main>
 
 <dialog id="quote-dlg" aria-labelledby="qd-h">
@@ -160,6 +202,7 @@
 <script src="nav-mega.js"></script>
 <script src="g.js"></script>
 <script src="planner.js"></script>
+<script src="planner-wizard.js"></script>
 <script src="../switcher.js"></script>
 </body>
 </html>

@@ -3,7 +3,8 @@
    Saved in localStorage['i9g-bag'] as { "<listing id>": qty }, ids are keys of window.I9.P. Every storage call is in
    try/catch: in a private window or with storage blocked the bag lives in memory for the page and nothing breaks.
    Writers: home (g.js: add, chain "add all five"), product page (g.js, with its qty), planner ("Add priced lines" and
-   per-line Add), setups ("Add the whole setup", per-line), shop tiles. Readers: every header #bag-ct, the drawer, checkout. */
+   per-line Add), setups ("Add the whole setup", per-line), shop tiles, Everyday (everyday.js: product-simple with its
+   add-ons, shelf tiles). Readers: every header #bag-ct, the drawer, checkout. */
 (function () {
   const I9 = window.I9; if (!I9) return;
   const { P, usd } = I9;
@@ -57,6 +58,14 @@
     KEY,
   };
   window.I9BAG = bag;
+  /* Everyday listings (Camp Snap colours, etc.) live in ../shared/catalog-everyday.js. A page that does not load it
+     (setups, planner, product) can still hold those lines in the saved bag: load the file once, from the same folder as
+     catalog.js, then repaint, so names and totals resolve everywhere. Pages that already load it are untouched. */
+  if (!I9.EVERYDAY && !document.querySelector('script[src*="catalog-everyday.js"]')) {
+    const c = document.querySelector('script[src*="catalog.js"]');
+    if (c) { const s = document.createElement('script'); s.src = c.getAttribute('src').replace(/catalog\.js(\?.*)?$/, 'catalog-everyday.js');
+      s.onload = () => { paint(); subs.forEach(f => { try { f(); } catch (e) {} }); }; document.head.appendChild(s); }
+  }
   window.addEventListener('storage', e => { if (e.key === KEY) { mem = read(); paint(); subs.forEach(f => { try { f(); } catch (x) {} }); } });
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', () => paint()); else paint();
 })();
