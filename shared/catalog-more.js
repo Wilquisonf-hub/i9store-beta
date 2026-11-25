@@ -56,3 +56,48 @@
   for (const k in M) { M[k].id = k; M[k].src = IMG + M[k].img; I9.P[k] = M[k]; }
   I9.MORE = Object.keys(M);
 })();
+
+/* Room planner additions (direction G planner.html), appended 25 Nov 2026. Same rules as above: live i9store.com/usa
+   listings read on 23–25 Nov 2026 from the public category pages (cameras/ptz, cinema, mirrorless, lenses, studio/switchers,
+   studio/converters, accessories/cables, tripods, headsets). Raw reads: tmp-g/c-uniq.json, tmp-planner/lens-acc.json,
+   tmp-planner/cables.json. Names put in English; model words unchanged; prices are the listed USD prices. */
+(function () {
+  const I9 = window.I9; if (!I9) return;
+  const IMG = 'https://storage.centrali9tv.com.br/prod/';
+  const M = {
+    ue100:      { brand:'Panasonic', name:'AW-UE100', sub:'4K NDI PTZ camera, 12G-SDI/HDMI, 24x optical zoom, black', usd:6789, cat:'Cameras', img:'2025/03/images/original/78315_1596027060_1579.jpg', path:'cameras/ptz-roboticas/camera-panasonic-4k-ndi-pro-12g-sdihdmi-ptz-com-zoom-optico-de-24x-preta/' },
+    ue150:      { brand:'Panasonic', name:'AW-UE150', sub:'UHD 4K PTZ camera, 20x zoom, black', usd:9962, cat:'Cameras', img:'2021/11/images/original/29722_camerapanasonic.jpg', path:'cameras/ptz-roboticas/panasonic-aw-ue150k-camera-ptz-uhd-4k-preta/' },
+    crn500:     { brand:'Canon', name:'CR-N500', sub:'Professional 4K NDI PTZ camera, 15x zoom, satin black', usd:5399, cat:'Cameras', img:'2021/11/images/original/29554_1615970799_1630.jpg', path:'cameras/ptz-roboticas/canon-cr-n500-camera-ptz-4k-ndi-com-zoom-15x-preto/' },
+    fx30:       { brand:'Sony', name:'FX30', sub:'4K cinema camera, body only (no top handle)', usd:1948, cat:'Cameras', img:'2022/10/images/original/39759_a1.jpg', path:'cameras/cinema/sony-fx30-camera-de-cinema-4k-corpo/' },
+    s5iix:      { brand:'Panasonic', name:'Lumix S5 IIX', sub:'Mirrorless camera, body only', usd:2197.99, cat:'Cameras', img:'2024/03/images/original/59357_9617.jpg', path:'cameras/dslr-mirrorless/panasonic-lumix-s5-iix-camera-mirrorless-corpo/' },
+    mk1855:     { brand:'Fujinon', name:'MK18-55mm T2.9', sub:'Cine zoom lens, MFT mount', usd:3799, cat:'Lenses', img:'2020/09/images/original/17212_28060.jpg', path:'lentes/mft-mount/fujinon-lente-mk18-55mm-t29-mft-mount/' },
+    dg1260:     { brand:'Panasonic', name:'Leica DG Vario-Elmarit 12-60mm f/2.8-4', sub:'ASPH. POWER OIS zoom lens, MFT mount', usd:997.99, cat:'Lenses', img:'2024/10/images/original/68294_713.jpg', path:'lentes/lentes/panasonic-lente-leica-dg-vario-elmarit-12-60mm-f28-4-asph-power-ois/' },
+    pz18105:    { brand:'Sony', name:'E PZ 18-105mm f/4 G OSS', sub:'Power zoom lens, Sony E mount', usd:848, cat:'Lenses', img:'2020/09/images/original/18824_29916.jpg', path:'lentes/e-mount/sony-lente-e-pz-18-105mm-f4-g-oss/' },
+    mk50135:    { brand:'Fujinon', name:'MK50-135mm T2.9', sub:'Cine zoom lens, Sony E mount', usd:3999, cat:'Lenses', img:'2020/09/images/original/12398_22015.jpg', path:'lentes/e-mount/fujinon-lente-mk50-135mm-t29-sony-e-mount/' },
+    s24105:     { brand:'Panasonic', name:'Lumix S 24-105mm f/4 Macro OIS', sub:'Zoom lens, L mount (kit with UV filter)', usd:1297.99, cat:'Lenses', img:'2024/07/images/original/63358_13.jpg', path:'lentes/lentes/panasonic-l-ente-lumix-s-24-105mm-f4-macro-ois-com-kit-de-filtro-uv/' },
+    s50:        { brand:'Panasonic', name:'Lumix S 50mm f/1.8', sub:'Prime lens, L mount', usd:447.99, cat:'Lenses', img:'2024/07/images/original/63347_10648.jpg', path:'lentes/lentes/panasonic-lente-lumix-s-50mm-f18-lens/' },
+    s85:        { brand:'Panasonic', name:'Lumix S 85mm f/1.8', sub:'Prime lens, L mount', usd:647.99, cat:'Lenses', img:'2024/07/images/original/63351_21.jpg', path:'lentes/lentes/panasonic-lente-lumix-s-85mm-f18/' },
+    rf45:       { brand:'Canon', name:'RF 45mm f/1.2 STM', sub:'Prime lens, Canon RF mount', usd:469, cat:'Lenses', img:'2025/11/images/original/93359_4.jpg', path:'lentes/rf-mount/canon-lente-rf-45mm-f12-stm/' },
+    atemmini:   { brand:'Blackmagic Design', name:'ATEM Mini', sub:'Switcher for 4 HDMI cameras', usd:295, cat:'Studio', img:'2020/09/images/original/18426_29437.jpg', path:'estudio/switchers/blackmagic-design-atem-mini-switcher-para-4-cameras-hdmi/' },
+    atemext:    { brand:'Blackmagic Design', name:'ATEM Mini Extreme', sub:'Switcher', usd:1249, cat:'Studio', img:'2022/02/images/original/30454_blackmagic_desi.jpg', path:'estudio/switchers/blackmagic-design-atem-mini-extreme/' },
+    atemsdi:    { brand:'Blackmagic Design', name:'ATEM SDI', sub:'Switcher', usd:389, cat:'Studio', img:'2022/10/images/original/40518_7321.jpg', path:'estudio/switchers/blackmagic-design-atem-sdi-switcher/' },
+    atemsdipro: { brand:'Blackmagic Design', name:'ATEM SDI Pro ISO', sub:'Switcher', usd:895, cat:'Studio', img:'2026/01/images/original/96591_blackmagicdesin.jpg', path:'estudio/switchers/blackmagic-design-atem-sdi-pro-iso-switcher/' },
+    atemsdix:   { brand:'Blackmagic Design', name:'ATEM SDI Extreme ISO', sub:'Switcher', usd:1715, cat:'Studio', img:'2022/08/images/original/37611_7159a.jpg', path:'estudio/switchers/blackmagic-design-switcher-atem-sdi-extreme-iso/' },
+    atem1mehd:  { brand:'Blackmagic Design', name:'ATEM 1 M/E Constellation HD', sub:'Live production switcher, 1 RU', usd:1195, cat:'Studio', img:'2024/11/images/original/71541_blackmagic_desi.jpg', path:'estudio/switchers/blackmagic-design-switcher-de-producao-ao-vivo-atem-1-me-constellation-hd-1-ru/' },
+    fiberconv:  { brand:'Blackmagic Design', name:'Mini Converter Optical Fiber 12G-SDI', sub:'SDI to fiber and back', usd:185, cat:'Studio', img:'2020/09/images/original/13232_22971.jpg', path:'estudio/conversores/blackmagic-design-mini-converter-optical-fiber-12g-sdi/' },
+    hdmi76:     { brand:'Kondor Blue', name:'Braided HDMI cable, 7.6 m', sub:'Passive copper HDMI', usd:32.99, cat:'Cables', img:'2024/06/images/original/63056_10540.jpg', path:'acessorios/cabos-e-conectores/kondor-cabo-hdmi-trancado-76m-azul/' },
+    hdmiaoc10:  { brand:'ZILR', name:'Fiber-optic HDMI cable, 4K, 10 m', sub:'Active optical HDMI with Ethernet', usd:149.99, cat:'Cables', img:'2023/05/images/original/50451_zilrcabohdmidea.jpg', path:'acessorios/cabos-e-conectores/zilr-cabo-hdmi-de-alta-velocidade-de-fibra-optica-com-ethernet-10-metros/' },
+    hdmiaoc15:  { brand:'iFootage', name:'8K optical HDMI cable, 15 m', sub:'Active optical HDMI', usd:119, cat:'Cables', img:'2023/09/images/original/54242_photo_20230905_.jpg', path:'acessorios/cabos-e-conectores/ifootage-cabo-hdmi-optico-8k-15m/' },
+    sdi2:       { brand:'ZILR', name:'12G-SDI BNC cable, 2 m', sub:'4K BNC to BNC', usd:27.49, cat:'Cables', img:'2023/05/images/original/50396_zilrcabo12gsdib.jpg', path:'acessorios/cabos-e-conectores/zilr-cabo-12g-sdi-bnc-4k-de-2m-de-comprimento/' },
+    canare300:  { brand:'Canare', name:'12G-SDI / 4K UHD video coax, 300 m', sub:'Bulk reel, black', usd:981.87, cat:'Cables', img:'2024/10/images/original/68561_1767.jpg', path:'acessorios/cabos-e-conectores/canare-cabo-coaxial-de-video-12g-sdi-4k-uhd-984-black/' },
+    belden1855: { brand:'Belden', name:'1855A 6G-SDI Mini-RG59 coax, 1000 ft', sub:'CMR rated, 23 AWG, black', usd:479, cat:'Cables', img:'2022/12/images/original/43166_169494.png', path:'acessorios/cabos-e-conectores/belden-cabo-sdi-1855a-010z1000-cmr-rated-6g-sdi-mini-rg59-digital-coax-video-cable-23-awg-black-1000-foot/' },
+    beldenbnc:  { brand:'Belden', name:'6 GHz BNC compression connector, Mini RG59', sub:'Pack of 50, for 1855A', usd:161.5, cat:'Cables', img:'2022/12/images/original/43171_202151.png', path:'acessorios/cabos-e-conectores/belden-1855abhd1-6g-sdi-1-pc-bnc-hd-compression-connector-for-1855a23-awg-rg59-mini-coax-cable-violet-band-50pk/' },
+    ad01:       { brand:'SmallRig', name:'AD-01', sub:'Heavy-duty tripod with fluid head', usd:159, cat:'Supports', img:'2023/01/images/original/45602_smallrigad01tri.jpg', path:'tripes-e-suportes/tripe-para-camera/smallrig-ad-01-tripe-resistente-com-cabeca-fluida/' },
+    focus12:    { brand:'Cartoni', name:'FOCUS 12 2-St SDS ALU System MS', sub:'Fluid head and two-stage tripod system', usd:2778, cat:'Supports', img:'2023/04/images/original/48929_6640.jpg', path:'tripes-e-suportes/tripe-para-camera/cartoni-focus-12-red-lock-system-100mm-ball/' },
+    c1pro8:     { brand:'Hollyland', name:'Solidcom C1 Pro-8S', sub:'Full-duplex ENC wireless intercom, 8 headsets, 1.9 GHz', usd:2549, cat:'Audio', img:'2025/06/images/original/83800_15.jpg', path:'audio/fones-de-ouvido-e-headsets/hollyland-solidcom-c1-pro-8s-full-duplex-enc-wireless-intercom-system-com-8-headsets-19-ghz/' },
+    gs108pp:    { brand:'Netgear', name:'GS108PP', sub:'8-port Gigabit PoE+ unmanaged switch', usd:139.99, cat:'Studio', img:'2024/09/images/original/67726_796.jpg', path:'estudio/switchers/netgear-switch-8-portas-gigabit-ethernet-poe-nao-gerenciavel/' },
+    gs516up:    { brand:'Netgear', name:'GS516UP', sub:'16-port Gigabit PoE++ unmanaged switch', usd:369.99, cat:'Studio', img:'2024/09/images/original/66868_392b.jpg', path:'estudio/switchers/netgear-switch-nao-gerenciado-compativel-com-gigabit-poe-de-16-portas/' },
+  };
+  for (const k in M) { M[k].id = k; M[k].src = IMG + M[k].img; I9.P[k] = M[k]; }
+  I9.PLANNER_MORE = Object.keys(M);
+})();

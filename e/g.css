@@ -552,3 +552,29 @@ button,input{font:inherit;color:inherit}
 @media (max-width:699px){#chain,#solutions,#quote{scroll-margin-top:60px}}
 @media (max-width:699px){.ctot .acts{flex-direction:row}.ctot .acts .btn{flex:1 1 0;padding:0 10px;font-size:14px;min-height:48px}}
 .win.big .umd{flex:0 0 auto}
+
+/* ---- room planner entry points (additive, 25 Nov 2026; planner.html has its own planner.css) ---- */
+.gnav .plan-link{display:flex;align-items:center;gap:8px}
+.gnav .plan-link .tally{width:7px;height:7px}
+@media (min-width:1280px) and (max-width:1499px){.gnav nav a{padding:0 11px}}
+@media (min-width:1100px) and (max-width:1279px){.gnav nav a{padding:0 8px}}
+.ibtn.plan-ib{display:none}
+@media (max-width:1099px){.ibtn.plan-ib{display:inline-flex}}
+@media (max-width:699px){.ibtn.plan-ib{display:none}} /* phone: the header is full; the solutions CTA and the chain link carry it */
+.plancta{display:grid;grid-template-columns:minmax(0,4fr) minmax(0,7fr) auto;align-items:center;gap:6px 32px;margin-top:10px;padding:22px 24px;border:1px solid var(--rule);background:var(--panel);text-decoration:none;color:var(--ink)}
+.plancta .meta{display:flex;align-items:center;gap:10px;color:var(--ink-3);grid-column:1;grid-row:1}
+.plancta b{grid-column:1;grid-row:2;font-size:20px;font-weight:600;letter-spacing:-.02em;line-height:1.2}
+.plancta .pc-p{grid-column:2;grid-row:1/3;color:var(--ink-2);font-size:15px;line-height:1.5}
+.plancta .pc-a{grid-column:3;grid-row:1/3;display:inline-flex;align-items:center;gap:10px;min-height:48px;padding:0 20px;background:var(--signal);color:#000;font-weight:600;font-size:15px;white-space:nowrap}
+.plancta .pc-a .ic{width:18px;height:18px;transition:transform .3s var(--ease)}
+.plancta:hover{border-color:var(--rule-2)}
+.plancta:hover .pc-a{background:var(--signal-hi)}
+.plancta:hover .pc-a .ic{transform:translateX(3px)}
+.change{display:flex;flex-wrap:wrap;justify-content:space-between;gap:4px 24px}
+.change .plan-a{color:var(--s-ink)}
+.usedin .plan-p{margin-top:12px}
+.usedin .plan-p a{display:inline-flex;align-items:center;gap:8px;min-height:44px;font-weight:600;font-size:15px;text-decoration:none;color:var(--ink);padding:0;border:0;background:none}
+.usedin .plan-p a:hover{text-decoration:underline}
+.usedin .plan-p .ic{width:16px;height:16px}
+@media (max-width:1099px){.plancta{grid-template-columns:minmax(0,1fr) auto}.plancta .pc-p{grid-column:1/-1;grid-row:3}.plancta .pc-a{grid-column:2;grid-row:1/3}}
+@media (max-width:699px){.plancta{grid-template-columns:1fr;padding:18px 16px}.plancta .pc-a,.plancta .pc-p{grid-column:1;grid-row:auto;justify-content:space-between}}
