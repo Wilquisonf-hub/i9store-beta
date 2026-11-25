@@ -4,7 +4,7 @@
    the product page emphasis and the header accent change with the mode.
 
    Which mode a page opens in, first rule that applies:
-     1. Pro-only surfaces (pro.html, planner.html, setups.html) are always Pro. Their "Store" segment goes to index.html.
+     1. Pro-only surfaces (pro.html, planner.html, setups.html, led.html) are always Pro. Their "Store" segment goes to index.html.
      2. ?mode=store|pro in the URL wins, and is saved.
      3. A solution link (shop.html?solution=…) switches to Pro.
      4. The saved choice, localStorage 'i9g-mode' (try/catch: storage blocked = this page only).
@@ -22,7 +22,7 @@
   const root = document.documentElement;
   const page = (location.pathname.split('/').pop() || 'index.html').toLowerCase();
   const qs = new URLSearchParams(location.search);
-  const PRO_ONLY = ['pro.html', 'planner.html', 'setups.html'];
+  const PRO_ONLY = ['pro.html', 'planner.html', 'setups.html', 'led.html'];   /* led.html: the LED wall configurator (25 Nov) */
   const read = () => { try { const v = localStorage.getItem(KEY); return MODES.includes(v) ? v : null; } catch (e) { return null; } };
   const save = m => { try { localStorage.setItem(KEY, m); } catch (e) {} };
 
