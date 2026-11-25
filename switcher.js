@@ -13,10 +13,15 @@
     '#i9beta a[aria-current]{background:#F53C00;color:#0A0A0A}' +
     '#i9beta a:focus-visible{outline:3px solid #F53C00;outline-offset:2px}' +
     '#i9beta .lbl{padding:11px 10px 11px 12px;opacity:.6}' +
-    '@media (max-width:560px){#i9beta{left:8px;bottom:8px}#i9beta .lbl,#i9beta .long{display:none}#i9beta a{padding:12px 14px}}';
+    '@media (max-width:560px){#i9beta{left:8px;bottom:8px}#i9beta .lbl,#i9beta .long{display:none}#i9beta a{padding:12px 14px}}' +
+    /* touch screens up to tablet width: collapsed to one pill (BETA · F); tap opens the version list */
+    '#i9beta .tog{display:none;background:none;border:0;color:inherit;font:inherit;letter-spacing:inherit;padding:11px 12px;cursor:pointer}' +
+    '#i9beta .tog b{color:#F53C00;font-weight:500}' +
+    '@media (max-width:1180px) and (pointer:coarse){#i9beta .tog{display:block}#i9beta:not(.open) a{display:none}#i9beta.open .tog{opacity:.6}}';
   var st = document.createElement('style'); st.textContent = css; document.head.appendChild(st);
   var nav = document.createElement('nav'); nav.id = 'i9beta'; nav.setAttribute('aria-label', 'Design versions');
-  var html = '<a class="lbl" href="../index.html" title="All versions">BETA</a>';
+  var html = '<button class="tog" type="button" aria-expanded="false" aria-label="Design versions">BETA · <b>' + (cur || '').toUpperCase() + '</b></button>' +
+    '<a class="lbl" href="../index.html" title="All versions">BETA</a>';
   versions.forEach(function (v) {
     var name = v[1].split(' · ');
     var target = (common.indexOf(file) >= 0 || v[0] === cur) ? file : 'index.html';
@@ -25,6 +30,8 @@
   });
   nav.innerHTML = html;
   document.body.appendChild(nav);
+  var tog = nav.querySelector('.tog');
+  tog.addEventListener('click', function () { var o = nav.classList.toggle('open'); tog.setAttribute('aria-expanded', o); });
   /* Sit above any fixed or sticky bottom bar on the page (wizard footer, phone buy bar) so it never covers Back / Buy. */
   function lift() {
     var h = 0;
