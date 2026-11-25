@@ -107,6 +107,8 @@ select:hover,input:hover,textarea:hover{border-color:var(--stone)}
 .fmini dd{margin:0;font-size:15px}
 .feat-a{display:flex;flex-wrap:wrap;gap:12px 20px;align-items:center;margin-top:auto;padding-top:8px}
 #feat{padding:clamp(2rem,4vw,3rem) 0 0}
+.feats{display:grid;gap:20px}
+#mk-real{display:grid;gap:20px}
 
 /* ---------- register ---------- */
 .reg{display:grid;grid-template-columns:minmax(0,4fr) minmax(0,7fr);min-height:calc(100vh - 106px)}

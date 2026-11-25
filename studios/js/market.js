@@ -72,21 +72,14 @@
       // register
       stepOf: 'Step {a} of {b}', req: 'Required', pickOne: 'Choose at least one', emailBad: 'Enter a valid email',
       neighbours: 'Add nearby:', addTerr: 'Add a territory', rm: 'Remove {c}',
-      orig: 'An i9 Original', tbc: 'To confirm with i9', perDeal: 'i9 owns the IP: rights set per deal', langTbc: 'languages to confirm with i9',
+      tbc: 'To confirm with i9', langTbc: 'languages to confirm with i9', realCount: '{r} real i9 titles + {n} demonstration titles', realCountOne: '1 real i9 title + {n} demonstration titles',
+      fitRtTbc: 'Runtime per episode to confirm with i9', seeTitle: 'See the title',
       epsTbc: 'episodes to confirm', fitTbc: 'Episodes and runtime to confirm with i9', licDeal: 'Set per deal',
-      featK: 'An i9 Original · real title', featP: 'The one real title in this catalogue: the car show produced entirely by i9, in two packagings, short-form pílulas or 30-minute episodes. i9 owns the IP, so territories, windows and exclusivity are set per deal.',
-      outlets: 'Airs today on', origCount: '1 i9 Original + {n} demonstration titles',
-      rightsDeal: 'i9 owns the Netmotors IP. Territories, vehicles, windows, licence periods and exclusivity are agreed per deal.',
-      covExcl: '{t} is not counted: episodes and runtime to confirm with i9.',
-      aiDub: '{a} AI dub', langsAI: 'Portuguese · AI-dubbed into English and Spanish', dubAIv: 'English, Spanish (AI-dubbed)',
-      cutsShort: '8–12 min pílulas, 12 a month · or 4 × 30 min a month', metaCuts: '3 seasons · 8–12 min pílulas or 30-min episodes',
+      covExcl: '{t} is not counted: runtime per episode to confirm with i9.',
+      aiDub: '{a} AI dub',
       fitCut30: '30-min version, 4 a month: covers {p}% of your slot', fitCutPill: 'Pílulas, 12 a month: covers {p}% of your slot', fitCutNo: 'Needs a slot of at least 12 min',
       fitOneCut30: 'One 30-min episode fits your {s}-min slot', fitOnePill: 'A pílula fits your {s}-min slot',
       trailer: 'Trailer coming soon', trailerP: 'The trailer is being edited. Request a screener in the meantime.',
-      versH: 'One show, two packagings', versShort: 'Short-form', versShortV: '8–12 min × 12 a month', versShortP: 'Pílulas for OTT, social and fillers.',
-      versLin: 'Linear TV', versLinV: '4 × 30 min a month', versLinP: 'Each episode is 3 pílulas. A weekly 30-min slot.',
-      seasons: 'Seasons', seasonsV: '3, in the new format', shortForm: 'Short-form', shortFormV: 'Pílulas of 8–12 min, 12 a month', linear: '30-min version', linearV: '4 × 30 min a month, each made of 3 pílulas',
-      epSeason: 'Episodes per season', k4: '4K availability', trailerK: 'Trailer', credit: 'Credit', format2: 'Format',
       schedCut: 'At {s} min × {d} days a week your slot takes {n} {c} a month (a month counted as 4 weeks). Netmotors supplies {k} a month, about {p}% of it.',
       cut30n: '30-min episodes', cutPilln: 'pílulas',
       covRate: '{t} is not counted in the total: it is supplied at {r} a month and the season length is still to confirm with i9.',
@@ -133,21 +126,14 @@
       toast: '{t} adicionado à sua proposta', toastRm: '{t} removido da sua proposta',
       stepOf: 'Etapa {a} de {b}', req: 'Obrigatório', pickOne: 'Escolha pelo menos um', emailBad: 'Digite um e-mail válido',
       neighbours: 'Adicionar vizinhos:', addTerr: 'Adicionar território', rm: 'Remover {c}',
-      orig: 'Um original i9', tbc: 'A confirmar com a i9', perDeal: 'a i9 é dona do IP: direitos definidos por negócio', langTbc: 'idiomas a confirmar com a i9',
+      tbc: 'A confirmar com a i9', langTbc: 'idiomas a confirmar com a i9', realCount: '{r} títulos reais da i9 + {n} títulos de demonstração', realCountOne: '1 título real da i9 + {n} títulos de demonstração',
+      fitRtTbc: 'Duração por episódio a confirmar com a i9', seeTitle: 'Ver o título',
       epsTbc: 'episódios a confirmar', fitTbc: 'Episódios e duração a confirmar com a i9', licDeal: 'Definida por negócio',
-      featK: 'Um original i9 · título real', featP: 'O único título real deste catálogo: o programa de carros produzido inteiramente pela i9, em dois formatos, pílulas curtas ou episódios de 30 minutos. A i9 é dona do IP, então territórios, janelas e exclusividade são definidos por negócio.',
-      outlets: 'Vai ao ar hoje em', origCount: '1 original i9 + {n} títulos de demonstração',
-      rightsDeal: 'A i9 é dona do IP do Netmotors. Territórios, veículos, janelas, períodos de licença e exclusividade são combinados por negócio.',
-      covExcl: '{t} não entra na conta: episódios e duração a confirmar com a i9.',
-      aiDub: 'dublagem por IA em {a}', langsAI: 'Português · dublado por IA em inglês e espanhol', dubAIv: 'Inglês, espanhol (dublagem por IA)',
-      cutsShort: 'pílulas de 8–12 min, 12 por mês · ou 4 × 30 min por mês', metaCuts: '3 temporadas · pílulas de 8–12 min ou episódios de 30 min',
+      covExcl: '{t} não entra na conta: duração por episódio a confirmar com a i9.',
+      aiDub: 'dublagem por IA em {a}',
       fitCut30: 'Versão de 30 min, 4 por mês: cobre {p}% da sua faixa', fitCutPill: 'Pílulas, 12 por mês: cobre {p}% da sua faixa', fitCutNo: 'Precisa de uma faixa de pelo menos 12 min',
       fitOneCut30: 'Um episódio de 30 min cabe na sua faixa de {s} min', fitOnePill: 'Uma pílula cabe na sua faixa de {s} min',
       trailer: 'Trailer em breve', trailerP: 'O trailer está em edição. Enquanto isso, peça um screener.',
-      versH: 'Um programa, dois formatos', versShort: 'Formato curto', versShortV: '8–12 min × 12 por mês', versShortP: 'Pílulas para OTT, redes e interprogramas.',
-      versLin: 'TV linear', versLinV: '4 × 30 min por mês', versLinP: 'Cada episódio reúne 3 pílulas. Uma faixa semanal de 30 min.',
-      seasons: 'Temporadas', seasonsV: '3, no formato novo', shortForm: 'Formato curto', shortFormV: 'Pílulas de 8–12 min, 12 por mês', linear: 'Versão de 30 min', linearV: '4 × 30 min por mês, cada um com 3 pílulas',
-      epSeason: 'Episódios por temporada', k4: 'Disponibilidade em 4K', trailerK: 'Trailer', credit: 'Crédito', format2: 'Formato',
       schedCut: 'Com {s} min × {d} dias por semana, a sua faixa consome {n} {c} por mês (mês contado como 4 semanas). O Netmotors entrega {k} por mês, cerca de {p}% disso.',
       cut30n: 'episódios de 30 min', cutPilln: 'pílulas',
       covRate: '{t} não entra no total: é entregue a {r} por mês e a duração da temporada ainda está a confirmar com a i9.',
@@ -160,6 +146,8 @@
     return s;
   }
   function nm(obj) { return obj ? (obj[L()] || obj.en) : ''; }
+  function val(v) { return v == null ? null : (typeof v === 'string' ? v : nm(v)); }
+  function tbcSpan() { return '<span class="tbc">' + t('tbc') + '</span>'; }
   function country(code) { var c = R.countries.filter(function (x) { return x[0] === code; })[0]; return c ? (L() === 'pt' ? c[2] : c[1]) : code; }
   function terrName(code) { return R.regions[code] ? nm(R.regions[code]) : country(code); }
   function langName(code) { return nm(R.languages[code]) || code; }
@@ -177,16 +165,17 @@
   }
   function langMode(title, p) {
     var langs = p.langs || [];
+    if (!title.audio) return null;
     var a = inter(title.audio, langs); if (a.length) return { mode: 'audio', code: a[0] };
-    if (p.dub) { var d = inter(title.dub, langs); if (d.length) return { mode: 'dub', code: d[0] }; }
-    if (p.subs) { var s = inter(title.subs, langs); if (s.length) return { mode: 'subs', code: s[0], orig: title.audio[0] }; }
+    if (p.dub && title.dub) { var d = inter(title.dub, langs); if (d.length) return { mode: 'dub', code: d[0] }; }
+    if (p.subs && title.subs) { var s = inter(title.subs, langs); if (s.length) return { mode: 'subs', code: s[0], orig: title.audio[0] }; }
     return null;
   }
   function evaluate(title, p) {
     var res = { ok: false, reason: null, rows: [], covered: [], notCovered: [], veh: [], ex: [], lic: [], win: [], lang: null };
     if (!p) { res.reason = 'noprofile'; return res; }
     if (!suits(title, p)) { res.reason = 'rating'; return res; }
-    if (title.perDeal) { res.ok = true; res.perDeal = true; res.covered = p.terr.slice(); res.veh = p.veh.slice(); res.lang = langMode(title, p); res.ai = !!title.dubAI; return res; }
+    if (title.perDeal) { res.ok = true; res.perDeal = true; res.covered = p.terr.slice(); res.veh = p.veh.slice(); res.lang = langMode(title, p); res.ai = !!title.dubAI; res.t = title; return res; }
     var terrHit = false;
     title.rights.forEach(function (row) {
       var cov = p.terr.filter(function (c) { return covers(row, c); });
@@ -218,7 +207,7 @@
     return s;
   }
   function whyText(ev) {
-    if (ev.perDeal) return [list(ev.covered.map(country)), ev.veh.map(function (v) { return R.vehicles[v].s; }).join(', '), t('perDeal'), ev.lang ? langPhrase(ev) : t('langsAI')].join(' · ');
+    if (ev.perDeal) return [list(ev.covered.map(country)), ev.veh.map(function (v) { return R.vehicles[v].s; }).join(', '), nm(ev.t.dealNote), ev.lang ? langPhrase(ev) : nm(ev.t.langNote)].join(' · ');
     var vs = ev.veh.map(function (v) { return R.vehicles[v].s; });
     var ex = ev.ex.map(function (e) { return nm(R.exclusivity[e]); }).join(t('or'));
     return [list(ev.covered.map(country)), vs.join(', '), ex, langPhrase(ev)].join(' · ');
@@ -253,7 +242,7 @@
   function fit(title, f) {
     if (title.cuts) return fitCuts(title, f);
     var k = perSlot(title, f), w = weeksOf(f), need = slotsNeeded(f);
-    if (!title.episodes || !title.runtime) return { pct: 0, k: 0, slots: 0, text: t('fitTbc'), tbc: true };
+    if (!title.episodes || !title.runtime) return { pct: 0, k: 0, slots: 0, text: title.episodes ? t('fitRtTbc') : t('fitTbc'), tbc: true };
     if (!k) return { pct: 0, k: 0, slots: 0, text: t('fitLong', { r: title.runtime }), long: true };
     var slots = Math.ceil(title.episodes / k), pct = Math.min(1, slots / need), txt;
     if (single(f)) txt = title.episodes === 1 ? t('fitOne', { s: f.slot }) : t('fitOneSeries', { n: title.episodes, k: slots });
@@ -312,11 +301,11 @@
     });
   }
   function metaLine(tt) {
-    if (tt.cuts) return nm(R.types[tt.type]) + ' · ' + t('metaCuts');
+    if (tt.metaLine) return nm(tt.metaLine);
     if (!tt.episodes) return nm(R.types[tt.type]) + ' · ' + t('epsTbc');
     return nm(R.types[tt.type]) + ' · ' + (tt.episodes > 1 ? t('eps', { e: tt.episodes, r: tt.runtime }) : t('film', { r: tt.runtime })) + ' · ' + fmtH(tt.episodes * tt.runtime);
   }
-  function tag(tt) { return tt.original ? ' <span class="origtag">' + t('orig') + '</span>' : (tt.demo ? ' <span class="dtag">DEMO</span>' : ''); }
+  function tag(tt) { return tt.real ? ' <span class="origtag ' + tt.credit + '">' + esc(nm(tt.creditLine)) + '</span>' : (tt.demo ? ' <span class="dtag">DEMO</span>' : ''); }
   function bar(pct) { return '<span class="fbar" aria-hidden="true"><i style="width:' + Math.round(pct * 100) + '%"></i></span>'; }
   function weekStrip(filled, total, cls) {
     var n = Math.min(total, 52), scale = total / n, out = '';
@@ -356,8 +345,8 @@
     var f = filler(), F = filters();
     var evs = C.map(function (title) { return { t: title, ev: evaluate(title, p) }; });
     var availAll = evs.filter(function (x) { return x.ev.ok; });
-    var feats = availAll.filter(function (x) { return x.t.original; });
-    var avail = availAll.filter(function (x) { return !x.t.original; });
+    var feats = availAll.filter(function (x) { return x.t.real; });
+    var avail = availAll.filter(function (x) { return !x.t.real; });
     var hid = { rights: 0, language: 0, rating: 0 };
     evs.forEach(function (x) { if (!x.ev.ok) { var r = x.ev.reason; if (r === 'territory' || r === 'vehicle') hid.rights++; else if (r === 'language') hid.language++; else if (r === 'rating') hid.rating++; } });
     var nHid = C.length - availAll.length;
@@ -366,7 +355,7 @@
     $('#cat-name').textContent = p.company;
     $('#cat-h').textContent = t('catTitle');
     $('#cat-chips').innerHTML = profileChips(p);
-    $('#cat-count').innerHTML = '<span class="big num">' + availAll.length + '</span><span>' + (availAll.length === 1 ? t('clearedOne') : t('cleared', { n: availAll.length }).replace(/^\d+\s/, '')) + (feats.length ? '<br><em class="meta-s dim">' + t('origCount', { n: avail.length }) + '</em>' : '') + '</span>';
+    $('#cat-count').innerHTML = '<span class="big num">' + availAll.length + '</span><span>' + (availAll.length === 1 ? t('clearedOne') : t('cleared', { n: availAll.length }).replace(/^\d+\s/, '')) + (feats.length ? '<br><em class="meta-s dim">' + t(feats.length === 1 ? 'realCountOne' : 'realCount', { r: feats.length, n: avail.length }) + '</em>' : '') + '</span>';
     var hparts = [];
     if (hid.rights) hparts.push(t('hidRights', { n: hid.rights }));
     if (hid.language) hparts.push(t('hidLang', { n: hid.language }));
@@ -380,7 +369,7 @@
 
     // filter options limited to what the buyer can use
     var vehOpts = p.veh;
-    var typeOpts = Object.keys(R.types).filter(function (k) { return C.some(function (x) { return x.type === k && !x.original; }); });
+    var typeOpts = Object.keys(R.types).filter(function (k) { return C.some(function (x) { return x.type === k && !x.real; }); });
     var langOpts = uniq(avail.reduce(function (a, x) { return a.concat(x.t.audio || [], x.t.dub || [], x.t.subs || []); }, [])).filter(function (l) { return p.langs.indexOf(l) >= 0; });
     var side = $('#cat-filters');
     function seg(name, opts, cur) {
@@ -464,7 +453,7 @@
 
   function card(tt, ev, ft) {
     var meta = metaLine(tt);
-    return '<article class="tcard' + (tt.original ? ' is-orig' : '') + '" data-id="' + tt.id + '">' +
+    return '<article class="tcard' + (tt.real ? ' is-real' : '') + '" data-id="' + tt.id + '">' +
       '<a class="tp" href="title.html?id=' + tt.id + '">' + I9S_poster(tt, { label: true }) + '</a>' +
       '<div class="tb">' +
         '<h3><a href="title.html?id=' + tt.id + '">' + esc(nm(tt.title)) + '</a>' + tag(tt) + '</h3>' +
@@ -509,26 +498,26 @@
     $$('[data-d]', box).forEach(function (b) { b.addEventListener('click', function () { var i = $('#fl-days'); i.value = Math.max(1, Math.min(7, (+i.value || 1) + (+b.getAttribute('data-d')))); upd(); }); });
   }
 
+  function featureCard(tt, ev, withAdd) {
+    var ft = fit(tt, filler());
+    return '<article class="feat rv in" data-id="' + tt.id + '">' +
+      '<a class="feat-ph" href="title.html?id=' + tt.id + '"><img src="img/' + tt.photos[0] + '.webp" alt="' + esc(nm(tt.photoAlt) || nm(tt.title)) + '" loading="lazy"><span class="otag big ' + tt.credit + '">' + esc(tt.creditTag) + '</span></a>' +
+      '<div class="feat-b">' +
+        '<p class="meta dim"><span class="tally"></span> ' + esc(nm(tt.featK)) + '</p>' +
+        '<h2><a href="title.html?id=' + tt.id + '">' + esc(nm(tt.title)) + '</a></h2>' +
+        '<p class="meta-s dim">' + esc(nm(tt.genre)) + ' · ' + esc(nm(tt.creditLine)) + '</p>' +
+        '<p>' + esc(nm(tt.featP)) + '</p>' +
+        (ev && ev.ok ? '<p class="why">' + esc(whyText(ev)) + '</p>' : '') +
+        '<dl class="fmini">' + (tt.feature || []).map(function (r) { var v = val(r.v); return '<div><dt class="meta">' + esc(nm(r.k)) + '</dt><dd>' + (v == null ? tbcSpan() : esc(v)) + '</dd></div>'; }).join('') + '</dl>' +
+        (ev ? '<div class="fit">' + bar(ft.pct) + '<span class="meta-s">' + esc(ft.text) + '</span></div>' : '') +
+        '<div class="feat-a">' + (withAdd ? addBtn(tt.id) : '') + '<a class="' + (withAdd ? 'textlink' : 'btn sm') + '" href="title.html?id=' + tt.id + '">' + t('seeTitle') + (withAdd ? ' →' : '') + '</a></div>' +
+      '</div></article>';
+  }
   function renderFeatured(feats, p) {
     var box = $('#feat'); if (!box) return;
     if (!feats.length) { box.hidden = true; box.innerHTML = ''; return; }
     box.hidden = false;
-    var x = feats[0], tt = x.t;
-    box.innerHTML = '<div class="wrap"><article class="feat" data-id="' + tt.id + '">' +
-      '<a class="feat-ph" href="title.html?id=' + tt.id + '"><img src="img/' + tt.photos[0] + '.webp" alt="' + esc(nm(tt.title)) + ': ' + (L() === 'pt' ? 'carro clássico e equipe numa garagem, durante a gravação' : 'a classic car and crew in a garage, during the shoot') + '"><span class="otag big">AN i9 ORIGINAL</span></a>' +
-      '<div class="feat-b">' +
-        '<p class="meta dim"><span class="tally"></span> ' + t('featK') + '</p>' +
-        '<h2><a href="title.html?id=' + tt.id + '">' + esc(nm(tt.title)) + '</a></h2>' +
-        '<p class="meta-s dim">' + esc(nm(tt.genre)) + '</p>' +
-        '<p>' + t('featP') + '</p>' +
-        '<p class="why">' + esc(whyText(x.ev)) + '</p>' +
-        '<dl class="fmini"><div><dt class="meta">' + t('outlets') + '</dt><dd>' + esc(tt.outlets.join(' · ')) + '</dd></div>' +
-          '<div><dt class="meta">' + t('format2') + '</dt><dd>' + t('cutsShort') + '</dd></div>' +
-          '<div><dt class="meta">' + t('specAudio') + '</dt><dd>' + t('langsAI') + '</dd></div>' +
-          '<div><dt class="meta">' + t('epSeason') + '</dt><dd><span class="tbc">' + t('tbc') + '</span></dd></div></dl>' +
-        (function () { var ft = fit(tt, filler()); return '<div class="fit">' + bar(ft.pct) + '<span class="meta-s">' + esc(ft.text) + '</span></div>'; })() +
-        '<div class="feat-a">' + addBtn(tt.id) + '<a class="textlink" href="title.html?id=' + tt.id + '">' + (L() === 'pt' ? 'Ver o título' : 'See the title') + ' →</a></div>' +
-      '</div></article></div>';
+    box.innerHTML = '<div class="wrap feats">' + feats.map(function (x) { return featureCard(x.t, x.ev, true); }).join('') + '</div>';
     bindAdd(box, function () { var y = window.scrollY; renderCatalog(p); window.scrollTo(0, y); });
   }
 
@@ -579,14 +568,7 @@
       [t('specAudio'), langs(tt.audio)], [t('specDub'), langs(tt.dub)], [t('specSubs'), langs(tt.subs)],
       [t('specFmt'), tt.format ? tt.format.join(' · ') : TBC], [t('specRating'), tt.real ? (L() === 'pt' ? 'Para a família' : 'Family-safe') : nm(R.ratings[tt.rating])]
     ];
-    if (tt.real) spec = [
-      [t('specGenre'), nm(tt.genre)], [t('credit'), 'AN i9 ORIGINAL'], [t('outlets'), tt.outlets.join(' · ')],
-      [t('seasons'), tt.seasons ? t('seasonsV') : TBC],
-      [t('shortForm'), tt.cuts ? t('shortFormV') : TBC], [t('linear'), tt.cuts ? t('linearV') : TBC],
-      [t('epSeason'), TBC], [t('specTot'), TBC],
-      [t('specAudio'), langs(tt.audio)], [t('specDub'), tt.dubAI ? t('dubAIv') : langs(tt.dub)], [t('specSubs'), langs(tt.subs)],
-      [t('k4'), TBC], [t('trailerK'), tt.trailer === 'soon' ? t('trailer') : TBC], [t('specRating'), L() === 'pt' ? 'Para a família' : 'Family-safe']
-    ];
+    if (tt.facts) spec = tt.facts.map(function (r) { var v = val(r.v); return [nm(r.k), v == null ? TBC : v]; });
     var cell = function (v) { return v && v.tbc ? '<span class="tbc">' + t('tbc') + '</span>' : esc(v); };
     var inP = inProp(tt.id), scr = prop().some(function (x) { return x.id === tt.id && x.screener; });
     $('#ttl-hero').innerHTML =
@@ -604,10 +586,10 @@
             '<button type="button" class="btn" id="t-scr"' + (p && !ev.ok ? ' disabled' : '') + ' aria-pressed="' + scr + '">' + (scr ? '✓ ' + t('screenerOn') : t('screener')) + '</button>' +
           '</div>' +
           '<p class="meta-s dim" id="t-note" role="status" aria-live="polite"></p>' +
-          (tt.cuts ? '<div class="vers"><div class="trailer" role="img" aria-label="' + esc(t('trailer')) + '"><span class="meta">TRAILER</span><b>' + t('trailer') + '</b><span class="meta-s">' + t('trailerP') + '</span></div>' +
-            '<h2 class="meta vh">' + t('versH') + '</h2><div class="vcards">' +
-            '<div><span class="meta">' + t('versShort') + '</span><b>' + t('versShortV') + '</b><p>' + t('versShortP') + '</p></div>' +
-            '<div><span class="meta">' + t('versLin') + '</span><b>' + t('versLinV') + '</b><p>' + t('versLinP') + '</p></div></div></div>' : '') +
+          (tt.trailer === 'soon' || tt.versions ? '<div class="vers">' +
+            (tt.trailer === 'soon' ? '<div class="trailer" role="img" aria-label="' + esc(t('trailer')) + '"><span class="meta">TRAILER</span><b>' + t('trailer') + '</b><span class="meta-s">' + t('trailerP') + '</span></div>' : '') +
+            (tt.versions ? '<h2 class="meta vh">' + esc(nm(tt.versions.h)) + '</h2><div class="vcards">' + tt.versions.list.map(function (v) { return '<div><span class="meta">' + esc(nm(v.k)) + '</span><b>' + esc(nm(v.v)) + '</b><p>' + esc(nm(v.p)) + '</p></div>'; }).join('') + '</div>' : '') +
+            '</div>' : '') +
           '<table class="spec dark"><tbody>' + spec.map(function (r) { return '<tr><th scope="row">' + esc(r[0]) + '</th><td>' + cell(r[1]) + '</td></tr>'; }).join('') + '</tbody></table>' +
         '</div>' +
       '</div>';
@@ -616,9 +598,9 @@
     var mine = function (row) { return p && p.terr.some(function (c) { return covers(row, c); }) && inter(row.veh, p.veh).length; };
     if (tt.perDeal) {
       var tb = '<span class="tbc">' + t('tbc') + '</span>';
-      $('#ttl-rights').innerHTML = '<div class="wrap"><div class="head"><h2 class="h2">' + t('rightsH') + '</h2><p>' + t('rightsDeal') + '</p></div>' +
+      $('#ttl-rights').innerHTML = '<div class="wrap"><div class="head"><h2 class="h2">' + t('rightsH') + '</h2><p>' + esc(nm(tt.rightsNote)) + '</p></div>' +
         '<div class="tscroll"><table class="rights"><thead><tr><th>' + t('thTerr') + '</th><th>' + t('thVeh') + '</th><th>' + t('thWin') + '</th><th>' + t('thLic') + '</th><th>' + t('thEx') + '</th></tr></thead><tbody>' +
-        '<tr class="mine"><td data-l="' + t('thTerr') + '"><span class="yours meta"><span class="tally"></span>' + t('perDeal') + '</span>' + tb + '</td><td data-l="' + t('thVeh') + '">' + tb + '</td><td data-l="' + t('thWin') + '">' + tb + '</td><td data-l="' + t('thLic') + '">' + tb + '</td><td data-l="' + t('thEx') + '">' + tb + '</td></tr>' +
+        '<tr class="mine"><td data-l="' + t('thTerr') + '"><span class="yours meta"><span class="tally"></span>' + esc(nm(tt.dealNote)) + '</span>' + tb + '</td><td data-l="' + t('thVeh') + '">' + tb + '</td><td data-l="' + t('thWin') + '">' + tb + '</td><td data-l="' + t('thLic') + '">' + tb + '</td><td data-l="' + t('thEx') + '">' + tb + '</td></tr>' +
         '</tbody></table></div></div>';
     } else
     $('#ttl-rights').innerHTML =
@@ -645,9 +627,9 @@
           '<div><span class="v num">' + f.days + '</span><span class="meta">' + (pt ? 'Dias por semana' : 'Days a week') + '</span></div>' +
           '<div><span class="v num">' + (fc.cut ? fc.cut.perMonth : '—') + '</span><span class="meta">' + (fc.cut ? (fc.cut.id === 'thirty' ? t('cut30n') : t('cutPilln')) : '') + (pt ? ' por mês' : ' a month') + '</span></div>' +
           '<div class="res"><span class="v num">' + Math.round(fc.pct * 100) + '%</span><span class="meta">' + esc(fc.text) + '</span></div></div>' +
-          (fc.cut && !single(f) ? '<p class="sc-t">' + t('schedCut', { s: f.slot, d: f.days, n: fc.needMonth, c: fc.cut.id === 'thirty' ? t('cut30n') : t('cutPilln'), k: fc.cut.perMonth, p: Math.round(fc.pct * 100) }) + ' <b>' + t('versLinP') + '</b></p>' : '');
+          (fc.cut && !single(f) ? '<p class="sc-t">' + t('schedCut', { s: f.slot, d: f.days, n: fc.needMonth, c: fc.cut.id === 'thirty' ? t('cut30n') : t('cutPilln'), k: fc.cut.perMonth, p: Math.round(fc.pct * 100) }) + '</p>' : '');
       }
-      else if (!tt.runtime) body = '<p class="lede">' + t('fitTbc') + '.</p>';
+      else if (!tt.runtime) body = '<p class="lede">' + (tt.episodes ? t('fitRtTbc') : t('fitTbc')) + '.</p>';
       else if (!k) body = '<p class="lede">' + t('schedFilm', { r: tt.runtime }) + '</p>';
       else {
         var slots = Math.ceil(tt.episodes / k), wks = Math.round(slots / f.days * 10) / 10;
@@ -719,9 +701,9 @@
     var need = slotsNeeded(f), w = weeksOf(f), wf = Math.min(w, Math.floor(slots / f.days));
     var perWeek = fmtH(f.slot * f.days);
     var covLine = single(f) ? t('covSingle', { n: okRows.length }) : (slots >= need ? t('covAll', { h: perWeek, w: w }) : t('covTxt', { s: f.slot, d: f.days, h: perWeek, f: wf, w: w }));
-    var eps = okRows.reduce(function (a, r) { return a + (r.t.episodes || 0); }, 0);
+    var eps = okRows.reduce(function (a, r) { return a + (r.t.runtime ? (r.t.episodes || 0) : 0); }, 0);
     var mins = okRows.reduce(function (a, r) { return a + (r.t.episodes || 0) * (r.t.runtime || 0); }, 0);
-    var tbcRows = okRows.filter(function (r) { return !r.t.episodes; });
+    var tbcRows = okRows.filter(function (r) { return !r.t.episodes || !r.t.runtime; });
     var vehs = p ? p.veh : [];
     var draft = get('i9s.draft', {}) || {};
     $('#prop-side').innerHTML =
@@ -899,6 +881,7 @@
     var w = $('#mk-wall'); if (w) w.innerHTML = C.concat(C).slice(0, 30).map(function (x) { return I9S_poster(x); }).join('');
     $$('[data-sample]').forEach(function (b) { if (!b._b) { b._b = 1; b.addEventListener('click', function () { useSample(b.getAttribute('data-sample'), true); }); } });
     var n = $('#mk-n'); if (n) n.textContent = C.length;
+    var rf = $('#mk-real'); if (rf) rf.innerHTML = C.filter(function (x) { return x.real; }).map(function (x) { return featureCard(x, null, false); }).join('');
   }
 
   /* ---------------- boot ---------------- */

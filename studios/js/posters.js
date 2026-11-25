@@ -11,11 +11,11 @@
     var fmt = !t.episodes ? '' : (t.episodes > 1 ? t.episodes + ' × ' + t.runtime + '′' : t.runtime + '′');
     var p = t.poster || { g: 'black', l: 'stack' };
     if (t.photos && t.photos.length) {
-      /* real title: its own cleared photo, the AN i9 ORIGINAL credit, never a DEMO tag */
-      return '<span class="poster g-black l-photo' + (t.original ? ' orig' : '') + '"' + (opts.label ? ' role="img" aria-label="' + esc(name) + ' poster"' : ' aria-hidden="true"') + '>' +
+      /* real title: its own cleared photo, its credit tag (AN i9 ORIGINAL or i9 CO-PRODUCTION), never DEMO */
+      return '<span class="poster g-black l-photo' + (t.credit ? ' ' + t.credit : '') + '"' + (opts.label ? ' role="img" aria-label="' + esc(name) + ' poster"' : ' aria-hidden="true"') + '>' +
         '<img src="img/' + t.photos[opts.photo || 0] + '.webp" alt="" loading="lazy">' +
         '<span class="pk">' + esc(type) + '</span>' +
-        (t.original ? '<span class="otag">AN i9 ORIGINAL</span>' : '') +
+        (t.creditTag ? '<span class="otag ' + (t.credit || '') + '">' + esc(t.creditTag) + '</span>' : '') +
         '<span class="pt">' + esc(name) + '</span>' +
         '<span class="ps">i9 STUDIOS</span></span>';
     }

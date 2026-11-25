@@ -1,14 +1,18 @@
 /* ==========================================================================
    i9 Studios content marketplace: DEMONSTRATION CATALOGUE.
 
-   ONE REAL TITLE: Netmotors, i9's original production (owned IP, credit "AN i9 ORIGINAL", the only
-   title allowed to carry it). Its published facts come from i9tv.com.br; every fact we do not have is
-   null and shows as "to confirm with i9". Its rights are set per deal (i9 owns the IP).
+   TWO REAL TITLES, first in the list:
+   - Netmotors: i9's original production (owned IP). Credit "AN i9 ORIGINAL", the only title allowed
+     to carry it. Rights set per deal because i9 owns the IP.
+   - Heróis Eternos: 21-episode documentary series co-produced by i9 Studios and Record Américas.
+     Credit "i9 co-production · with Record Américas" (never AN i9 ORIGINAL). Availability is
+     confirmed with i9 per deal because it is a co-produced title.
+   Real-title facts come from i9tv.com.br and the owner; every fact we do not have is null and
+   shows as "to confirm with i9". Nothing is multiplied out (no season totals, no running times).
 
-   EVERY OTHER TITLE BELOW IS INVENTED. Names, synopses, episode counts and rights are examples
-   written to show how the marketplace works. None is a real show and none is an i9
-   production. Real i9 productions (Heróis Eternos, Canta Comigo, ...) are credited on the
-   Produce page and are NOT offered for licence here.
+   EVERY OTHER TITLE IS INVENTED. Names, synopses, episode counts and rights are examples written to
+   show how the marketplace works. None is a real show and none is an i9 production. Other real i9
+   productions (Canta Comigo, ...) are credited on the Produce page and are NOT offered for licence.
 
    To make it real, i9 replaces this file with its distribution catalogue, one object per
    title, keeping the same fields:
@@ -16,9 +20,16 @@
    id        url-safe slug
    demo      true for placeholders (shows the DEMO tag); remove for real titles
    type      novela | series | film | documentary | reality | kids | music | faith | sports | magazine
-   real      true for a real title (no DEMO tag)      original  true only for owned IP (AN i9 ORIGINAL)
+   real      true for a real title (no DEMO tag)
+   credit    'original' (owned IP, AN i9 ORIGINAL) | 'coprod' (co-production); real titles only
+   creditTag / creditLine   the credit as a tag on the poster / as words on cards and pages
    photos    real, cleared i9 photos (real titles only)   outlets  where it airs today (published facts)
    perDeal   true when rights are not listed and availability is set per deal
+   metaLine, featK, featP, dealNote, rightsNote, langNote   per-title wording { en, pt }
+   feature   rows on the catalogue feature card; facts  rows of the title-page spec table
+             each row { k: {en,pt}, v: string | {en,pt} | null }  (null = "to confirm with i9")
+   versions  optional packagings block (Netmotors: short-form and 30-min)
+   cuts      optional packagings the schedule filler can use, supplied at a monthly rate
    title     { en, pt }            synopsis { en, pt }      genre { en, pt }
    rating    L | 10 | 12 | 14 | 16 | 18   (18 = adult: hidden from faith and kids channels)
    tags      suitability: 'faith-safe', 'family', 'kids'
@@ -34,8 +45,11 @@
              ex     nonexcl | excl
    ========================================================================== */
 window.I9S_CATALOG = [
+  /* ---------------- REAL TITLES (no DEMO tag) ---------------- */
   {
-    id: 'netmotors', real: true, original: true, perDeal: true, type: 'magazine',
+    id: 'netmotors', real: true, credit: 'original', perDeal: true, type: 'magazine',
+    creditTag: 'AN i9 ORIGINAL',
+    creditLine: { en: 'An i9 Original', pt: 'Um original i9' },
     title: { en: 'Netmotors', pt: 'Netmotors' },
     genre: { en: 'Motoring / lifestyle magazine show', pt: 'Programa de revista sobre carros e estilo de vida' },
     synopsis: {
@@ -45,8 +59,8 @@ window.I9S_CATALOG = [
     rating: 'L', tags: ['family'],
     /* Owner facts, 25 Nov: 3 seasons in the new format; "pílulas" of 8–12 min, 12 a month; a second
        packaging of 4 × 30-min episodes a month, each made of 3 pílulas; original Portuguese; AI-dubbed
-       into English and Spanish; trailer in edit. Still unknown (null = "to confirm with i9"): episodes
-       per season, total running time, subtitles, 4K availability, territories, windows, exclusivity.
+       into English and Spanish; trailer in edit. Unknown (null = "to confirm with i9"): episodes per
+       season, total running time, subtitles, 4K availability, territories, windows, exclusivity.
        Season totals are NOT multiplied out from the monthly rate. */
     seasons: 3, episodes: null, runtime: null, format: null, subs: null,
     audio: ['pt'], dub: ['en', 'es'], dubAI: true, trailer: 'soon',
@@ -56,9 +70,109 @@ window.I9S_CATALOG = [
     ],
     outlets: ['RFTV', 'NGT', 'PlayTV', 'YouTube · Netmotors TV'],
     photos: ['p-netmotors-0', 'p-netmotors-1', 'p-netmotors-3', 'p-netmotors-2', 'p-netmotors-4', 'p-netmotors-5'],
+    photoAlt: { en: 'Netmotors: a classic car and crew in a garage, during the shoot', pt: 'Netmotors: um carro clássico e a equipe numa garagem, durante a gravação' },
     poster: { g: 'black', l: 'photo' },
+    metaLine: { en: '3 seasons · 8–12 min pílulas or 30-min episodes', pt: '3 temporadas · pílulas de 8–12 min ou episódios de 30 min' },
+    featK: { en: 'An i9 Original · real title', pt: 'Um original i9 · título real' },
+    featP: {
+      en: 'The car show produced entirely by i9, in two packagings: short-form pílulas or 30-minute episodes. i9 owns the IP, so territories, windows and exclusivity are set per deal.',
+      pt: 'O programa de carros produzido inteiramente pela i9, em dois formatos: pílulas curtas ou episódios de 30 minutos. A i9 é dona do IP, então territórios, janelas e exclusividade são definidos por negócio.'
+    },
+    dealNote: { en: 'i9 owns the IP: rights set per deal', pt: 'a i9 é dona do IP: direitos definidos por negócio' },
+    rightsNote: {
+      en: 'i9 owns the Netmotors IP. Territories, vehicles, windows, licence periods and exclusivity are agreed per deal.',
+      pt: 'A i9 é dona do IP do Netmotors. Territórios, veículos, janelas, períodos de licença e exclusividade são combinados por negócio.'
+    },
+    langNote: { en: 'Portuguese · AI-dubbed into English and Spanish', pt: 'Português · dublado por IA em inglês e espanhol' },
+    /* short rows on the feature card; v: null shows "to confirm with i9" */
+    feature: [
+      { k: { en: 'Airs today on', pt: 'Vai ao ar hoje em' }, v: 'RFTV · NGT · PlayTV · YouTube · Netmotors TV' },
+      { k: { en: 'Format', pt: 'Formato' }, v: { en: '8–12 min pílulas, 12 a month · or 4 × 30 min a month', pt: 'pílulas de 8–12 min, 12 por mês · ou 4 × 30 min por mês' } },
+      { k: { en: 'Original audio', pt: 'Áudio original' }, v: { en: 'Portuguese · AI-dubbed into English and Spanish', pt: 'Português · dublado por IA em inglês e espanhol' } },
+      { k: { en: 'Episodes per season', pt: 'Episódios por temporada' }, v: null }
+    ],
+    /* the title page spec table */
+    facts: [
+      { k: { en: 'Genre', pt: 'Gênero' }, v: { en: 'Motoring / lifestyle magazine show', pt: 'Programa de revista sobre carros e estilo de vida' } },
+      { k: { en: 'Credit', pt: 'Crédito' }, v: 'AN i9 ORIGINAL' },
+      { k: { en: 'Airs today on', pt: 'Vai ao ar hoje em' }, v: 'RFTV · NGT · PlayTV · YouTube · Netmotors TV' },
+      { k: { en: 'Seasons', pt: 'Temporadas' }, v: { en: '3, in the new format', pt: '3, no formato novo' } },
+      { k: { en: 'Short-form', pt: 'Formato curto' }, v: { en: 'Pílulas of 8–12 min, 12 a month', pt: 'Pílulas de 8–12 min, 12 por mês' } },
+      { k: { en: '30-min version', pt: 'Versão de 30 min' }, v: { en: '4 × 30 min a month, each made of 3 pílulas', pt: '4 × 30 min por mês, cada um com 3 pílulas' } },
+      { k: { en: 'Episodes per season', pt: 'Episódios por temporada' }, v: null },
+      { k: { en: 'Total running time', pt: 'Duração total' }, v: null },
+      { k: { en: 'Original audio', pt: 'Áudio original' }, v: { en: 'Portuguese', pt: 'Português' } },
+      { k: { en: 'Dubbed versions', pt: 'Versões dubladas' }, v: { en: 'English, Spanish (AI-dubbed)', pt: 'Inglês, espanhol (dublagem por IA)' } },
+      { k: { en: 'Subtitles', pt: 'Legendas' }, v: null },
+      { k: { en: '4K availability', pt: 'Disponibilidade em 4K' }, v: null },
+      { k: { en: 'Trailer', pt: 'Trailer' }, v: { en: 'Trailer coming soon', pt: 'Trailer em breve' } },
+      { k: { en: 'Suitability', pt: 'Adequação' }, v: { en: 'Family-safe', pt: 'Para a família' } }
+    ],
+    versions: {
+      h: { en: 'One show, two packagings', pt: 'Um programa, dois formatos' },
+      list: [
+        { k: { en: 'Short-form', pt: 'Formato curto' }, v: { en: '8–12 min × 12 a month', pt: '8–12 min × 12 por mês' }, p: { en: 'Pílulas for OTT, social and fillers.', pt: 'Pílulas para OTT, redes e interprogramas.' } },
+        { k: { en: 'Linear TV', pt: 'TV linear' }, v: { en: '4 × 30 min a month', pt: '4 × 30 min por mês' }, p: { en: 'Each episode is 3 pílulas. A weekly 30-min slot.', pt: 'Cada episódio reúne 3 pílulas. Uma faixa semanal de 30 min.' } }
+      ]
+    },
     rights: []
   },
+  {
+    /* Facts only from i9tv.com.br, projetos/herois-eternos: documentary series, 21 episodes,
+       co-produced by i9 Studios and Record Américas, shot in the Holy Land retracing the paths of
+       people considered heroes, archaeology as the thread, recorded and post-produced in 4K.
+       Owner, 25 Nov: "Heróis Eternos" is the only name of this project. Co-produced, so NOT an i9
+       Original. Unknown (null): runtime per episode, total running time, audio/dub/subtitle
+       languages, territories, vehicles, windows, licence, exclusivity, trailer/screener, age rating. */
+    id: 'herois-eternos', real: true, credit: 'coprod', perDeal: true, type: 'documentary',
+    creditTag: 'i9 CO-PRODUCTION',
+    creditLine: { en: 'i9 co-production · with Record Américas', pt: 'Coprodução i9 · com a Record Américas' },
+    title: { en: 'Heróis Eternos', pt: 'Heróis Eternos' },
+    genre: { en: 'Documentary series', pt: 'Série documental' },
+    synopsis: {
+      en: 'A 21-episode documentary series shot in the Holy Land, retracing the paths of people considered heroes, with the findings of archaeology as the thread of the narrative. Recorded and post-produced in 4K. Co-produced by i9 Studios and Record Américas.',
+      pt: 'Uma série documental em 21 episódios gravada na Terra Santa, refazendo os caminhos de pessoas consideradas heróis, com as descobertas da arqueologia como fio da narrativa. Gravação e pós-produção em 4K. Coprodução da i9 Studios com a Record Américas.'
+    },
+    rating: null, tags: ['faith-safe', 'family'],
+    episodes: 21, runtime: null, format: ['4K'], audio: null, dub: null, subs: null, trailer: null,
+    photos: ['p-herois-eternos-12', 'p-herois-eternos-0', 'p-herois-eternos-5', 'p-herois-eternos-1', 'p-herois-eternos-6', 'p-herois-eternos-11', 'p-herois-eternos-2', 'p-herois-eternos-4', 'p-herois-eternos-7', 'p-herois-eternos-10'],
+    photoAlt: { en: 'Heróis Eternos: an interview filmed in a dark, leather-furnished room', pt: 'Heróis Eternos: uma entrevista gravada numa sala escura com poltronas de couro' },
+    poster: { g: 'black', l: 'photo' },
+    metaLine: { en: 'Documentary series · 21 episodes · runtime to confirm', pt: 'Série documental · 21 episódios · duração a confirmar' },
+    featK: { en: 'i9 co-production · real title', pt: 'Coprodução i9 · título real' },
+    featP: {
+      en: 'A 21-episode documentary series in the Holy Land, co-produced by i9 Studios and Record Américas, recorded and post-produced in 4K. As a co-produced title, availability is confirmed with i9 per deal.',
+      pt: 'Uma série documental em 21 episódios na Terra Santa, coproduzida pela i9 Studios com a Record Américas, gravada e pós-produzida em 4K. Por ser um título coproduzido, a disponibilidade é confirmada com a i9 por negócio.'
+    },
+    dealNote: { en: 'Co-produced title: availability confirmed with i9 per deal', pt: 'Título coproduzido: disponibilidade confirmada com a i9 por negócio' },
+    rightsNote: {
+      en: 'Heróis Eternos is co-produced by i9 Studios and Record Américas. Territories, vehicles, windows, licence periods and exclusivity are confirmed with i9 per deal.',
+      pt: 'Heróis Eternos é uma coprodução da i9 Studios com a Record Américas. Territórios, veículos, janelas, períodos de licença e exclusividade são confirmados com a i9 por negócio.'
+    },
+    langNote: { en: 'languages to confirm with i9', pt: 'idiomas a confirmar com a i9' },
+    feature: [
+      { k: { en: 'Episodes', pt: 'Episódios' }, v: '21' },
+      { k: { en: 'Format', pt: 'Formato' }, v: { en: 'Recorded and post-produced in 4K', pt: 'Gravação e pós-produção em 4K' } },
+      { k: { en: 'Runtime per episode', pt: 'Duração por episódio' }, v: null },
+      { k: { en: 'Languages', pt: 'Idiomas' }, v: null }
+    ],
+    facts: [
+      { k: { en: 'Genre', pt: 'Gênero' }, v: { en: 'Documentary series', pt: 'Série documental' } },
+      { k: { en: 'Credit', pt: 'Crédito' }, v: { en: 'i9 co-production · with Record Américas', pt: 'Coprodução i9 · com a Record Américas' } },
+      { k: { en: 'Location', pt: 'Locação' }, v: { en: 'Holy Land', pt: 'Terra Santa' } },
+      { k: { en: 'Episodes', pt: 'Episódios' }, v: '21' },
+      { k: { en: 'Runtime per episode', pt: 'Duração por episódio' }, v: null },
+      { k: { en: 'Total running time', pt: 'Duração total' }, v: null },
+      { k: { en: 'Original audio', pt: 'Áudio original' }, v: null },
+      { k: { en: 'Dubbed versions', pt: 'Versões dubladas' }, v: null },
+      { k: { en: 'Subtitles', pt: 'Legendas' }, v: null },
+      { k: { en: 'Format', pt: 'Formato' }, v: { en: 'Recorded and post-produced in 4K', pt: 'Gravação e pós-produção em 4K' } },
+      { k: { en: 'Trailer / screener', pt: 'Trailer / screener' }, v: null },
+      { k: { en: 'Suitability', pt: 'Adequação' }, v: { en: 'Faith-safe · family', pt: 'Segura para fé · família' } }
+    ],
+    rights: []
+  },
+  /* ---------------- DEMONSTRATION TITLES (invented) ---------------- */
   {
     id: 'house-of-tides', demo: true, type: 'novela',
     title: { en: 'House of Tides', pt: 'Casa das Marés' },
