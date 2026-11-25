@@ -25,13 +25,13 @@
   });
   nav.innerHTML = html;
   document.body.appendChild(nav);
-  /* Sit above any fixed bottom bar on the page (wizard footer, phone buy bar) so it never covers Back / Buy. */
+  /* Sit above any fixed or sticky bottom bar on the page (wizard footer, phone buy bar) so it never covers Back / Buy. */
   function lift() {
     var h = 0;
     document.querySelectorAll('body *').forEach(function (el) {
       if (el === nav || nav.contains(el)) return;
       var cs = getComputedStyle(el);
-      if (cs.position !== 'fixed' || cs.display === 'none' || cs.visibility === 'hidden') return;
+      if ((cs.position !== 'fixed' && cs.position !== 'sticky') || cs.display === 'none' || cs.visibility === 'hidden') return;
       var r = el.getBoundingClientRect();
       if (r.height > 0 && r.height < innerHeight * 0.4 && r.bottom >= innerHeight - 2 && r.width > innerWidth * 0.5) h = Math.max(h, innerHeight - r.top);
     });
