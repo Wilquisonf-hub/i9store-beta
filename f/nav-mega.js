@@ -76,7 +76,8 @@
           <h3>Lay out your room before you buy.</h3>
           <p>Start from one of our setups or from an empty room. Every piece in the planner is a live listing, and the list goes to your bag or to a specialist for a quote.</p>
           <a class="btn sig" href="planner.html">Open the room planner</a>
-          <a class="mg-led" href="led.html" style="display:grid;gap:4px;margin-top:28px;padding-top:18px;border-top:1px solid var(--rule);text-decoration:none;color:var(--ink)"><span class="meta" style="display:flex;gap:10px;align-items:center;color:var(--ink-3)"><span class="tally"></span>LED walls · built to order</span><b style="font-size:18px;font-weight:600;letter-spacing:-.01em">Configure an LED wall ${icon('arrow-right')}</b><span style="color:var(--ink-2);font-size:14px">Pitch, cabinets, processors and a 3D view, quoted with the factory.</span></a></div>
+          <a class="mg-led" href="led.html" style="display:grid;gap:4px;margin-top:28px;padding-top:18px;border-top:1px solid var(--rule);text-decoration:none;color:var(--ink)"><span class="meta" style="display:flex;gap:10px;align-items:center;color:var(--ink-3)"><span class="tally"></span>LED walls · built to order</span><b style="font-size:18px;font-weight:600;letter-spacing:-.01em">Configure an LED wall ${icon('arrow-right')}</b><span style="color:var(--ink-2);font-size:14px">Pitch, cabinets, processors and a 3D view, quoted with the factory.</span></a>
+          <a class="mg-all" href="tools.html" style="margin-top:16px">Tools and guides: LED wall calculator, church LED walls, podcast studio ${icon('arrow-right')}</a></div>
         <div><p class="meta" style="color:var(--ink-3);margin:0 0 10px">Start from a setup</p>
           <ul class="mg-tpl">${SETUPS.map(s => `<li><a href="planner.html?template=${s.id}"><b>${esc(s.title)}</b><span class="meta-s">${s.pieces} pcs</span></a></li>`).join('')}</ul></div>
       </div>` },
@@ -136,7 +137,7 @@
     tabs = $$('.mg-tab', bar);
     /* the page we're on marks its tab */
     const qp = new URLSearchParams(location.search);
-    let cur = here === 'everyday.html' || here === 'product-simple.html' ? 'everyday' : here === 'setups.html' ? 'setups' : here === 'planner.html' || here === 'led.html' ? 'plan' : here === 'shop.html' ? (qp.get('solution') ? 'solutions' : qp.get('brand') || qp.get('view') === 'brands' ? 'brands' : (m === 'store' ? 'departments' : 'categories')) : '';
+    let cur = here === 'everyday.html' || here === 'product-simple.html' ? 'everyday' : here === 'setups.html' ? 'setups' : here === 'planner.html' || here === 'led.html' || ['tools.html', 'led-wall-calculator.html', 'led-wall-church.html', 'guide-podcast-studio.html'].includes(here) ? 'plan' : here === 'shop.html' ? (qp.get('solution') ? 'solutions' : qp.get('brand') || qp.get('view') === 'brands' ? 'brands' : (m === 'store' ? 'departments' : 'categories')) : '';
     if (cur && $('#mg-t-' + cur)) $('#mg-t-' + cur).setAttribute('aria-current', 'page');
     tabs.forEach(wire);
     panels.addEventListener('keydown', panelKeys);
@@ -233,6 +234,7 @@
     plan: () => `<h2 class="mg-vh">Plan your room</h2><p style="color:var(--ink-2);margin:0 0 16px">Start from a setup or an empty room. Every piece is a live listing.</p>
       <a class="btn sig" href="planner.html" style="width:100%">Open the room planner</a>
       <a class="btn" href="led.html" style="width:100%;margin-top:8px">Configure an LED wall</a>
+      <a class="btn" href="tools.html" style="width:100%;margin-top:8px">Tools and guides</a>
       <p class="meta" style="color:var(--ink-3);margin:24px 0 4px">Start from a setup</p>${rows(SETUPS.map(s => `<li><a class="mg-row sm" href="planner.html?template=${s.id}"><span class="grow"><span>${esc(s.title)}</span></span><span class="n">${s.pieces} pcs</span></a></li>`))}`,
   };
   function build() {

@@ -4,7 +4,10 @@
    imported only when the step opens) · 8 review and request a factory quote.
    LED walls are built to order: there is no price and no bag here. The end is a quote request that i9 takes to the
    factory. All answers ride in the URL hash as #l=<base64url JSON> (like the planner's #p=), so a link reopens the same
-   wall on the same step. The quote form's personal fields never go in the URL. */
+   wall on the same step. The quote form's personal fields never go in the URL.
+   Lead gate (owner, 25 Nov): steps 1–5 and the 3D overview are free. The processor plan (model, count, ports,
+   receiving cards, fibre, genlock), the closest / typical row views, the printable spec sheet and "save project" need a
+   free project account. While locked those values are never written to the page; the link (#l=) carries inputs only. */
 (function () {
   'use strict';
   const L = window.I9LED; if (!L) return;
@@ -206,9 +209,12 @@
   }
   const b64e = s => btoa(unescape(encodeURIComponent(s))).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
   const b64d = s => decodeURIComponent(escape(atob(s.replace(/-/g, '+').replace(/_/g, '/'))));
-  function hashOf(z = Z) { const o = {}; const d = DEF(); Object.keys(z).forEach(k => { if (JSON.stringify(z[k]) !== JSON.stringify(d[k]) || k === 's') o[k] = z[k]; }); return '#l=' + b64e(JSON.stringify(o)); }
+  /* the link carries the free layer only: every answer the customer typed or picked, never a result. The processor
+     override (pr) is a gated result, so it never rides in the link; the plan is recomputed for whoever opens it. */
+  const NOT_IN_LINK = ['pr'];
+  function hashOf(z = Z) { const o = {}; const d = DEF(); Object.keys(z).forEach(k => { if (NOT_IN_LINK.includes(k)) return; if (JSON.stringify(z[k]) !== JSON.stringify(d[k]) || k === 's') o[k] = z[k]; }); return '#l=' + b64e(JSON.stringify(o)); }
   function save() { try { history.replaceState(history.state, '', location.pathname.split('/').pop() + location.search.replace(/[?&]preset=[\w-]+/, '').replace(/^&/, '?') + hashOf()); } catch (e) {} }
-  function readHash() { const m = /^#l=([\w-]+)/.exec(location.hash); if (!m) return null; try { return valid(JSON.parse(b64d(m[1]))); } catch (e) { return null; } }
+  function readHash() { const m = /^#l=([\w-]+)/.exec(location.hash); if (!m) return null; try { const z = valid(JSON.parse(b64d(m[1]))); z.pr = null; return z; } catch (e) { return null; } }
   function chooseUse(k) {
     if (Z.use === k) return;
     const U = L.USES[k]; Z.use = k; Z.env = U.env; Z.mount = U.mount; Z.rent = U.rent; Z.sw = U.sw; Z.sh = U.sh; Z.dc = U.dc; Z.dt = U.dt;
@@ -337,6 +343,230 @@
     $('#lz-sum').innerHTML = sum;
   }
 
+  /* ======================= project account (the lead gate) =======================
+     PRODUCTION (none of this runs in the prototype):
+     - The account is the store's existing customer account (Central API). Sign-in is by a 6-digit email code or
+       Google; there are no passwords anywhere in this flow.
+     - The gated values (processor model and count, ports used / available, receiving cards, fibre, genlock and
+       frame-rate implications, the closest / typical row views, the printable spec sheet) are computed SERVER-SIDE
+       after sign-in and are never shipped to anonymous clients: led-data.js loses its PROCESSORS table, and procs(),
+       fibreOf() and specRows()' gated lines become one authenticated call that returns the plan for this #l= state.
+     - On account creation (and on every quote request or "save project") the lead goes to Central → Comercial as an
+       opportunity: contact fields + role + timing + consent, the project JSON (the #l= state and the computed plan),
+       the source page and the UTM parameters of the visit. Contact fields travel in the request body, never in a URL.
+     - The sales team sees the project in Central and contacts the customer to continue it. No response-time promise.
+     PROTOTYPE: nothing is sent and no account is created. A flag in localStorage holds only { name, emailMasked, id },
+     never the full email or phone; the full form values live in memory for the form's lifetime only. */
+  const ACC_KEY = 'i9led-account';
+  let ACC = null;          /* { name, emailMasked, id } */
+  let ACC_ORG = '';        /* organisation, memory only, for the quote card in this visit */
+  function accLoad() {
+    try {
+      const o = JSON.parse(localStorage.getItem(ACC_KEY) || 'null');
+      if (o && typeof o.name === 'string' && o.name.trim() && typeof o.emailMasked === 'string' && /^LED-[A-Z0-9]{5}$/.test(o.id)) ACC = { name: o.name.trim().slice(0, 80), emailMasked: o.emailMasked.slice(0, 120), id: o.id };
+    } catch (e) { ACC = null; }
+  }
+  function accStore() { try { localStorage.setItem(ACC_KEY, JSON.stringify({ name: ACC.name, emailMasked: ACC.emailMasked, id: ACC.id })); } catch (e) {} }
+  function accForget() { try { localStorage.removeItem(ACC_KEY); } catch (e) {} }
+  const signed = () => !!ACC;
+  const maskEmail = e => { const s = String(e).trim(), at = s.lastIndexOf('@'); return at < 1 ? '•••' : s[0] + '•••' + s.slice(at); };
+  const nameFromEmail = e => String(e).split('@')[0].split(/[._+-]+/).filter(Boolean).map(w => w[0].toUpperCase() + w.slice(1)).join(' ') || 'i9 customer';
+  function newId() {
+    const A = 'ABCDEFGHJKMNPQRSTUVWXYZ23456789'; let r;
+    try { r = crypto.getRandomValues(new Uint8Array(5)); } catch (e) { r = Array.from({ length: 5 }, () => Math.floor(Math.random() * 256)); }
+    return 'LED-' + Array.from(r, x => A[x % A.length]).join('');
+  }
+  const live = t => { const l = $('#live'); if (l) l.textContent = t; };
+  const firstName = n => String(n).trim().split(/\s+/)[0];
+
+  /* what the account gives, said once, the same everywhere */
+  const GATE_T = {
+    proc: 'Processor plan, ports and receiving cards: free with a project account. An i9 engineer reviews the plan with you.',
+    '3d': 'The views from the closest and typical rows come with a free project account.',
+    sheet: 'Processor, genlock and fibre lines, the printable sheet and saving the project: free with a project account.',
+  };
+  /* the sheet's lede: what is waiting (by where it was opened) + what the account gives */
+  const ACC_BASE = 'Save the project, get the processor plan, the full spec sheet and an engineer’s review.';
+  const ACC_LEDE = { '': '', proc: 'The processor plan for this wall is worked out.', '3d': 'The views from the closest and typical rows are ready.', sheet: 'The full spec sheet is ready to print.', save: '' };
+  const GETS = ['Processor model, ports and receiving cards', 'Genlock, frame rate and fibre advice', 'Views from the closest and typical rows', 'The printable spec sheet, saved with the project'];
+  const COUNTRIES = ['United States', 'Brazil', 'Mexico', 'Colombia', 'Chile', 'Argentina', 'Peru', 'Ecuador', 'Dominican Republic', 'Puerto Rico', 'Panama', 'Costa Rica', 'Guatemala', 'Other'];
+  const ROLES = [['end', 'End customer'], ['integrator', 'Integrator or reseller'], ['rental', 'Rental company']];
+  const TIMING = [['month', 'This month'], ['1-3', '1–3 months'], ['3-6', '3–6 months'], ['research', 'Just researching']];
+  const FLABEL = { name: 'full name', org: 'company, church or organisation', email: 'a valid work email', phone: 'phone or WhatsApp', country: 'country', role: '“I am”', timing: 'project timing', consent: 'your OK for i9 to contact you' };
+  const GOOGLE_G = '<svg class="gg" viewBox="0 0 48 48" aria-hidden="true"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>';
+
+  /* a redaction bar: the shape of a value, never the value */
+  const rd = (w, cls = '') => `<span class="rd${cls ? ' ' + cls : ''}" style="--w:${w}" aria-hidden="true"></span>`;
+  const LOCKED = 'Free with a project account';
+  function gateBox(kind) {
+    return `<div class="gate"><p class="gate-t">${icon('lock')}<span>${esc(GATE_T[kind])}</span></p>
+      <div class="gate-a"><button type="button" class="btn sig" data-acct="new" data-from="${kind}">Create free project account</button><button type="button" class="lnk" data-acct="in" data-from="${kind}">I already have an account</button></div></div>`;
+  }
+
+  /* the account form: the sheet uses it, and so does the step 8 quote request when nobody is signed in (one form, not two) */
+  function acctForm(ctx, mode) {
+    const radios = (name, list) => list.map(([v, l]) => `<label class="rc"><input type="radio" name="${name}" value="${v}" required><span>${esc(l)}</span></label>`).join('');
+    const det = mode === 'in'
+      ? `<label class="fld"><span>Work email</span><input name="email" type="email" autocomplete="email" required></label>`
+      : `<div class="qf2"><label class="fld"><span>Full name</span><input name="name" autocomplete="name" required></label>
+          <label class="fld"><span>Company, church or organisation</span><input name="org" autocomplete="organization" required></label></div>
+        <div class="qf2"><label class="fld"><span>Work email</span><input name="email" type="email" autocomplete="email" required></label>
+          <label class="fld"><span>Phone or WhatsApp</span><input name="phone" type="tel" autocomplete="tel" required></label></div>
+        <label class="fld"><span>Country</span><select name="country" autocomplete="country-name" required><option value="">Choose</option>${COUNTRIES.map(c => `<option>${c}</option>`).join('')}</select></label>
+        <fieldset class="afr"><legend>I am</legend><div class="afc c3">${radios('role', ROLES)}</div></fieldset>
+        <fieldset class="afr"><legend>Project timing</legend><div class="afc c4">${radios('timing', TIMING)}</div></fieldset>
+        <label class="fld"><span>Note <em>optional</em></span><textarea name="note" rows="3" placeholder="Venue, content, deadlines, anything we should know"></textarea></label>
+        <label class="cns"><input type="checkbox" name="consent" required><span>i9 may contact me about this project</span></label>`;
+    const go = ctx === 'quote' ? 'Request factory quote' : 'Email me a sign-in code';
+    const sw = ctx === 'quote' ? `Already have an account? <button type="button" class="lnk" data-acct="in" data-from="sheet">Sign in</button>`
+      : mode === 'in' ? `New here? <button type="button" class="lnk" data-acct-mode="new">Create a free project account</button>`
+      : `Already have an account? <button type="button" class="lnk" data-acct-mode="in">Sign in</button>`;
+    return `<form class="af" id="${ctx === 'quote' ? 'qf' : 'af'}" data-ctx="${ctx}" data-mode="${mode}" novalidate>
+      <div class="af-det">
+        <button type="button" class="btn af-g" data-google>${GOOGLE_G}Continue with Google</button>
+        <p class="af-gnote meta-s" role="status" hidden></p>
+        <p class="af-or meta-s"><span>or with your email</span></p>
+        ${det}
+        <p class="qf-err meta-s af-err" role="alert" hidden></p>
+        <button type="submit" class="btn sig af-go">${go} ${icon('arrow-right')}</button>
+        <p class="meta-s af-fine">No password. ${ctx === 'quote' ? 'We email you a 6-digit code to confirm, and the request opens your free project account.' : 'We email you a 6-digit code.'}</p>
+        <p class="meta-s af-sw">${sw}</p>
+      </div>
+      <div class="af-code" hidden>
+        <p class="af-sent">Enter the 6-digit code we sent to <b class="af-to"></b>.</p>
+        <label class="fld"><span>Sign-in code</span><input name="code" class="af-cin" inputmode="numeric" autocomplete="one-time-code" maxlength="7" spellcheck="false"></label>
+        <p class="qf-err meta-s af-err2" role="alert" hidden></p>
+        <button type="submit" class="btn sig af-go">${ctx === 'quote' ? 'Verify and send the request' : 'Verify and save the project'} ${icon('arrow-right')}</button>
+        <p class="meta-s af-sw"><button type="button" class="lnk" data-af-back>Use a different email</button></p>
+        <p class="meta-s af-fine">Prototype: any 6 digits work; no email is sent.</p>
+      </div>
+    </form>`;
+  }
+  function afSubmit(f) {
+    const code = $('.af-code', f);
+    if (!code.hidden) return afVerify(f);
+    const err = $('.af-err', f), els = [...f.elements].filter(e => e.closest('.af-det') && e.willValidate);
+    els.forEach(e => { e.removeAttribute('aria-invalid'); const fs = e.closest('fieldset'); if (fs) fs.removeAttribute('aria-invalid'); });
+    const bad = els.filter(e => !e.checkValidity());
+    if (bad.length) {
+      bad.forEach(e => { const fs = e.closest('fieldset.afr'); (fs || e).setAttribute('aria-invalid', 'true'); });
+      const miss = [...new Set(bad.map(e => FLABEL[e.name] || e.name))];
+      err.hidden = false; err.textContent = miss.length > 3 ? 'Fill in the fields marked in orange, and tick the box so i9 can contact you about the project.'.replace(miss.includes(FLABEL.consent) ? '' : ', and tick the box so i9 can contact you about the project', '') : 'Still needed: ' + miss.join(', ') + '.';
+      bad[0].focus();
+      return;
+    }
+    err.hidden = true;
+    const d = {}; els.forEach(e => { if (e.type === 'radio') { if (e.checked) d[e.name] = e.value; } else if (e.type === 'checkbox') d[e.name] = e.checked; else d[e.name] = e.value.trim(); });
+    f._d = d;   /* memory only, for the code step */
+    $('.af-to', f).textContent = maskEmail(d.email);
+    $('.af-det', f).hidden = true; code.hidden = false;
+    const ci = $('.af-cin', f); ci.value = ''; ci.focus();
+    live('Enter the 6-digit sign-in code. Prototype: any 6 digits work.');
+  }
+  function afVerify(f) {
+    const ci = $('.af-cin', f), err = $('.af-err2', f), v = ci.value.replace(/\s+/g, '');
+    if (!/^\d{6}$/.test(v)) { ci.setAttribute('aria-invalid', 'true'); err.hidden = false; err.textContent = 'Enter the 6 digits from the email.'; ci.focus(); return; }
+    const d = f._d || {}, ctx = f.dataset.ctx;
+    ACC = { name: (f.dataset.mode === 'in' ? nameFromEmail(d.email) : d.name).slice(0, 80), emailMasked: maskEmail(d.email), id: newId() };
+    ACC_ORG = (d.org || '').slice(0, 120);
+    f._d = null;
+    accStore();
+    /* PRODUCTION: here the account is created or signed in through Central, the lead + project JSON + source page + UTM
+       go to Central → Comercial, and the gated plan is fetched from the server. The prototype sends nothing. */
+    render(); save();
+    live(`Signed in as ${ACC.name}. Project saved · ${ACC.id}. The processor plan is open.`);
+    if (ctx === 'quote') showSent();
+    else acctDone();
+  }
+  function afClick(b) {
+    if (b.hasAttribute('data-google')) {
+      const n = $('.af-gnote', b.closest('form')); n.hidden = false;
+      n.textContent = 'Google sign-in isn’t connected on this prototype. Use the email code below.';
+      return true;
+    }
+    if (b.hasAttribute('data-af-back')) {
+      const f = b.closest('form'); $('.af-code', f).hidden = true; $('.af-det', f).hidden = false;
+      const e = $('[name="email"]', f); if (e) e.focus();
+      return true;
+    }
+    return false;
+  }
+  function signOut() {
+    ACC = null; ACC_ORG = ''; accForget();
+    if (dlg && dlg.open) dlg.close();
+    render(); save();
+    live('Signed out. The processor plan is locked again.');
+    const h = $('#lz-h'); h.setAttribute('tabindex', '-1'); h.focus({ preventScroll: true });
+  }
+
+  /* ----- the account sheet: a side panel (full screen on a phone), a modal dialog with its own focus trap ----- */
+  let dlg = null, opener = null;
+  function acctSheet(mode, from) {
+    return `<div class="acct-in">
+      <div class="acct-hd"><p class="meta"><span class="tally"></span>${mode === 'in' ? 'Project account · sign in' : 'Free project account'}</p><button type="button" class="acct-x" data-acct-close aria-label="Close">${icon('x')}</button></div>
+      <h2 id="acct-h" tabindex="-1">${mode === 'in' ? 'Sign in to your project.' : 'Save this wall and get the full plan.'}</h2>
+      <p class="acct-lede">${esc(mode === 'in' ? 'We email you a code. Your saved project, the processor plan and the full spec sheet open as soon as you’re in.' : ((ACC_LEDE[from] || '') + ' ' + ACC_BASE).trim())}</p>
+      ${mode === 'in' ? '' : `<ul class="acct-get">${GETS.map(g => `<li><i aria-hidden="true"></i>${esc(g)}</li>`).join('')}</ul>`}
+      <p class="acct-proto meta-s"><i aria-hidden="true"></i>Prototype: nothing is sent; no account is created.</p>
+      <div class="acct-body">${acctForm('sheet', mode)}</div>
+    </div>`;
+  }
+  function acctDone() {
+    if (!dlg) return;
+    const s = Z.s, what = s === 6 ? 'See the processor plan' : s === 7 ? 'Back to the 3D view' : s === 8 ? 'Back to the spec sheet' : 'Back to your wall';
+    dlg.innerHTML = `<div class="acct-in">
+      <div class="acct-hd"><p class="meta acct-ok"><span class="tally"></span>Project saved · ${esc(ACC.id)}</p><button type="button" class="acct-x" data-acct-close aria-label="Close">${icon('x')}</button></div>
+      <h2 id="acct-h" tabindex="-1">You’re in, ${esc(firstName(ACC.name))}.</h2>
+      <p class="acct-lede">Our team will contact you to continue the project.</p>
+      <ul class="acct-get on">${GETS.map(g => `<li><i aria-hidden="true"></i>${esc(g)}</li>`).join('')}</ul>
+      <p class="acct-proto meta-s"><i aria-hidden="true"></i>Prototype: nothing is sent; no account is created.</p>
+      <button type="button" class="btn sig acct-done" data-acct-close>${what} ${icon('arrow-right')}</button>
+    </div>`;
+    $('#acct-h', dlg).focus();
+  }
+  const FOCUSABLE = 'button:not([disabled]),input:not([disabled]),select:not([disabled]),textarea:not([disabled]),a[href],[tabindex]:not([tabindex="-1"])';
+  const visibleIn = el => [...el.querySelectorAll(FOCUSABLE)].filter(e => e.getClientRects().length && !e.closest('[hidden]'));
+  function openAcct(mode, from, el) {
+    if (signed()) return;
+    if (el) opener = el;
+    if (!dlg) {
+      dlg = document.createElement('dialog'); dlg.className = 'acct'; dlg.id = 'acct'; dlg.setAttribute('aria-labelledby', 'acct-h');
+      document.body.appendChild(dlg);
+      dlg.addEventListener('cancel', e => { e.preventDefault(); closeAcct(); });   /* Esc */
+      dlg.addEventListener('click', e => {
+        if (e.target === dlg) { closeAcct(); return; }   /* the backdrop */
+        const b = e.target.closest('button'); if (!b || b.disabled) return;
+        if (afClick(b)) return;
+        if (b.hasAttribute('data-acct-close')) { closeAcct(); return; }
+        if (b.dataset.acctMode) { openAcct(b.dataset.acctMode, dlg.dataset.from); return; }
+      });
+      dlg.addEventListener('submit', e => { const f = e.target; if (f.classList.contains('af')) { e.preventDefault(); afSubmit(f); } });
+      dlg.addEventListener('keydown', e => {   /* focus stays in the sheet */
+        if (e.key !== 'Tab') return;
+        const f = visibleIn(dlg); if (!f.length) return;
+        const a = f[0], z = f[f.length - 1], cur = document.activeElement;
+        if (e.shiftKey && (cur === a || !dlg.contains(cur) || cur === $('#acct-h', dlg))) { e.preventDefault(); z.focus(); }
+        else if (!e.shiftKey && (cur === z || !dlg.contains(cur))) { e.preventDefault(); a.focus(); }
+      });
+    }
+    dlg.dataset.from = from || '';
+    dlg.innerHTML = acctSheet(mode, from || '');
+    if (!dlg.open) { try { dlg.showModal(); } catch (e) { dlg.setAttribute('open', ''); } }
+    root.classList.add('acct-open');
+    $('#acct-h', dlg).focus();
+  }
+  function closeAcct() {
+    if (!dlg) return;
+    if (dlg.open) dlg.close();
+    root.classList.remove('acct-open');
+    /* the opener may have been redrawn (sign-in redraws the step): fall back to what just unlocked */
+    let t = opener && opener.isConnected ? opener : null;
+    if (!t || (signed() && t.dataset && t.dataset.acct)) t = signed() ? (Z.s === 6 ? $('.prc', panel) : Z.s === 7 ? $('[data-v3="c"]', panel) : Z.s === 8 ? $('#lz-print', panel) : null) : null;
+    if (!t) { t = $('#lz-h'); t.setAttribute('tabindex', '-1'); }
+    t.focus({ preventScroll: !opener || !opener.isConnected });
+    opener = null;
+  }
+
   /* ----- the running summary (steps 2–7) ----- */
   function summary(C, PR) {
     const U = Z.use && L.USES[Z.use], m = C.m;
@@ -352,9 +582,15 @@
         ${row('cab', 'Cabinets', m && Z.mx >= 5 ? `${n0(C.cabs)} × ${esc(C.cab.name)} mm` + (Z.shape === 'curved' ? ` · curved ${nf(C.screens[0].geo.bend, 1)}°` : Z.shape === 'corner' ? ' · cornered' : '') : '', 5)}
         ${row('wall', 'Wall', m && Z.mx >= 5 ? esc(sc.length > 1 ? areaTxt(C.area) + ' in ' + sc.length + (Z.shape === 'corner' ? ' surfaces' : ' screens') : dimTxt(sc[0].W, sc[0].H) + ' · ' + areaTxt(C.area)) : '', 5)}
         ${row('res', 'Resolution', m && Z.mx >= 5 ? (sc.length > 1 ? sc.map(s => pxTxt(s.pxW, s.pxH)).filter((v, i, a) => a.indexOf(v) === i).join(' · ') : pxTxt(sc[0].pxW, sc[0].pxH)) : '', 5)}
-        ${row('proc', 'Processor', m && Z.mx >= 6 && PR ? esc(PR.chosen.p.brand + ' ' + PR.chosen.p.model) + (PR.chosen.units > 1 && isFinite(PR.chosen.units) ? ' × ' + PR.chosen.units : '') + ` · ${PR.chosen.ports} port${PR.chosen.ports === 1 ? '' : 's'}` : '', 6)}
+        ${row('proc', 'Processor', m && Z.mx >= 6 && PR ? (signed() ? esc(PR.chosen.p.brand + ' ' + PR.chosen.p.model) + (PR.chosen.units > 1 && isFinite(PR.chosen.units) ? ' × ' + PR.chosen.units : '') + ` · ${PR.chosen.ports} port${PR.chosen.ports === 1 ? '' : 's'}` : `<span class="lkv">${icon('lock')}With a project account</span>`) : '', 6)}
       </dl>
-      <p class="meta-s lsn">Built to order, no stock and no prices. i9 quotes it with the factory.</p>`;
+      <p class="meta-s lsn">Built to order, no stock and no prices. i9 quotes it with the factory.</p>
+      ${accLine()}`;
+  }
+  /* who is signed in, under the summary (and on the quote card) */
+  function accLine() {
+    if (signed()) return `<div class="lacc"><p class="meta-s">Signed in as <b>${esc(ACC.name)}</b> · <button type="button" class="lnk" data-signout>Sign out</button></p><p class="meta-s lacc-id">Project saved · ${esc(ACC.id)}</p></div>`;
+    return `<div class="lacc"><button type="button" class="lnk strong" data-acct="new" data-from="">${icon('lock')}Save this project</button><p class="meta-s">Free account: the processor plan, the full spec sheet and an engineer’s review.</p></div>`;
   }
 
   /* ----- step 1: use and place ----- */
@@ -563,7 +799,10 @@
         <div class="fq"><span class="ql">Backup data loop<span class="meta-s">A second cable to every chain, common in rental and broadcast. Doubles the ports.</span></span><span class="seg" role="group" aria-label="Backup data loop"><button type="button" data-bk="0" aria-pressed="${!Z.bk}">No</button><button type="button" data-bk="1" aria-pressed="${!!Z.bk}">Yes</button></span></div>
         <div class="fq"><span class="ql">Processor to wall<span class="meta-s">Cable run from the control position to the wall.</span></span><span class="cin">${lenInput('lz-run', Z.run, 'Cable run from processor to wall')}${unitSeg()}</span></div>
       </div>`;
-    const card = `<div class="prc">
+    /* locked: the inputs above stay live; the result is drawn as its shape only. Nothing computed for the plan
+       (model, count, ports, loads, fibre, cards, warnings) is written while nobody is signed in. */
+    if (!signed()) return `<div class="sgrid">${controls}<div class="sres">${step6Locked()}</div></div>`;
+    const card = `<div class="prc" tabindex="-1">
         <div class="prh"><p class="meta"><span class="tally"></span>${r === PR.rec ? 'Recommended processor' : 'Your choice'}</p>${r !== PR.rec ? `<button type="button" class="textlink sm" data-pr="">Back to the recommendation</button>` : ''}</div>
         <h2>${esc(p.brand)} ${esc(p.model)}${isFinite(r.units) && r.units > 1 ? ` <span class="ux">× ${r.units}</span>` : ''}</h2>
         <p class="why">${esc(why)}</p>
@@ -594,13 +833,32 @@
       <p class="meta-s fnote">Small to large. * port count is arithmetic on the spec sheet: verify. Max loads as each maker states them; per-port loads from NovaStar’s formula (MX40 Pro sheet), Brompton’s help pages and, for Colorlight, its max load ÷ ports.</p>`;
     return `<div class="sgrid">${controls}<div class="sres">${card}<h3 class="lh meta">All processors against this wall</h3>${list}</div></div>`;
   }
+  function step6Locked() {
+    const rows = [['Per port', '15ch'], ['Pixel load', '13ch'], ['Max canvas', '9ch'], ['Inputs', '19ch'], ['Genlock', '14ch'], ['Frame rate', '10ch'], ['Fibre', '17ch'], ['Receiving cards', '6ch']];
+    const card = `<div class="prc lockd">
+        <div class="prh"><p class="meta"><span class="tally"></span>Recommended processor</p><span class="lkb meta">${icon('lock')}<span class="lkt">Project account</span></span></div>
+        <h2 class="rdh"><span class="sr">Processor model and count: free with a project account.</span>${rd('6.2em')} <span class="ux" aria-hidden="true">×</span>${rd('.62em', 'sq')}</h2>
+        <p class="why rdw">${rd('94%')}${rd('58%')}</p>
+        <div class="pport"><span class="meta">Ethernet ports</span><b class="num"><span class="sr">Used and available ports: free with a project account.</span>${rd('1.1em')} <small aria-hidden="true">of</small> ${rd('1.4em')}</b><span class="pts lk" aria-hidden="true">${'<i></i>'.repeat(12)}</span></div>
+        <dl class="ospec">${rows.map(([k, w]) => `<div><dt>${k}</dt><dd>${rd(w)}<span class="sr">${LOCKED}</span></dd></div>`).join('')}</dl>
+        ${gateBox('proc')}
+      </div>`;
+    const W = [['8ch', '9ch', '13ch', '10ch'], ['9ch', '6ch', '12ch', '8ch'], ['10ch', '8ch', '14ch', '6ch'], ['8ch', '10ch', '12ch', '9ch']];
+    const list = `<div class="prl lk" aria-hidden="true">${W.map(w => `<div class="pr"><span class="pb">${rd(w[0])}</span><b>${rd(w[1])}</b><span class="pq">${rd(w[2])}</span><span class="ps">${rd(w[3])}</span></div>`).join('')}</div>
+      <p class="meta-s fnote">Every processor we check against this wall, small to large, with ports, load and fit. It comes with the plan.</p>`;
+    return `${card}<h3 class="lh meta">All processors against this wall</h3>${list}`;
+  }
 
   /* ----- step 7: 3D ----- */
   function step7() {
+    /* the overview is free; standing in the rows comes with the account (the buttons open the account sheet) */
+    const pov = (v, t) => signed() ? `<button type="button" data-v3="${v}" aria-pressed="false">${t}</button>`
+      : `<button type="button" class="lk" data-acct="new" data-from="3d" aria-label="${t}: free with a project account">${icon('lock')}${t}</button>`;
     return `<div class="g3">
-      <div class="g3bar"><div class="seg sm g3v" role="group" aria-label="View"><button type="button" data-v3="o" aria-pressed="true">Overview</button><button type="button" data-v3="c" aria-pressed="false">From the closest row</button><button type="button" data-v3="t" aria-pressed="false">From the typical row</button></div>
+      <div class="g3bar"><div class="seg sm g3v" role="group" aria-label="View"><button type="button" data-v3="o" aria-pressed="true">Overview</button>${pov('c', 'From the closest row')}${pov('t', 'From the typical row')}</div>
         <button type="button" class="tbtn" id="g3-reset">Reset view</button><span class="meta-s g3h">Drag to orbit · scroll or pinch to zoom</span></div>
       <div class="g3box" id="g3box"><div class="g3msg" id="g3msg"><span class="meta"><span class="tally"></span>Building the wall…</span></div><p class="g3pov meta" id="g3pov" hidden></p></div>
+      ${signed() ? '' : `<p class="g3lock meta-s">${icon('lock')}<span>${esc(GATE_T['3d'])} <button type="button" class="lnk" data-acct="new" data-from="3d">Create free project account</button></span></p>`}
       <p class="meta-s g3note">Massing model. Assumed heights: wall bottom ${Z.shape === 'corner' && Z.cn === 'floor' ? 'on the LED floor' : Z.mount === 'flown' ? '1.5 m (flown trim)' : Z.mount === 'ground' ? 'on a 0.15 m base' : '1.0 m above the floor'}; cabinet depth 0.1 m; person 1.75 m. The structure is drawn to show the kind of mounting, not engineered.</p>
     </div>`;
   }
@@ -645,10 +903,12 @@
     else if (Z.shape === 'corner') rows.push(['Shape', Z.cn === 'floor' ? 'Cornered · wall + LED floor (floor load rating to confirm with factory)' : 'Cornered · two walls at 90°']);
     rows.push(['Total', `${n0(C.cabs)} cabinets · ${areaTxt(C.area)} · ${n0(C.px)} px`]);
     rows.push(['Viewing', `closest ${lenTxt(Z.dc)} · typical ${lenTxt(Z.dt)}`]);
-    rows.push(['Processor', `${r.p.brand} ${r.p.model}${isFinite(r.units) && r.units > 1 ? ' × ' + r.units : ''} · ${r.ports} of ${r.p.ports * (isFinite(r.units) ? r.units : 1)} ports${Z.bk ? ' (with backup loop)' : ''}`]);
+    /* gated lines: while nobody is signed in only their label is kept (the value is never built) */
+    const lk = !signed();
+    rows.push(['Processor', lk ? LOCKED : `${r.p.brand} ${r.p.model}${isFinite(r.units) && r.units > 1 ? ' × ' + r.units : ''} · ${r.ports} of ${r.p.ports * (isFinite(r.units) ? r.units : 1)} ports${Z.bk ? ' (with backup loop)' : ''}`]);
     rows.push(['Signal', `${Z.inp.length ? Z.inp.map(i => INPUTS[i]).join(', ') : 'Inputs to define'} · ${SRC[Z.src][2]} · ${Z.map === '1to1' ? '1:1 mapping' : 'scaled'} · ${Z.bits}-bit ${Z.fps} Hz`]);
-    rows.push(['Genlock', glNeed(Z) ? `Needed · ${r.p.model}: ${r.p.genlock === true ? 'yes' : r.p.genlock === 'source' ? 'source lock only' : 'not stated, verify'}` : 'Not needed']);
-    rows.push(['Cable run', `${lenTxt(Z.run, 0)} · ${isFinite(r.units) ? fibreOf(Z, r).t : '—'}`]);
+    rows.push(['Genlock', lk ? LOCKED : glNeed(Z) ? `Needed · ${r.p.model}: ${r.p.genlock === true ? 'yes' : r.p.genlock === 'source' ? 'source lock only' : 'not stated, verify'}` : 'Not needed']);
+    rows.push(['Cable run', lk ? LOCKED : `${lenTxt(Z.run, 0)} · ${isFinite(r.units) ? fibreOf(Z, r).t : '—'}`]);
     rows.push(['Weight, power', C.kg ? `${nf(C.kg, 0)} kg` : TO_CONFIRM]);
     if (m.maker === 'i9') rows.push(['To confirm', (m.cabinet ? '' : 'Cabinet size, ') + 'Module resolution, brightness, weight and power of the i9 model, with the factory']);
     return rows;
@@ -662,30 +922,23 @@
           <div class="sh-top"><div><p class="meta">i9Store Pro · LED wall · for a factory quote</p><h2 id="sheet-h">${esc(L.USES[Z.use].label)}${C.screens.length > 1 ? ', ' + C.screens.length + ' screens' : ''}</h2></div>
             <p class="sh-big num"><b>${pxTxt(C.canvas[0], C.canvas[1])}</b><span class="meta-s">${n0(C.cabs)} cabinets · ${esc(areaTxt(C.area))}</span></p></div>
           <figure class="sh-elev">${elevation(C, { label: 'Front view for the spec sheet' })}</figure>
-          <dl class="sh-dl">${rows.map(([k, v]) => `<div><dt>${esc(k)}</dt><dd${v === TO_CONFIRM ? ' class="tc"' : ''}>${esc(v)}</dd></div>`).join('')}</dl>
+          <dl class="sh-dl">${rows.map(([k, v], i) => `<div${v === LOCKED ? ' class="lkr"' : ''}><dt>${esc(k)}</dt>${v === LOCKED ? `<dd>${rd(['24ch', '17ch', '28ch'][i % 3])}${icon('lock')}<span class="sr">${LOCKED}</span></dd>` : `<dd${v === TO_CONFIRM ? ' class="tc"' : ''}>${esc(v)}</dd>`}</div>`).join('')}</dl>
           <p class="sh-note meta-s">No prices: LED walls are built to order and quoted with the factory. Pixels per cabinet are approximate until the factory confirms the module resolution. Processor figures are from the makers’ spec sheets, read ${esc(L.READ)}.</p>
-          <div class="sh-acts"><button type="button" class="btn sm" id="lz-print">Print the spec sheet</button>
+          ${signed() ? '' : `<p class="sh-lock meta-s">${icon('lock')}<span>${esc(GATE_T.sheet)}</span></p>`}
+          <div class="sh-acts">${signed() ? `<button type="button" class="btn sm" id="lz-print">Print the spec sheet</button><button type="button" class="btn sm" id="lz-saveproj">Save project</button>`
+            : `<button type="button" class="btn sm lk" data-acct="new" data-from="sheet">${icon('lock')}Print the spec sheet</button><button type="button" class="btn sm lk" data-acct="new" data-from="save">${icon('lock')}Save project</button>`}
             <!-- Integration comes later: the LED wall will join the room plan as one "to quote" line. For now this only opens the planner. -->
             <a class="textlink" href="planner.html" id="lz-toplan">Add to my room plan ${icon('arrow-right')}</a></div>
+          <p class="sh-saved meta-s" id="lz-saved" role="status" hidden></p>
         </div>
       </section>
       <section class="qform" aria-labelledby="qf-h">
-        <div id="qf-wrap">
+        <div id="qf-wrap">${signed() ? quoteSigned() : `
         <p class="meta"><span class="tally"></span>Request a factory quote</p>
         <h2 id="qf-h">Who should we send it to?</h2>
-        <p class="qf-p">A specialist checks the spec with you, then i9 quotes it with the factory: price, lead time and shipping to you.</p>
-        <form id="qf" novalidate>
-          <div class="qf2"><label class="fld"><span>Name</span><input name="name" autocomplete="name" required></label>
-            <label class="fld"><span>Company or church</span><input name="company" autocomplete="organization"></label></div>
-          <div class="qf2"><label class="fld"><span>Email</span><input name="email" type="email" autocomplete="email" required></label>
-            <label class="fld"><span>Phone or WhatsApp</span><input name="phone" type="tel" autocomplete="tel"></label></div>
-          <div class="qf2"><label class="fld"><span>Country</span><select name="country" autocomplete="country-name" required><option value="">Choose</option>${['United States', 'Brazil', 'Mexico', 'Colombia', 'Chile', 'Argentina', 'Peru', 'Ecuador', 'Dominican Republic', 'Puerto Rico', 'Panama', 'Costa Rica', 'Guatemala', 'Other'].map(c => `<option>${c}</option>`).join('')}</select></label>
-            <label class="fld"><span>${Z.rent ? 'Event date' : 'Install date'}</span><input name="date" type="date"></label></div>
-          <label class="fld"><span>Notes</span><textarea name="notes" rows="4" placeholder="Venue, content, deadlines, anything we should know"></textarea></label>
-          <p class="qf-err meta-s" id="qf-err" hidden></p>
-          <button type="submit" class="btn sig qf-go">Request factory quote ${icon('arrow-right')}</button>
-          <p class="meta-s qf-fine">Prototype: nothing is sent from this page.</p>
-        </form>
+        <p class="qf-p">A specialist checks the spec with you, then i9 quotes it with the factory. The request also saves the project to a free account: the processor plan, the full spec sheet and an engineer’s review.</p>
+        <p class="acct-proto meta-s"><i aria-hidden="true"></i>Prototype: nothing is sent; no account is created.</p>
+        ${acctForm('quote', 'new')}`}
         </div>
         <div class="qsent" id="qsent" hidden tabindex="-1"></div>
       </section>
@@ -694,27 +947,49 @@
   function quoteText(C, PR) {
     return ['i9Store Pro · LED wall · factory quote request', ''].concat(specRows(C, PR).map(([k, v]) => `${k}: ${v}`)).concat(['', 'Reopen this wall: ' + location.href.split('#')[0] + hashOf()]).join('\n');
   }
+  /* signed in: the contact comes from the account, so the form keeps only what belongs to this request */
+  function quoteSigned() {
+    return `<p class="meta"><span class="tally"></span>Request a factory quote</p>
+        <h2 id="qf-h">Send it to the factory.</h2>
+        <p class="qf-p">A specialist checks the spec with you, then i9 quotes it with the factory: price, lead time and shipping to you.</p>
+        <div class="qacc"><p class="meta">From your project account</p><b>${esc(ACC.name)}</b><span class="meta-s">${ACC_ORG ? esc(ACC_ORG) + ' · ' : ''}${esc(ACC.emailMasked)}</span>
+          <p class="meta-s">Signed in as <b>${esc(ACC.name)}</b> · <button type="button" class="lnk" data-signout>Sign out</button></p></div>
+        <form id="qf" novalidate>
+          <label class="fld"><span>${Z.rent ? 'Event date' : 'Install date'} <em>optional</em></span><input name="date" type="date"></label>
+          <label class="fld"><span>Notes <em>optional</em></span><textarea name="notes" rows="4" placeholder="Venue, content, deadlines, anything we should know"></textarea></label>
+          <p class="qf-err meta-s" id="qf-err" hidden></p>
+          <button type="submit" class="btn sig qf-go">Request factory quote ${icon('arrow-right')}</button>
+          <p class="meta-s qf-fine">Prototype: nothing is sent from this page.</p>
+        </form>`;
+  }
   function submitQuote() {
     const f = $('#qf'); if (!f) return;
+    if (f.classList.contains('af')) { afSubmit(f); return; }   /* nobody signed in: the request creates the account */
     const err = $('#qf-err');
     if (!f.checkValidity()) {
       const bad = [...f.elements].find(e => e.willValidate && !e.checkValidity());
-      err.hidden = false; err.textContent = 'Name, a valid email and the country are needed for the quote.';
+      err.hidden = false; err.textContent = 'Check the date.';
       if (bad) bad.focus();
       return;
     }
     err.hidden = true;
-    /* PRODUCTION: this is where the lead goes to Central → Comercial (the sales pipeline), as one request with the
-       contact fields, the spec rows above and the share link (#l=). Contact fields travel in the request body only,
-       never in a URL. This prototype sends nothing: no fetch, no beacon, no storage of the form. */
-    const C = calc(), PR = procs(Z, C), s = $('#qsent');
+    showSent();
+  }
+  function showSent() {
+    /* PRODUCTION: this is where the lead goes to Central → Comercial (the sales pipeline) as an opportunity on the
+       customer's account: the account, the spec rows above, the computed plan, the share link (#l=), the source page
+       and the UTM of the visit. Contact fields travel in the request body only, never in a URL. This prototype sends
+       nothing: no fetch, no beacon, no storage of the form. */
+    if (!signed()) return;
+    const C = calc(), PR = procs(Z, C), s = $('#qsent'); if (!s) return;
     $('#qf-wrap').hidden = true; s.hidden = false;
     s.innerHTML = `<p class="meta"><span class="tally"></span>Prototype: nothing is sent</p>
       <h2>This is where the request would go to i9.</h2>
-      <p>In the live store, a specialist would receive the spec below with your contact details, check it with you and quote it with the factory. On this prototype nothing left the page.</p>
+      <p class="qs-acc"><b>Project saved · ${esc(ACC.id)}</b><span>Our team will contact you to continue the project.</span></p>
+      <p>In the live store, a specialist would receive the spec below with your account details, check it with you and quote it with the factory. On this prototype nothing left the page and no account was created.</p>
       <pre tabindex="0" id="qtext">${esc(quoteText(C, PR))}</pre>
       <div class="qs-acts"><button type="button" class="btn sm" id="q-copy">Copy summary</button><button type="button" class="btn sm" id="q-edit">Back to the form</button></div>`;
-    $('#live').textContent = 'Prototype: nothing is sent. The request summary is shown.';
+    live('Prototype: nothing is sent. The request summary is shown.');
     s.focus();
   }
 
@@ -749,6 +1024,9 @@
   panel.addEventListener('click', e => {
     const b = e.target.closest('button'); if (!b || b.disabled) return;
     const d = b.dataset;
+    if (afClick(b)) return;
+    if (d.acct) { openAcct(d.acct, d.from, b); return; }
+    if (b.hasAttribute('data-signout')) { signOut(); return; }
     if (d.go) { go(+d.go); return; }
     if (d.use) { chooseUse(d.use); rerender(`[data-use="${d.use}"]`); return; }
     if (d.ex) { applyPreset(d.ex); render(); save(); go(5); return; }
@@ -775,8 +1053,9 @@
     if (d.v3 && G3) { G3.setView(d.v3 === 'o' ? null : d.v3); return; }
     if (b.id === 'g3-reset' && G3) { G3.reset(); return; }
     if (b.id === 'lz-print') { window.print(); return; }
+    if (b.id === 'lz-saveproj') { const t = $('#lz-saved'); if (t && signed()) { t.hidden = false; t.innerHTML = `<b>Project saved · ${esc(ACC.id)}</b> Our team will contact you to continue the project. Prototype: nothing is sent.`; b.classList.add('done'); b.textContent = 'Saved'; } return; }
     if (b.id === 'q-copy') { const t = $('#qtext').textContent; try { navigator.clipboard.writeText(t).then(() => { b.textContent = 'Copied'; }, () => {}); } catch (e) {} return; }
-    if (b.id === 'q-edit') { $('#qsent').hidden = true; $('#qf-wrap').hidden = false; $('#qf [name="name"]').focus(); return; }
+    if (b.id === 'q-edit') { $('#qsent').hidden = true; $('#qf-wrap').hidden = false; const fe = $('#qf input, #qf textarea'); if (fe) fe.focus(); return; }
   });
   /* lengths: typed in the current unit, stored in metres.
      Every keystroke commits the value to the state ('input'), so whatever is clicked next (Next, a toggle, an example)
@@ -812,11 +1091,12 @@
 
   /* ======================= boot ======================= */
   (function boot() {
+    accLoad();
     const z = readHash(), q = new URLSearchParams(location.search).get('preset');
     if (z) Z = z;
     else if (q && L.PRESETS.some(p => p.id === q)) applyPreset(q);
     render(); save();
   })();
 
-  window.I9LEDWIZ = { get state() { return Z; }, go, calc: z => calc(z ? valid({ ...Z, ...z }) : Z), procs: z => { const v = z ? valid({ ...Z, ...z }) : Z; return procs(v, calc(v)); }, fit, arcGeom, curveCols, suggest: z => suggest(z ? valid({ ...Z, ...z }) : Z), verdict, hashOf: () => hashOf(), get g3() { return G3; } };
+  window.I9LEDWIZ = { get state() { return Z; }, go, calc: z => calc(z ? valid({ ...Z, ...z }) : Z), procs: z => { const v = z ? valid({ ...Z, ...z }) : Z; return procs(v, calc(v)); }, fit, arcGeom, curveCols, suggest: z => suggest(z ? valid({ ...Z, ...z }) : Z), verdict, hashOf: () => hashOf(), get g3() { return G3; }, get account() { return ACC ? { ...ACC } : null; } };
 })();

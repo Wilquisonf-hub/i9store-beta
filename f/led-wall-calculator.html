@@ -1,0 +1,232 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta name="robots" content="noindex, nofollow">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>LED Wall Calculator: Pitch, Size and Resolution | i9Store</title>
+<meta name="description" content="Free LED wall calculator: the pixel pitch for your viewing distance, the cabinets that fit your space, the real wall size and resolution, then a factory quote.">
+<!-- Production URL (SEO-ESTRATEGIA.md §12): https://i9store.com/usa/tools/led-wall-calculator/ . The prototype file is
+     direction-h/led-wall-calculator.html; the canonical below is the production URL, never the prototype path.
+     Planned hreflang set once the ES and PT versions exist (only then, §12): en → /usa/tools/led-wall-calculator/,
+     es → /usa/es/herramientas/calculadora-pantalla-led/, pt → /usa/pt/ferramentas/calculadora-painel-de-led/,
+     x-default → the en URL. Not output now: hreflang only where every version exists. -->
+<link rel="canonical" href="https://i9store.com/usa/tools/led-wall-calculator/">
+<link rel="icon" href="../shared/i9-seal.webp">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=PT+Mono&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="g.css">
+<link rel="stylesheet" href="nav-mega.css">
+<link rel="stylesheet" href="modes.css">
+<link rel="stylesheet" href="seo.css">
+<script src="mode.js"></script>
+<!-- Structured data. Every value is visible on the page. FAQPage: Google stopped showing FAQ rich results on 7 May 2026
+     (SEO-ESTRATEGIA.md §5.1); the markup stays because it matches the visible FAQ and costs nothing, not for a rich result. -->
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","@id":"https://i9store.com/usa/tools/led-wall-calculator/#app",
+ "name":"LED wall calculator","url":"https://i9store.com/usa/tools/led-wall-calculator/",
+ "description":"Suggests a pixel pitch from the viewing distance, fits whole cabinets into the space and returns the real wall size, resolution and aspect ratio. The processor plan is in the configurator with a free project account.",
+ "applicationCategory":"DesignApplication","operatingSystem":"Any (web browser)","browserRequirements":"Requires JavaScript",
+ "isAccessibleForFree":true,"inLanguage":"en",
+ "offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},
+ "publisher":{"@type":"Organization","name":"i9Store","url":"https://i9store.com/usa/"}}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[
+ {"@type":"ListItem","position":1,"name":"i9Store Pro","item":"https://i9store.com/usa/pro/"},
+ {"@type":"ListItem","position":2,"name":"Tools","item":"https://i9store.com/usa/tools/"},
+ {"@type":"ListItem","position":3,"name":"LED wall calculator","item":"https://i9store.com/usa/tools/led-wall-calculator/"}]}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+ {"@type":"Question","name":"What pixel pitch do I need for my viewing distance?","acceptedAnswer":{"@type":"Answer","text":"As a rule of thumb, the minimum viewing distance in metres equals the pitch in millimetres, and a comfortable distance is three times that (about 10 ft per mm). With the front row at 4 m and most people at 10 m, the limit is the smaller of 4 and 10 ÷ 3 = 3.33 mm, so the calculator suggests 2.9 mm, the largest indoor pitch in its list at or below 3.33 mm."}},
+ {"@type":"Question","name":"How many LED cabinets do I need?","acceptedAnswer":{"@type":"Answer","text":"A wall is built from whole cabinets, so divide the space by the cabinet size and round down. A 5 × 3 m space with 640 × 480 mm cabinets takes 7 columns (5,000 ÷ 640 = 7.8) and 6 rows (3,000 ÷ 480 = 6.25): 42 cabinets and a real wall of 4.48 × 2.88 m."}},
+ {"@type":"Question","name":"How do I work out the resolution of an LED wall?","acceptedAnswer":{"@type":"Answer","text":"Pixels per cabinet are the cabinet size divided by the pitch. i9's COB 1.86 on a 640 × 480 mm cabinet gives 344 × 258 px per cabinet (computed; the factory confirms the module resolution). Seven by six cabinets make 2,408 × 1,548 px, about 3.73 megapixels. LED walls rarely land on a standard video size."}},
+ {"@type":"Question","name":"Can I feed an LED wall with 1080p or 4K?","acceptedAnswer":{"@type":"Answer","text":"If the wall is 1920 × 1080 px or smaller, a 1080p source maps pixel for pixel. Up to 3840 × 2160 px it needs a 4K UHD input or a 1080p source scaled up by the processor. Larger walls are split across several processor outputs or units. A 2,408 × 1,548 px wall sits between the two, so it takes a 4K input or a scaled 1080p source."}},
+ {"@type":"Question","name":"How many processor ports does an LED wall need?","acceptedAnswer":{"@type":"Answer","text":"Each 1 Gb Ethernet port carries a limited number of pixels. NovaStar's spec-sheet formula gives 659,722 pixels per port at 8-bit and 60 Hz, and half that at 10-bit. A 344 × 258 px cabinet is 88,752 px, so 7 such cabinets fit on one port at 8-bit. The configurator counts the ports for your wall and names a processor that fits it, with a free project account. Copper Ethernet reaches 100 m; longer runs need fibre."}},
+ {"@type":"Question","name":"Which pixel pitches are made for indoor and outdoor walls?","acceptedAnswer":{"@type":"Answer","text":"The calculator lists generic indoor pitches from 0.9 to 4.8 mm and outdoor pitches from 2.6 to 10 mm. Outdoor walls need weatherproof cabinets and more brightness. i9's own COB 1.86 and 1.96 XR panels are indoor models."}},
+ {"@type":"Question","name":"How much does an LED wall cost?","acceptedAnswer":{"@type":"Answer","text":"LED walls are built to order, so there is no price list. i9 takes your spec (size, pitch, cabinets, processing) to the factory and replies with a price and lead time, for a project in any country."}}]}
+</script>
+</head>
+<body class="ip-page">
+<script src="../shared/icons.js"></script>
+<a class="sr" href="#main">Skip to content</a>
+<div id="live" class="sr" aria-live="polite"></div>
+
+<header class="gnav"><div class="wrap">
+  <button class="ibtn menu-btn" aria-label="Menu"><svg class="ic" aria-hidden="true"><use href="#ic-list"/></svg></button>
+  <a class="logo" href="index.html" aria-label="i9Store home"><img src="../shared/i9-seal.webp" alt=""><span><b>i9Store</b><small>i9 / Equipment</small></span></a>
+  <nav class="mega-bar" data-mega aria-label="Shop"></nav>
+  <div class="right">
+    <a class="ibtn" href="shop.html" aria-label="Search the catalogue"><svg class="ic" aria-hidden="true"><use href="#ic-magnifying-glass"/></svg></a>
+    <a class="ibtn" href="pro.html#quote" aria-label="Quote list"><svg class="ic" aria-hidden="true"><use href="#ic-clipboard-text"/></svg><span class="ct" id="quote-ct">0</span></a>
+    <a class="ibtn" href="checkout.html" aria-label="Bag"><svg class="ic" aria-hidden="true"><use href="#ic-bag"/></svg><span class="ct" id="bag-ct">0</span></a>
+    <a class="talk" href="#"><svg class="ic" aria-hidden="true"><use href="#ic-whatsapp-logo"/></svg>Talk to a specialist</a>
+  </div>
+</div></header>
+
+<main id="main">
+  <section class="ip-top" aria-labelledby="h1">
+    <div class="wrap">
+      <nav class="crumbs" aria-label="Breadcrumb"><a href="pro.html">Pro</a><span aria-hidden="true">/</span><a href="tools.html">Tools</a><span aria-hidden="true">/</span><span aria-current="page">LED wall calculator</span></nav>
+      <div class="ip-hgrid">
+        <div><p class="meta kick"><span class="tally"></span><span>Tools · LED walls · free, no account</span></p>
+          <h1 class="ip-h1" id="h1">LED wall calculator. <span class="dim">Pitch, size and resolution.</span></h1></div>
+        <div>
+          <p class="ip-lede">Type the space and how far away people are. The calculator suggests a pixel pitch, fits whole cabinets into the space and shows the wall you would actually get: its size, resolution and aspect ratio.</p>
+          <p class="ip-lede">Same rules as i9’s full <a href="led.html">LED wall configurator</a>. Metres or feet. LED walls are built to order and i9 quotes them for any country.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- the free layer: the calculator renders in place (led-calc.js); every output also has a worked example in the text below -->
+  <section class="lc" id="lc" aria-label="LED wall calculator">
+    <div class="wrap lc-grid">
+      <div class="lc-in">
+        <div class="fq"><span class="ql">What it’s for<span class="meta-s">Sets typical cabinets; on-camera uses keep the pitch under 2.6 mm.</span></span><select class="sel" id="lc-use" aria-label="What the LED wall is for"></select></div>
+        <div class="fq"><span class="ql">Indoor or outdoor?<span class="meta-s">Outdoor pitches and cabinets are a different list.</span></span>
+          <span class="seg" role="group" aria-label="Indoor or outdoor"><button type="button" data-env="in" aria-pressed="true">Indoor</button><button type="button" data-env="out" aria-pressed="false">Outdoor</button></span></div>
+        <div class="fq"><span class="ql">Units</span><span class="seg sm" role="group" aria-label="Units"><button type="button" data-u="m" aria-pressed="true">m</button><button type="button" data-u="ft" aria-pressed="false">ft</button></span></div>
+        <div class="fq"><span class="ql">Space for the wall<span class="meta-s">Width × height the wall may fill.</span></span>
+          <span class="cin"><label class="num-in"><span class="sr">Width</span><input id="lc-sw" type="text" inputmode="decimal" autocomplete="off" spellcheck="false" value="5"><i class="u">m</i></label><span class="x" aria-hidden="true">×</span><label class="num-in"><span class="sr">Height</span><input id="lc-sh" type="text" inputmode="decimal" autocomplete="off" spellcheck="false" value="3"><i class="u">m</i></label></span></div>
+        <div class="fq"><span class="ql">Closest viewer<span class="meta-s">Front row, or the camera for a backdrop.</span></span><label class="num-in"><span class="sr">Closest viewing distance</span><input id="lc-dc" type="text" inputmode="decimal" autocomplete="off" spellcheck="false" value="4"><i class="u">m</i></label></div>
+        <div class="fq"><span class="ql">Most viewers<span class="meta-s">Where most people sit or stand.</span></span><label class="num-in"><span class="sr">Typical viewing distance</span><input id="lc-dt" type="text" inputmode="decimal" autocomplete="off" spellcheck="false" value="10"><i class="u">m</i></label></div>
+        <div class="fq"><span class="ql">Panel<span class="meta-s">Leave it on suggested, or pick an i9 model or a pitch.</span></span><select class="sel" id="lc-m" aria-label="Panel or pixel pitch"></select></div>
+        <div class="fq"><span class="ql">Cabinet<span class="meta-s">i9 models are built on their own cabinet.</span></span><select class="sel" id="lc-cab" aria-label="Cabinet size"></select></div>
+        <div class="fq"><span class="ql">Fit<span class="meta-s">Fill takes every whole cabinet; 16:9 picks the grid nearest 16:9.</span></span>
+          <span class="seg sm" role="group" aria-label="Fit"><button type="button" data-fit="fill" aria-pressed="true">Fill the space</button><button type="button" data-fit="169" aria-pressed="false">Closest to 16:9</button></span></div>
+      </div>
+
+      <aside class="lc-out" aria-labelledby="lc-oh">
+        <p class="meta" id="lc-oh"><span class="tally"></span>Suggested pixel pitch</p>
+        <p class="big" id="lc-pitch" aria-live="polite">2.9 mm <span class="dim">or finer</span></p>
+        <p class="why" id="lc-why"></p>
+        <dl class="ospec">
+          <div><dt>Panel</dt><dd id="lc-panel"></dd></div>
+        </dl>
+        <p class="vds" id="lc-chips" style="margin-top:10px"></p>
+        <dl class="ospec" aria-live="polite">
+          <div><dt>Cabinets</dt><dd id="lc-cabs"></dd></div>
+          <div><dt>Real wall size</dt><dd id="lc-size"></dd></div>
+          <div><dt>Margin left</dt><dd id="lc-margin"></dd></div>
+          <div><dt>Resolution</dt><dd id="lc-res"></dd></div>
+          <div><dt>Aspect ratio</dt><dd id="lc-ratio"></dd></div>
+          <div><dt>Per cabinet</dt><dd id="lc-pxc"></dd></div>
+          <div class="tease"><dt>Processor plan</dt><dd><a id="lc-plan" href="led.html">Model, ports and receiving cards in the configurator</a> <span class="ap">free project account</span></dd></div>
+          <div><dt>Video input</dt><dd id="lc-input"></dd></div>
+        </dl>
+        <p class="warn meta-s" id="lc-warn" hidden>The space is smaller than one cabinet; one is shown.</p>
+        <div class="lc-acts">
+          <a class="btn sig" id="lc-open" href="led.html">Open in the full configurator <svg class="ic" aria-hidden="true"><use href="#ic-arrow-right"/></svg></a>
+          <p class="meta-s">Carries these answers to step 5. With a free project account the configurator saves the project and gives the processor plan and the spec sheet for a factory quote.</p>
+        </div>
+        <p class="lc-rule meta-s">Weight, power and brightness depend on the exact model: the factory confirms them with the quote. <span class="sr" id="lc-sum"></span></p>
+      </aside>
+      <div class="lc-figw">
+        <figure class="lc-fig"><figcaption class="meta"><span class="tally"></span>Front view · cabinet seams drawn</figcaption><div id="lc-elev"></div>
+          <p class="meta-s" style="color:var(--ink-3);margin:6px 0 0">Dashed: your space. Filled: the wall of whole cabinets. Person 1.75 m for scale.</p></figure>
+        <p class="meta-s" style="color:var(--ink-3);margin:14px 0 0">Starting values are the configurator’s church stage example (5 × 3 m, front row 4 m, most people 10 m). Change any of them.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="stage sec on-air" aria-labelledby="how-h">
+    <div class="slate-tab" aria-hidden="true"><i></i><span>Cam 2</span><b>How it works</b></div>
+    <div class="wrap">
+      <div class="head"><h2 class="h2" id="how-h">How it’s calculated. <span class="dim">Four steps, no black box.</span></h2>
+        <p>The same arithmetic runs in the configurator. Worked example: a 5 × 3 m space, front row at 4 m, most people at 10 m.</p></div>
+      <div class="method">
+        <div class="mblock"><p class="meta n-tag"><i></i>01 · Pitch and viewing distance</p>
+          <h3>Pitch follows the closest and the typical viewer.</h3>
+          <p>Pixel pitch is the distance between the centres of two pixels, in millimetres. Closer than about 1 m per mm, people see the pixels; from 3 m per mm (about 10 ft per mm) the image looks smooth. These are rules of thumb from i9’s pixel-pitch calculator: a range, not a hard limit.</p>
+          <code class="formula">limit = min(closest, typical ÷ 3) = min(4, 3.33) = 3.33 mm → 2.9 mm</code>
+          <p>The suggestion is the largest pitch in the list at or below that limit. For a wall that is on camera we keep it under 2.6 mm, and a camera test with a real cabinet comes before the order.</p></div>
+        <div class="mblock"><p class="meta n-tag"><i></i>02 · Whole cabinets</p>
+          <h3>A wall is built from whole cabinets.</h3>
+          <p>Cabinets don’t come in fractions, so the calculator fits as many as the space holds and shows what is left. Pick “Closest to 16:9” and it chooses the grid nearest 16:9 instead.</p>
+          <code class="formula">640 × 480 mm cabinets: floor(5,000 ÷ 640) = 7 · floor(3,000 ÷ 480) = 6 → 42 cabinets, 4.48 × 2.88 m</code></div>
+        <div class="mblock"><p class="meta n-tag"><i></i>03 · Resolution</p>
+          <h3>Pixels per cabinet × cabinets.</h3>
+          <p>Each cabinet holds its size divided by the pitch, rounded. Until the factory confirms the module resolution, the figure is labelled computed.</p>
+          <code class="formula">i9 COB 1.86: 640 ÷ 1.86 ≈ 344 · 480 ÷ 1.86 ≈ 258 → 7 × 344 = 2,408 · 6 × 258 = 1,548 px</code>
+          <p>2,408 × 1,548 px is about 3.73 megapixels at an aspect ratio of 1.56:1: larger than 1080p, smaller than 4K UHD.</p></div>
+        <div class="mblock"><p class="meta n-tag"><i></i>04 · Processor ports</p>
+          <h3>Ports follow the pixel load.</h3>
+          <p>An LED processor sends the picture to the wall over 1 Gb Ethernet ports, and each port carries a limited number of pixels. NovaStar’s spec-sheet formula gives 659,722 px per port at 8-bit and 60 Hz, and 329,861 px at 10-bit. Brompton’s nominal figure is lower (525,000 px at 8-bit). Copper Ethernet reaches 100 m; past that, fibre.</p>
+          <code class="formula">cabinets per port = floor(pixels per port ÷ pixels per cabinet) · e.g. 659,722 ÷ (344 × 258) → 7 at 8-bit</code>
+          <p>For your own wall, the configurator turns that into a port count and checks named processors against it (ports, inputs, 4K, frame rate, genlock), with receiving cards, in the processor plan of a free project account.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" aria-labelledby="sizes-h">
+    <div class="wrap">
+      <div class="head"><h2 class="h2" id="sizes-h">Common sizes, computed. <span class="dim">Three panels, six spaces.</span></h2>
+        <p>The spaces are the starting sizes in the configurator’s examples. Each cell is the whole-cabinet wall the calculator returns (fill the space): cabinets, real size and resolution. Generic pitches on 500 × 500 mm cabinets; i9’s COB 1.86 on its own 640 × 480 mm cabinet.</p></div>
+      <div class="tbl-w">
+        <table class="tbl" id="sizes">
+          <caption class="sr">Whole-cabinet LED walls for six spaces and three panels</caption>
+          <thead><tr><th scope="col">Space</th><th scope="col">i9 COB 1.86 · 640 × 480</th><th scope="col">2.6 mm generic · 500 × 500</th><th scope="col">3.9 mm generic · 500 × 500</th></tr></thead>
+          <tbody>
+            <tr data-sw="3" data-sh="1.7"><th scope="row">3 × 1.7 m<small>Corporate 16:9 example</small><button type="button" class="try" data-try="3,1.7" aria-label="Try 3 by 1.7 m in the calculator">Try it ↑</button></th><td data-l="i9 COB 1.86"><b>4 × 3 = 12</b><span>2.56 × 1.44 m</span><span>1,376 × 774 px</span></td><td data-l="2.6 mm generic"><b>6 × 3 = 18</b><span>3.00 × 1.50 m</span><span>1,152 × 576 px</span></td><td data-l="3.9 mm generic"><b>6 × 3 = 18</b><span>3.00 × 1.50 m</span><span>768 × 384 px</span></td></tr>
+            <tr data-sw="3.5" data-sh="2"><th scope="row">3.5 × 2 m<small>Corporate use · each IMAG side screen</small><button type="button" class="try" data-try="3.5,2" aria-label="Try 3.5 by 2 m in the calculator">Try it ↑</button></th><td data-l="i9 COB 1.86"><b>5 × 4 = 20</b><span>3.20 × 1.92 m</span><span>1,720 × 1,032 px</span></td><td data-l="2.6 mm generic"><b>7 × 4 = 28</b><span>3.50 × 2.00 m</span><span>1,344 × 768 px</span></td><td data-l="3.9 mm generic"><b>7 × 4 = 28</b><span>3.50 × 2.00 m</span><span>896 × 512 px</span></td></tr>
+            <tr data-sw="5" data-sh="3"><th scope="row">5 × 3 m<small>Church stage example</small><button type="button" class="try" data-try="5,3" aria-label="Try 5 by 3 m in the calculator">Try it ↑</button></th><td data-l="i9 COB 1.86"><b>7 × 6 = 42</b><span>4.48 × 2.88 m</span><span>2,408 × 1,548 px</span></td><td data-l="2.6 mm generic"><b>10 × 6 = 60</b><span>5.00 × 3.00 m</span><span>1,920 × 1,152 px</span></td><td data-l="3.9 mm generic"><b>10 × 6 = 60</b><span>5.00 × 3.00 m</span><span>1,280 × 768 px</span></td></tr>
+            <tr data-sw="6" data-sh="2.5"><th scope="row">6 × 2.5 m<small>Broadcast backdrop example</small><button type="button" class="try" data-try="6,2.5" aria-label="Try 6 by 2.5 m in the calculator">Try it ↑</button></th><td data-l="i9 COB 1.86"><b>9 × 5 = 45</b><span>5.76 × 2.40 m</span><span>3,096 × 1,290 px</span></td><td data-l="2.6 mm generic"><b>12 × 5 = 60</b><span>6.00 × 2.50 m</span><span>2,304 × 960 px</span></td><td data-l="3.9 mm generic"><b>12 × 5 = 60</b><span>6.00 × 2.50 m</span><span>1,536 × 640 px</span></td></tr>
+            <tr data-sw="6" data-sh="3"><th scope="row">6 × 3 m<small>XR and outdoor examples</small><button type="button" class="try" data-try="6,3" aria-label="Try 6 by 3 m in the calculator">Try it ↑</button></th><td data-l="i9 COB 1.86"><b>9 × 6 = 54</b><span>5.76 × 2.88 m</span><span>3,096 × 1,548 px</span></td><td data-l="2.6 mm generic"><b>12 × 6 = 72</b><span>6.00 × 3.00 m</span><span>2,304 × 1,152 px</span></td><td data-l="3.9 mm generic"><b>12 × 6 = 72</b><span>6.00 × 3.00 m</span><span>1,536 × 768 px</span></td></tr>
+            <tr data-sw="6" data-sh="3.5"><th scope="row">6 × 3.5 m<small>Church and event uses</small><button type="button" class="try" data-try="6,3.5" aria-label="Try 6 by 3.5 m in the calculator">Try it ↑</button></th><td data-l="i9 COB 1.86"><b>9 × 7 = 63</b><span>5.76 × 3.36 m</span><span>3,096 × 1,806 px</span></td><td data-l="2.6 mm generic"><b>12 × 7 = 84</b><span>6.00 × 3.50 m</span><span>2,304 × 1,344 px</span></td><td data-l="3.9 mm generic"><b>12 × 7 = 84</b><span>6.00 × 3.50 m</span><span>1,536 × 896 px</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="note">Generic pixels per cabinet are approximate (500 ÷ 2.6 ≈ 192, 500 ÷ 3.9 ≈ 128); the exact module resolution comes from the factory with the quote.</p>
+    </div>
+  </section>
+
+  <section class="sec" aria-labelledby="faq-h">
+    <div class="wrap">
+      <div class="head"><h2 class="h2" id="faq-h">Questions buyers ask.</h2><p>Short answers with the numbers worked out. Anything the factory has to confirm says so.</p></div>
+      <div class="faq">
+        <details open><summary>What pixel pitch do I need for my viewing distance?</summary><div class="a"><p>As a rule of thumb, the minimum viewing distance in metres equals the pitch in millimetres, and a comfortable distance is three times that (about 10 ft per mm). With the front row at 4 m and most people at 10 m, the limit is the smaller of 4 and 10 ÷ 3 = 3.33 mm, so the calculator suggests 2.9 mm, the largest indoor pitch in its list at or below 3.33 mm.</p></div></details>
+        <details><summary>How many LED cabinets do I need?</summary><div class="a"><p>A wall is built from whole cabinets, so divide the space by the cabinet size and round down. A 5 × 3 m space with 640 × 480 mm cabinets takes 7 columns (5,000 ÷ 640 = 7.8) and 6 rows (3,000 ÷ 480 = 6.25): 42 cabinets and a real wall of 4.48 × 2.88 m.</p></div></details>
+        <details><summary>How do I work out the resolution of an LED wall?</summary><div class="a"><p>Pixels per cabinet are the cabinet size divided by the pitch. i9’s COB 1.86 on a 640 × 480 mm cabinet gives 344 × 258 px per cabinet (computed; the factory confirms the module resolution). Seven by six cabinets make 2,408 × 1,548 px, about 3.73 megapixels. LED walls rarely land on a standard video size.</p></div></details>
+        <details><summary>Can I feed an LED wall with 1080p or 4K?</summary><div class="a"><p>If the wall is 1920 × 1080 px or smaller, a 1080p source maps pixel for pixel. Up to 3840 × 2160 px it needs a 4K UHD input or a 1080p source scaled up by the processor. Larger walls are split across several processor outputs or units. A 2,408 × 1,548 px wall sits between the two, so it takes a 4K input or a scaled 1080p source.</p></div></details>
+        <details><summary>How many processor ports does an LED wall need?</summary><div class="a"><p>Each 1 Gb Ethernet port carries a limited number of pixels. NovaStar’s spec-sheet formula gives 659,722 pixels per port at 8-bit and 60 Hz, and half that at 10-bit. A 344 × 258 px cabinet is 88,752 px, so 7 such cabinets fit on one port at 8-bit. The <a href="led.html">configurator</a> counts the ports for your wall and names a processor that fits it, with a free project account. Copper Ethernet reaches 100 m; longer runs need fibre.</p></div></details>
+        <details><summary>Which pixel pitches are made for indoor and outdoor walls?</summary><div class="a"><p>The calculator lists generic indoor pitches from 0.9 to 4.8 mm and outdoor pitches from 2.6 to 10 mm. Outdoor walls need weatherproof cabinets and more brightness. i9’s own COB 1.86 and 1.96 XR panels are indoor models.</p></div></details>
+        <details><summary>How much does an LED wall cost?</summary><div class="a"><p>LED walls are built to order, so there is no price list. i9 takes your spec (size, pitch, cabinets, processing) to the factory and replies with a price and lead time, for a project in any country. The <a href="led.html">configurator</a> writes that spec for you.</p></div></details>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" aria-labelledby="next-h" style="border-bottom:0">
+    <div class="wrap">
+      <div class="head"><h2 class="h2" id="next-h">Keep going.</h2><p>From a quick number to a wall i9 can quote.</p></div>
+      <nav class="rel" aria-labelledby="next-h">
+        <a href="led.html"><span class="meta"><span class="tally"></span>8 steps · factory quote</span><b>LED wall configurator</b><span class="d">Installation, processors and signal, a 3D view and the spec sheet.</span><span class="go">Configure a wall <svg class="ic" aria-hidden="true"><use href="#ic-arrow-right"/></svg></span></a>
+        <a href="led-wall-church.html"><span class="meta"><span class="tally"></span>Solution</span><b>LED walls for churches</b><span class="d">Sanctuary size, lyrics, side screens and the livestream camera.</span><span class="go">Read the church guide <svg class="ic" aria-hidden="true"><use href="#ic-arrow-right"/></svg></span></a>
+        <a href="planner.html"><span class="meta"><span class="tally"></span>Room planner</span><b>Plan the cameras</b><span class="d">Place cameras in your room and get the parts list with cable lengths.</span><span class="go">Open the planner <svg class="ic" aria-hidden="true"><use href="#ic-arrow-right"/></svg></span></a>
+        <a href="tools.html"><span class="meta"><span class="tally"></span>All tools</span><b>Tools and guides</b><span class="d">Every free planning tool and the guides built on them.</span><span class="go">See all tools <svg class="ic" aria-hidden="true"><use href="#ic-arrow-right"/></svg></span></a>
+      </nav>
+    </div>
+  </section>
+</main>
+
+<footer class="foot-g"><div class="wrap">
+  <div class="top">
+    <div><p class="line">We supply the equipment.<br>i9 Studios and i9TV do the rest.</p><p>I9Store USA LLC · 20815 NE 16th Ave, STE B33, Miami, FL 33179<br><a href="tel:+13053334374">+1 (305) 333-4374</a> · <a href="mailto:contato@i9tv.com.br">contato@i9tv.com.br</a></p></div>
+    <div><h3 class="meta">Pro</h3><ul><li><a href="pro.html#solutions">Solutions</a></li><li><a href="setups.html">Setups</a></li><li><a href="planner.html">Plan your room</a></li><li><a href="led.html">LED walls</a></li><li><a href="tools.html">Tools and guides</a></li></ul></div>
+    <div><h3 class="meta">Help</h3><ul><li><a href="pro.html#quote">Request a quote</a></li><li><a href="#">WhatsApp</a></li><li><a href="#">Terms and conditions</a></li></ul></div>
+    <div><h3 class="meta">i9</h3><ul><li><a href="#">i9 Studios</a></li><li><a href="#">i9TV</a></li><li><a href="#" lang="pt-BR">Loja Brasil</a></li></ul></div>
+  </div>
+  <div class="bot meta-s"><span>Viewing-distance rules: i9’s pixel-pitch calculator. Port figures: NovaStar and Brompton spec sheets (sources in the data file). LED walls are built to order and quoted by i9 for any country.</span><span>Design direction H · LED wall calculator · static prototype</span></div>
+</div></footer>
+<script src="../shared/catalog.js"></script>
+<script src="../shared/catalog-more.js"></script>
+<script src="../shared/catalog-browse.js"></script>
+<script src="bag.js"></script>
+<script src="browse-core.js"></script>
+<script src="nav-mega.js"></script>
+<script src="../shared/led-data.js"></script>
+<script src="led-calc.js"></script>
+<script src="../switcher.js"></script>
+</body>
+</html>
