@@ -163,6 +163,7 @@
         <div class="btot" id="btot"></div>
       </div>
       <div class="wzb" id="wz-budget" hidden></div>
+      <div class="pz-proj" id="pz-proj" hidden></div>
       <div id="bomlist"></div>
       <p class="assume meta-s" data-i18n="assume">Cable lengths: routed along floor and walls (the dashed lines), plus the rise at each end, plus 20 %, plus 2 m. Angles of view are manufacturer figures; values marked “approx.” need checking before an order.</p>
     </div>
@@ -177,6 +178,8 @@
     <button type="button" class="btn sig wz-next" id="wz-next"><span id="wz-next-l">Next</span><svg class="ic" aria-hidden="true"><use href="#ic-arrow-right"/></svg></button>
   </div></div>
 </main>
+<!-- round 4: the print-ready presentation (filled by planner-account.js on "Export presentation PDF") -->
+<section class="pz-pres" id="pz-pres" aria-hidden="true"></section>
 
 <dialog id="quote-dlg" aria-labelledby="qd-h">
   <div class="qd">
@@ -207,6 +210,7 @@
 <script src="g.js"></script>
 <script src="planner.js"></script>
 <script src="planner-wizard.js"></script>
+<script src="planner-account.js"></script>
 <script src="../switcher.js"></script>
 </body>
 </html>

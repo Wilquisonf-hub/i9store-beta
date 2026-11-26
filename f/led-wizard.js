@@ -951,7 +951,7 @@
   function quoteSigned() {
     return `<p class="meta"><span class="tally"></span>Request a factory quote</p>
         <h2 id="qf-h">Send it to the factory.</h2>
-        <p class="qf-p">A specialist checks the spec with you, then i9 quotes it with the factory: price, lead time and shipping to you.</p>
+        <p class="qf-p">A specialist checks the spec with you, then i9 quotes it with the factory: price, lead time and shipping to you. Installation, configuration and training by i9TV in Florida and Brazil, and in Latin America under contract, with an optional support plan (SLA).</p>
         <div class="qacc"><p class="meta">From your project account</p><b>${esc(ACC.name)}</b><span class="meta-s">${ACC_ORG ? esc(ACC_ORG) + ' · ' : ''}${esc(ACC.emailMasked)}</span>
           <p class="meta-s">Signed in as <b>${esc(ACC.name)}</b> · <button type="button" class="lnk" data-signout>Sign out</button></p></div>
         <form id="qf" novalidate>

@@ -3,7 +3,11 @@
    map in planner.html; nothing else is loaded. A massing model in the On Air look: warm white room, black hairline
    edges, grey people and furniture, dark camera bodies; orange only for the selected camera, its tally and its frustum.
    Heights are typical values (I9PLAN.HEIGHTS, "approx. — verify"), not measured. Plan coordinates: x across the room,
-   y into it (metres); here x → X, y → Z, height → Y, origin at the room centre. Camera pan a: 0° faces the front wall. */
+   y into it (metres); here x → X, y → Z, height → Y, origin at the room centre. Camera pan a: 0° faces the front wall.
+   Round 4 (version F): when the plan has a Nanlite light plan, each fixture is a physically-correct SpotLight (intensity in
+   candela = Nanlite's published lux at 1 m, inverse-square decay, beam from the data), ACES Filmic tone mapping auto-exposed
+   to the key light at the presenter, soft shadows on desktop (off on phones / "low"). A viewfinder inset and a multiview
+   render each camera at its real horizontal angle of view; frusta can be shown per camera. Rendering is on demand. */
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
@@ -21,31 +25,41 @@ export function mount(host, data, opt = {}) {
   canvas.setAttribute('role', 'img');
   canvas.setAttribute('aria-label', '3D view of the room plan');
   host.appendChild(canvas);
-  const renderer = new THREE.WebGLRenderer({ canvas, antialias:true, preserveDrawingBuffer:true });
-  renderer.setPixelRatio(Math.min(2, window.devicePixelRatio || 1));
+  const LIT = !!(data.fx && data.fx.length);
+  const LOW = opt.quality === 'low' || (opt.quality !== 'high' && (Math.min(window.innerWidth, window.innerHeight) < 700 || (navigator.hardwareConcurrency || 8) <= 4));
+  const renderer = new THREE.WebGLRenderer({ canvas, antialias:!LOW, preserveDrawingBuffer:true });
+  renderer.setPixelRatio(Math.min(LOW ? 1.25 : 2, window.devicePixelRatio || 1));
   renderer.outputColorSpace = THREE.SRGBColorSpace;
   const scene = new THREE.Scene();
   scene.background = new THREE.Color(COL.bg);
-  scene.add(new THREE.HemisphereLight(0xffffff, 0xcac7bf, 1.55));
-  const sun = new THREE.DirectionalLight(0xffffff, 1.1); sun.position.set(W * 0.35, WALL * 4, Dp * 0.6); scene.add(sun);
-  const fill = new THREE.DirectionalLight(0xffffff, 0.35); fill.position.set(-W * 0.5, WALL * 2, -Dp * 0.4); scene.add(fill);
+  const keyLux = Math.max(50, data.keyLux || 500);
+  if (LIT) {
+    renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    renderer.toneMappingExposure = 3.4 / keyLux;   /* a 60 % grey at the key reads about mid-high on ACES */
+    renderer.shadowMap.enabled = !LOW; renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+    scene.add(new THREE.HemisphereLight(0xffffff, 0x8f8c84, keyLux * 0.14));   /* bounce / room light (a look, not a measurement) */
+  } else {
+    scene.add(new THREE.HemisphereLight(0xffffff, 0xcac7bf, 1.55));
+    const sun = new THREE.DirectionalLight(0xffffff, 1.1); sun.position.set(W * 0.35, WALL * 4, Dp * 0.6); scene.add(sun);
+    const fill = new THREE.DirectionalLight(0xffffff, 0.35); fill.position.set(-W * 0.5, WALL * 2, -Dp * 0.4); scene.add(fill);
+  }
 
   const disposables = [];
   const keep = o => { disposables.push(o); return o; };
-  const lam = (c, o = {}) => keep(new THREE.MeshLambertMaterial({ color:c, ...o }));
-  const lineMat = (c = INK, op = 1) => keep(new THREE.LineBasicMaterial({ color:c, transparent:op < 1, opacity:op }));
+  const lam = (c, o = {}) => { if (LIT) { const { emissive, ...r } = o; return keep(new THREE.MeshStandardMaterial({ color:c, roughness:0.88, metalness:0, ...r })); } return keep(new THREE.MeshLambertMaterial({ color:c, ...o })); };
+  const lineMat = (c = INK, op = 1) => keep(new THREE.LineBasicMaterial({ color:c, transparent:op < 1, opacity:op, toneMapped:false }));
   const EDGE = lineMat(INK, 0.9), EDGE_SOFT = lineMat(INK, 0.28);
   /* a box sitting on y0, with black edges */
   function box(w, h, d, color, x, y0, z, edge = EDGE, parent = scene) {
     const g = keep(new THREE.BoxGeometry(w, h, d));
-    const m = new THREE.Mesh(g, lam(color)); m.position.set(x, y0 + h / 2, z); parent.add(m);
+    const m = new THREE.Mesh(g, lam(color)); m.position.set(x, y0 + h / 2, z); parent.add(m); m.castShadow = m.receiveShadow = LIT;
     const e = new THREE.LineSegments(keep(new THREE.EdgesGeometry(g)), edge); e.position.copy(m.position); parent.add(e);
     return m;
   }
 
   /* ---------- the room ---------- */
   const floor = new THREE.Mesh(keep(new THREE.PlaneGeometry(W, Dp)), lam(COL.floor, { emissive:0x262523 }));
-  floor.rotation.x = -Math.PI / 2; scene.add(floor);
+  floor.rotation.x = -Math.PI / 2; floor.receiveShadow = LIT; scene.add(floor);
   { const step = Math.max(W, Dp) > 25 ? 2 : 1, pts = [];
     for (let x = step; x < W - 1e-6; x += step) pts.push(X(x), 0.002, -Dp / 2, X(x), 0.002, Dp / 2);
     for (let y = step; y < Dp - 1e-6; y += step) pts.push(-W / 2, 0.002, Zc(y), W / 2, 0.002, Zc(y));
@@ -54,7 +68,7 @@ export function mount(host, data, opt = {}) {
   /* walls face inward, single-sided: the walls between you and the room drop out as you orbit (a dollhouse view) */
   const wallMat = lam(COL.wall, { side:THREE.FrontSide, emissive:0x8f8e8a });
   [[W, 0, -Dp / 2, 0], [W, 0, Dp / 2, Math.PI], [Dp, -W / 2, 0, Math.PI / 2], [Dp, W / 2, 0, -Math.PI / 2]].forEach(([len, x, z, ry]) => {
-    const m = new THREE.Mesh(keep(new THREE.PlaneGeometry(len, WALL)), wallMat); m.position.set(x, WALL / 2, z); m.rotation.y = ry; scene.add(m);
+    const m = new THREE.Mesh(keep(new THREE.PlaneGeometry(len, WALL)), wallMat); m.position.set(x, WALL / 2, z); m.rotation.y = ry; m.receiveShadow = LIT; scene.add(m);
   });
   { const c = [[-W / 2, -Dp / 2], [W / 2, -Dp / 2], [W / 2, Dp / 2], [-W / 2, Dp / 2]], pts = [];
     for (let i = 0; i < 4; i++) { const [a, b] = [c[i], c[(i + 1) % 4]]; pts.push(a[0], 0.004, a[1], b[0], 0.004, b[1]); }
@@ -90,6 +104,7 @@ export function mount(host, data, opt = {}) {
     const bodyH = seated ? 0.62 : 1.35, y0 = seated ? 0.45 : 0;
     const body = new THREE.Mesh(keep(new THREE.CylinderGeometry(0.17, 0.21, bodyH, 18)), personMat); body.position.y = y0 + bodyH / 2; g.add(body);
     const head = new THREE.Mesh(keep(new THREE.SphereGeometry(0.115, 18, 12)), personMat); head.position.y = y0 + bodyH + 0.15; g.add(head);
+    body.castShadow = head.castShadow = LIT; body.receiveShadow = head.receiveShadow = LIT;
     if (seated) box(0.46, 0.45, 0.46, COL.seat, 0, 0, 0, EDGE_SOFT, g);
     heads.push(new THREE.Vector3(X(p.x), base + y0 + bodyH + 0.15, Zc(p.y)));
   });
@@ -100,8 +115,30 @@ export function mount(host, data, opt = {}) {
     box(1.4, 0.75, 0.6, COL.furn, x, 0, z);
     const mon = box(0.62, 0.36, 0.03, COL.cam, x, 0.8, z - 0.12, EDGE); void mon; }
 
+  /* ---------- round 4: the plan's fixtures as lights ---------- */
+  const kelvin = K => { const t = K / 100; let r, g, b;   /* Tanner Helland's blackbody fit, 1000–40000 K */
+    r = t <= 66 ? 255 : 329.698727446 * Math.pow(t - 60, -0.1332047592); g = t <= 66 ? 99.4708025861 * Math.log(t) - 161.1195681661 : 288.1221695283 * Math.pow(t - 60, -0.0755148492);
+    b = t >= 66 ? 255 : t <= 19 ? 0 : 138.5177312231 * Math.log(t - 10) - 305.0447927307;
+    const c = v => Math.max(0, Math.min(255, v)) / 255; return new THREE.Color().setRGB(c(r), c(g), c(b), THREE.SRGBColorSpace); };
+  const FIX_BODY = keep(new THREE.MeshBasicMaterial({ color:0x1d1d1c, toneMapped:false })), FIX_FACE = keep(new THREE.MeshBasicMaterial({ color:0xfff3df, toneMapped:false }));
+  let shadowsLeft = LOW ? 0 : 4;
+  (data.fx || []).forEach(f => {
+    const pos = new THREE.Vector3(X(f.x), f.h, Zc(f.y)), tg = new THREE.Vector3(X(f.tx), f.th, Zc(f.ty));
+    const sp = new THREE.SpotLight(kelvin(f.cct || data.cct || 5600), f.lux1, 0, Math.min(1.45, f.beam * Math.PI / 360), 0.45, 2);
+    sp.position.copy(pos); sp.target.position.copy(tg); scene.add(sp, sp.target);
+    if (shadowsLeft > 0 && (f.role === 'key' || f.role === 'wash')) { shadowsLeft--; sp.castShadow = true; sp.shadow.mapSize.set(1024, 1024); sp.shadow.bias = -0.0004; sp.shadow.radius = 4; sp.shadow.camera.near = 0.3; }
+    /* the fixture: a head on a yoke, on a stand (or hung for a wash) */
+    const head = new THREE.Group(); head.position.copy(pos); scene.add(head); head.lookAt(tg);
+    const big = /pavo/.test(f.id) ? [0.6, 0.12, 0.05] : [0.22, 0.22, 0.3];
+    const hb = new THREE.Mesh(keep(new THREE.BoxGeometry(...big)), FIX_BODY); head.add(hb);
+    const fc = new THREE.Mesh(keep(new THREE.PlaneGeometry(big[0] * 0.8, big[1] * 0.8)), FIX_FACE); fc.position.z = big[2] / 2 + 0.002; head.add(fc);
+    const base = pos.y - f.h + (f.h > 3 ? f.h : 0), pts = f.role === 'wash' ? [pos.x, pos.y + 0.15, pos.z, pos.x, WALL, pos.z] : [pos.x, pos.y - 0.15, pos.z, pos.x, Math.max(0, pos.y - f.h), pos.z];
+    if (f.role !== 'wash' && f.role !== 'bg') for (let i = 0; i < 3; i++) { const a = i * 2.094, y0 = Math.max(0, pos.y - f.h); pts.push(pos.x, y0 + 0.5, pos.z, pos.x + Math.sin(a) * 0.35, y0, pos.z + Math.cos(a) * 0.35); }
+    const g = keep(new THREE.BufferGeometry()); g.setAttribute('position', new THREE.Float32BufferAttribute(pts, 3)); scene.add(new THREE.LineSegments(g, EDGE)); void base;
+  });
+
   /* ---------- lights (suggested positions: either side of the people, toward the cameras) ---------- */
-  if (data.lights > 0 && data.cams.length) {
+  if (!LIT && data.lights > 0 && data.cams.length) {
     const cx = data.cams.reduce((a, c) => a + X(c.x), 0) / data.cams.length, cz = data.cams.reduce((a, c) => a + Zc(c.y), 0) / data.cams.length;
     const toCam = Math.atan2(cx - crowd.x, cz - crowd.z), r = Math.min(4.5, Math.max(1.8, Math.hypot(cx - crowd.x, cz - crowd.z) * 0.45));
     const angs = [-0.6, 0.6, -1.05, 1.05].slice(0, data.lights);
@@ -119,9 +156,13 @@ export function mount(host, data, opt = {}) {
   }
 
   /* ---------- cameras + frusta ---------- */
-  const SEL_MAT = lam(ORANGE), BODY_MAT = lam(COL.cam), STAND_MAT = lineMat(COL.stand, 1);
+  const SEL_MAT = keep(new THREE.MeshBasicMaterial({ color:ORANGE, toneMapped:false })), BODY_MAT = LIT ? keep(new THREE.MeshBasicMaterial({ color:COL.cam, toneMapped:false })) : lam(COL.cam), STAND_MAT = lineMat(COL.stand, 1);
   const FR_LINE = lineMat(INK, 0.32), FR_LINE_ON = lineMat(ORANGE, 1);
-  const FR_FILL = keep(new THREE.MeshBasicMaterial({ color:ORANGE, transparent:true, opacity:0.12, side:THREE.DoubleSide, depthWrite:false }));
+  const FR_FILL = keep(new THREE.MeshBasicMaterial({ color:ORANGE, transparent:true, opacity:0.12, side:THREE.DoubleSide, depthWrite:false, toneMapped:false }));
+  /* one colour per camera when every frustum is shown (orange stays the selected one) */
+  const PAL = [0x2f6fed, 0x1f9d6b, 0xb44fd0, 0x8a6d00, 0x0a8a96, 0xc0392b, 0x5d6d7e, 0x7d3c98];
+  const FR_PAL = PAL.map(c => lineMat(c, 0.85));
+  let showFr = false;
   const cams = data.cams.map((c, i) => {
     const hgt = H.cam[c.mnt] || 1.5, base = c.mnt === 'tripod' && onStage(c.x, c.y) ? H.stage : 0;
     const pos = new THREE.Vector3(X(c.x), base + hgt, Zc(c.y));
@@ -171,14 +212,14 @@ export function mount(host, data, opt = {}) {
     const x = cv.getContext('2d'); x.fillStyle = on ? '#f53c00' : '#0a0a0a'; x.fillRect(4, 4, 56, 56);
     x.fillStyle = on ? '#000' : '#f7f6f2'; x.font = '700 34px "PT Mono", ui-monospace, monospace'; x.textAlign = 'center'; x.textBaseline = 'middle'; x.fillText(txt, 32, 35);
     const tex = keep(new THREE.CanvasTexture(cv)); tex.colorSpace = THREE.SRGBColorSpace;
-    const s = new THREE.Sprite(keep(new THREE.SpriteMaterial({ map:tex, depthTest:false })));
+    const s = new THREE.Sprite(keep(new THREE.SpriteMaterial({ map:tex, depthTest:false, toneMapped:false })));
     const k = 0.32 + Math.max(W, Dp) * 0.012; s.scale.set(k, k, k); s.renderOrder = 10; s.userData.txt = txt; return s;
   }
   let sel = Math.min(Math.max(0, data.sel | 0), cams.length - 1);
   function paintSel() {
     cams.forEach(o => {
       const on = o.i === sel;
-      o.frLines.material = on ? FR_LINE_ON : FR_LINE; o.frFill.visible = on; o.tally.visible = on;
+      o.frLines.material = on ? FR_LINE_ON : showFr ? FR_PAL[o.i % FR_PAL.length] : FR_LINE; o.frLines.visible = on || showFr; o.frFill.visible = on; o.tally.visible = on;
       const s = label(o.c.label, on); s.position.copy(o.spr.position); scene.remove(o.spr); o.spr = s; scene.add(s);
     });
   }
@@ -198,10 +239,41 @@ export function mount(host, data, opt = {}) {
     renderer.setSize(w, h, false); canvas.style.width = w + 'px'; canvas.style.height = h + 'px';
     cam.aspect = w / h; cam.updateProjectionMatrix(); draw();
   }
+  let mode = 'scene', vf = !!opt.vf;
+  const ov = document.createElement('div'); ov.className = 'pv3-ov'; host.appendChild(ov);
+  function camView(o) { povCam.position.copy(o.pos); povCam.rotation.order = 'YXZ'; povCam.rotation.set(o.pitch, -o.a, 0);
+    povCam.fov = 2 * Math.atan(Math.tan(o.c.h * Math.PI / 360) * 9 / 16) * 180 / Math.PI; povCam.aspect = 16 / 9; povCam.updateProjectionMatrix(); }
+  /* render one camera's picture into a pixel rectangle (y from the bottom, WebGL style), helpers hidden */
+  function shoot(o, x, y, w2, h2) {
+    const hide = cams.map(q => [q.rig.visible, q.spr.visible]); cams.forEach(q => { q.spr.visible = false; q.frLines.visible = false; q.frFill.visible = false; }); o.rig.visible = false;
+    camView(o); renderer.setViewport(x, y, w2, h2); renderer.setScissor(x, y, w2, h2); renderer.setScissorTest(true);
+    renderer.setClearColor(COL.bg, 1); renderer.clear(); renderer.render(scene, povCam);
+    cams.forEach((q, k) => { q.rig.visible = hide[k][0]; q.spr.visible = hide[k][1]; }); paintVis();
+  }
+  function paintVis() { cams.forEach(o => { const on = o.i === sel; o.frLines.visible = on || showFr; o.frFill.visible = on; }); }
+  const lab = (txt, l, t, w2, cls) => `<span class="pv3-lab${cls ? ' ' + cls : ''}" style="left:${l}%;top:${t}%;max-width:${w2}%">${txt}</span>`;
+  const esc3 = v => String(v).replace(/[&<>"]/g, c => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;' }[c]));
   function draw() {
     const w = canvas.width, h = canvas.height;
-    renderer.setScissorTest(false); renderer.setViewport(0, 0, w, h); renderer.setClearColor(pov == null ? COL.bg : 0x0a0a0a, 1); renderer.clear();
-    if (pov == null) { renderer.render(scene, cam); return; }
+    renderer.setScissorTest(false); renderer.setViewport(0, 0, w, h); renderer.setClearColor(pov == null && mode !== 'multi' ? COL.bg : 0x0a0a0a, 1); renderer.clear();
+    let html = '';
+    if (mode === 'multi' && cams.length) {
+      const n = cams.length, cols = n <= 1 ? 1 : n <= 4 ? 2 : 3, rows = Math.ceil(n / cols), gap = Math.round(4 * (renderer.getPixelRatio() || 1));
+      let cw = Math.floor((w - gap * (cols + 1)) / cols), ch = Math.round(cw * 9 / 16);
+      if (ch * rows + gap * (rows + 1) > h) { ch = Math.floor((h - gap * (rows + 1)) / rows); cw = Math.round(ch * 16 / 9); }
+      const ox = Math.round((w - (cw * cols + gap * (cols - 1))) / 2), oy = Math.round((h - (ch * rows + gap * (rows - 1))) / 2);
+      cams.forEach((o, k) => { const cx = ox + (k % cols) * (cw + gap), ry = Math.floor(k / cols), cy = h - oy - (ry + 1) * ch - ry * gap;
+        shoot(o, cx, cy, cw, ch);
+        html += lab(`<b>${esc3(o.c.label)}</b>${esc3(o.c.vf || '')}`, cx / w * 100, (h - cy - ch) / h * 100, cw / w * 100, 'mv' + (o.i === sel ? ' on' : '')); });
+      renderer.setScissorTest(false); ov.innerHTML = html; return;
+    }
+    if (pov == null) { renderer.render(scene, cam);
+      if (vf && cams[sel]) { const iw = Math.round(Math.max(Math.min(w * 0.34, 520 * (renderer.getPixelRatio() || 1)), 200)), ih = Math.round(iw * 9 / 16), m = Math.round(10 * (renderer.getPixelRatio() || 1));
+        renderer.setScissorTest(true); renderer.setViewport(w - iw - m - 2, m - 2, iw + 4, ih + 4); renderer.setScissor(w - iw - m - 2, m - 2, iw + 4, ih + 4); renderer.setClearColor(0x0a0a0a, 1); renderer.clear();
+        shoot(cams[sel], w - iw - m, m, iw, ih); renderer.setScissorTest(false);
+        html = lab(`<b>${esc3(cams[sel].c.label)}</b>${esc3(cams[sel].c.vf || '')}`, (w - iw - m) / w * 100, (h - m - ih) / h * 100, iw / w * 100, 'vf'); }
+      ov.innerHTML = html; return; }
+    ov.innerHTML = '';
     /* looking through a camera: a 16:9 frame, letterboxed, the camera's own body and frustum hidden */
     let fw = w, fh = Math.round(w * 9 / 16); if (fh > h) { fh = h; fw = Math.round(h * 16 / 9); }
     const ox = Math.round((w - fw) / 2), oy = Math.round((h - fh) / 2);
@@ -240,8 +312,14 @@ export function mount(host, data, opt = {}) {
     return { w, h, samples:n, nonBg:diff, colors:colors.size };
   }
   const api = {
-    setView, select(i) { sel = i; paintSel(); draw(); }, reset() { pov = null; controls.enabled = true; home(); draw(); }, stats,
-    dispose() { if (ro) ro.disconnect(); else window.removeEventListener('resize', size); controls.dispose(); disposables.forEach(d => d.dispose && d.dispose()); renderer.dispose(); canvas.remove(); if (window.I9PLAN3D === api) delete window.I9PLAN3D; },
+    setView, select(i) { sel = i; paintSel(); draw(); }, reset() { pov = null; mode = 'scene'; controls.enabled = true; home(); draw(); }, stats,
+    /* round 4 */
+    setMode(m) { mode = m === 'multi' ? 'multi' : 'scene'; if (mode === 'multi') pov = null; controls.enabled = mode !== 'multi'; draw(); },
+    setVf(on) { vf = !!on; draw(); }, setFrusta(on) { showFr = !!on; paintSel(); draw(); },
+    get lit() { return LIT; }, get low() { return LOW; }, get shadows() { return renderer.shadowMap.enabled; }, cells() { return ov.querySelectorAll('.pv3-lab.mv').length; },
+    hfov(i) { return cams[i] ? cams[i].c.h : null; },
+    fps(n = 30) { const gl = renderer.getContext(); draw(); gl.finish(); const px1 = new Uint8Array(4), t0 = performance.now(); for (let k = 0; k < n; k++) { draw(); gl.readPixels(1, 1, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, px1); } const ms = (performance.now() - t0) / n; return { ms:Math.round(ms * 10) / 10, fps:Math.round(1000 / ms), lit:LIT, low:LOW, shadows:renderer.shadowMap.enabled, px:renderer.getPixelRatio() }; },
+    dispose() { if (ro) ro.disconnect(); else window.removeEventListener('resize', size); controls.dispose(); disposables.forEach(d => d.dispose && d.dispose()); renderer.dispose(); canvas.remove(); ov.remove(); if (window.I9PLAN3D === api) delete window.I9PLAN3D; },
   };
   window.I9PLAN3D = api;
   return api;

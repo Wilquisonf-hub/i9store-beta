@@ -67,6 +67,15 @@
     sWarn:['{0} camera can’t frame its shot from there','{0} câmera não enquadra o plano daí'], sWarnN:['{0} cameras can’t frame their shot from there','{0} câmeras não enquadram o plano daí'],
     a_conv:['{0} × HDMI→SDI converter','{0} × conversor HDMI→SDI'], a_ctl:['PTZ joystick','Joystick PTZ'], a_cage:['{0} × cage','{0} × gaiola'], a_poe:['PoE switch','Switch PoE'], a_enc:['{0} × NDI encoder (to quote)','{0} × encoder NDI (a cotar)'], a_tri:['{0} × tripod','{0} × tripé'], a_brk:['{0} × bracket (to quote)','{0} × suporte (a cotar)'], a_pwr:['{0} × mains power','{0} × energia na tomada'],
     camsSub:['Cameras','Câmeras'], t_c:['Your cameras','Suas câmeras'],
+    /* round 4: 3D lights, viewfinders, readouts */
+    vfB:['Viewfinder','Visor'], mvB:['Multiview','Multiview'], frB:['Frusta','Campos de visão'], qB:['Quality','Qualidade'], qAuto:['Auto','Auto'], qLow:['Low','Baixa'],
+    isoK:['ISO','ISO'], cctK:['Colour','Cor'],
+    rdPres:['At the presenter · {0}','No apresentador · {0}'], rdKey:['Key','Principal'], rdRatio:['Key : fill','Principal : preenchimento'], rdCct:['Colour','Cor'], noFill:['no fill light','sem preenchimento'],
+    rdExp:['Exposure check · 1/50 s · ISO {0}','Checagem de exposição · 1/50 s · ISO {0}'], rdNeeds:['needs ≈{0} lx, has {1} lx','precisa ≈{0} lx, tem {1} lx'],
+    rdOk:['✓ enough light','✓ luz suficiente'], rdLow:['add light or open up','mais luz ou abra o diafragma'], rdAuto:['auto gain · no aperture data','ganho automático · sem dado de abertura'], rdNoT:['no subject in frame','ninguém no quadro'],
+    rdPow:['Power','Energia'], rdPowV:['{0} W · {1} A at 120 V','{0} W · {1} A em 120 V'], rdPowN:['Fixture maximum draw from each maker’s page. Plan circuits with your electrician.','Consumo máximo das luzes na página de cada fabricante. Planeje os circuitos com seu eletricista.'],
+    rdNote:['Rule of thumb: lux from each maker’s published 1 m figure (standard reflector, no diffusion), inverse-square to each face; beam spread approx. — verify; exposure E = 250 × N² ÷ (t × ISO). Softboxes cost 1–2 stops.','Regra prática: lux pelo valor publicado de cada fabricante a 1 m (refletor padrão, sem difusão), inverso do quadrado até cada rosto; abertura do facho aprox. — verificar; exposição E = 250 × N² ÷ (t × ISO). Softboxes custam 1–2 stops.'],
+    rdNone:['No light plan in this room: add one in step 4 to see the lit view and the light readouts.','Sem plano de luz nesta sala: inclua no passo 4 para ver a vista iluminada e as leituras de luz.'],
     /* round 3: production + lighting step */
     q_rec:['Record?','Gravar?'], rec_none:['No','Não'], rec_pgm:['The program','O programa'], rec_iso:['Every camera (ISO)','Cada câmera (ISO)'],
     q_st:['Stream?','Transmitir?'], st_0:['No','Não'], st_1:['1 platform','1 plataforma'], st_2:['2 or more','2 ou mais'],
@@ -83,15 +92,22 @@
     o_stream:['Stream','Transmissão'], o_screen:['Screen','Telão'], o_rec:['Record','Gravação'], o_over:['Overflow room','Sala de apoio'],
     cut_pgm:['Program','Programa'], cut_aux:['Aux · one source','Aux · uma fonte'], cut_mix:['M/E 2 · its own cut','M/E 2 · corte próprio'], cut_mix2:['Mix 2 · its own cut','Mix 2 · corte próprio'], cut_iso:['Program + every camera','Programa + cada câmera'], cut_dests:['{0} platforms','{0} plataformas'],
     viaEnc:['via {0}','via {0}'], viaRec:['on {0}','em {0}'], builtIn:['built in','embutido'],
-    lightK:['Lights & control','Luz e controle'], q_lights:['Add a light plan?','Incluir plano de luz?'], yesLights:['Yes, Nanlite','Sim, Nanlite'], noLights:['No, we have light','Não, já temos luz'],
-    q_ctl:['Who runs the lights?','Quem opera a luz?'], ctl_app:['An app (NANLINK)','Um app (NANLINK)'], ctl_dmx:['Scenes on DMX (wired)','Cenas em DMX (cabo)'], ctl_crmx:['Scenes on wireless DMX','Cenas em DMX sem fio'],
+    lightK:['Lights & control','Luz e controle'], q_lights:['Do you need lighting too?','Precisa de iluminação também?'], yesLights:['Yes, include lighting','Sim, incluir iluminação'], noLights:['No, we have lights','Não, já temos luz'], unsureLights:['Not sure, suggest later','Não sei, sugiram depois'],
+    q_ctl:['Who runs the lights?','Quem opera a luz?'], ctl_app:['The maker’s app','O app do fabricante'], ctl_dmx:['Scenes on DMX (wired)','Cenas em DMX (cabo)'], ctl_crmx:['Scenes on wireless DMX','Cenas em DMX sem fio'],
     q_panel:['A one-touch panel for the pastor / host','Painel de um toque para o pastor / apresentador'], q_relay:['An ON AIR sign','Placa ON AIR'],
     panelNote:['KioscTouch2 wall screen (or the Kiosc app on your iPad) → CueCore3 → the lights. Scenes: Worship · Preaching · Baptism · House lights.','Tela de parede KioscTouch2 (ou o app Kiosc no seu iPad) → CueCore3 → as luzes. Cenas: Louvor · Pregação · Batismo · Luz da casa.'],
     panelNoteP:['KioscTouch2 (or the Kiosc app) → CueCore3: an “On air” scene; the relay switches a mains ON AIR sign.','KioscTouch2 (ou o app Kiosc) → CueCore3: cena “No ar”; o relé liga uma placa ON AIR.'],
-    noArt:['No Nanlite on the store takes Art-Net or sACN: the scenes land on DMX from the CueCore3 ports.','Nenhuma Nanlite da loja aceita Art-Net ou sACN: as cenas saem em DMX pelas portas da CueCore3.'],
+    noArt:['Scenes leave the CueCore3 on its DMX ports; a fixture needs DMX to be in the scenes.','As cenas saem da CueCore3 pelas portas DMX; a luz precisa de DMX para entrar nas cenas.'],
     roll_cam:['Cameras','Câmeras'], roll_prod:['Production','Produção'], roll_lit:['Lighting & control','Luz e controle'], roll_cab:['Cables & mounts','Cabos e suportes'], rollQ:['{0} to quote','{0} a cotar'],
     mob:['Mobile / handheld','Móvel / na mão'], mobNote:['Wireless link to the switcher','Link sem fio até o switcher'], oneCtl:['One controller runs all {0} cameras','Um controlador comanda as {0} câmeras'],
     whyK:['Why this switcher','Por que este switcher'],
+    q_cctl:['Canon controller','Controlador Canon'], cctl_auto:['Auto','Auto'], cctl_300:['RC-IP300','RC-IP300'], cctl_1000:['RC-IP1000','RC-IP1000'],
+    cctlNote:['Auto: the RC-IP300 (to quote, being added to the store) up to 4 cameras, the RC-IP1000 above.','Auto: RC-IP300 (a cotar, entrando na loja) até 4 câmeras, RC-IP1000 acima.'],
+    q_pnl:['A hardware control panel','Um painel de controle físico'], pnl_none:['No','Não'], pnl_yes:['Yes','Sim'], pnlNote:['ATEM Micro Panel on the small ATEMs, an Advanced Panel on a Constellation. A control surface, never the switcher.','ATEM Micro Panel nos ATEM pequenos, um Advanced Panel no Constellation. Uma superfície de controle, nunca o switcher.'],
+    q_ctrl:['Scene controller','Controlador de cenas'], ctrl_vp:['CueCore3 (Visual Productions)','CueCore3 (Visual Productions)'], ctrl_splay:['S-PLAY MINI (ENTTEC), small rooms','S-PLAY MINI (ENTTEC), salas pequenas'],
+    q_ptype:['Panel','Painel'], ptype_kiosc:['KioscTouch2 wall screen','Tela de parede KioscTouch2'], ptype_ipad:['Kiosc app on your iPad','App Kiosc no seu iPad'], ptype_bstation:['B-Station2 buttons','Botões B-Station2'],
+    roll_svc:['Services · i9TV','Serviços · i9TV'],
+    howNote:['vMix is bought by the customer from vMix (i9 doesn’t sell it); OBS Studio is free. A hardware switcher is our first choice when it does the job.','O vMix é comprado pelo cliente na vMix (a i9 não vende); o OBS Studio é gratuito. Um switcher físico é nossa primeira escolha quando atende.'],
     lensStd:['Lens','Lente'], lensLong:['Long reach','Longo alcance'], extAdd:['+ {0}','+ {0}'], cropAdd:['{0} ×{1}','{0} ×{1}'],
     effTxt:['{0} effective','{0} efetivo'], dimTip:['Rule of thumb: past about f/8 a dim room needs more light or a higher ISO.','Regra prática: acima de f/8 uma sala escura pede mais luz ou ISO mais alto.'],
     adaptTip:['PL lens: needs the {0} (in the parts list) and the body’s Super 35 crop or the lens’s built-in 1.5× extender. {1} kg: heavy support to quote.','Lente PL: precisa do {0} (na lista) e do crop Super 35 do corpo ou do extensor 1,5× da lente. {1} kg: suporte reforçado a cotar.'],
@@ -428,7 +444,7 @@
     const n = cams.length;
     cams.forEach((c, i) => { if (c.k === 'lens' && !c.lens) c.lens = autoLens(c.m, L, i, n); if (c.man == null) c.man = manFor(z, c.k); });
     const lt = ltOf(z);
-    return { pr:prOf(z), lt:{ on:lt.on, ctl:lt.ctl, panel:lt.panel, relay:lt.relay, k:z.k, big: z.k === 'church' && z.w * z.d > 450 ? 1 : 0 },
+    return { pr:prOf(z), lt:{ on:lt.on, ctl:lt.ctl, ctrl:lt.ctrl || 'vp', panel:lt.panel, relay:lt.relay, ptype:lt.ptype || 'kiosc', pick:{ ...(lt.pick || {}) }, k:z.k, big: z.k === 'church' && z.w * z.d > 450 ? 1 : 0 },
       tpl:L.tpl, w:L.w, d:L.d, tr:trOverride || rec.tr, fmt:'hd', ext: z.k === 'podcast' || z.k === 'studio' ? 0 : 1, xr:L.xr, own:z.ow.slice(),
       furn:L.furn, ppl:L.ppl, ctrl:L.ctrl,
       cams:cams.map((c, i) => { const s = n === 1 ? { ...L.slots[0], aim:'all', shot:'wide' } : L.slots[i];
@@ -818,8 +834,8 @@
       tri ? t('a_tri', tri) : '', brk ? t('a_brk', brk) : ''].filter(Boolean);
     const bad = lu.filter((c, i) => { const r = reach(L, i, n, c.k, c.m, c.lens, c.ext, c.crop); return r && r.bad; }).length;
     const tr = ev.tr === 'ip' ? 'IP / NDI' : ev.tr.toUpperCase();
-    const ctlL = ev.bom.find(l => l.id && l.id === (D.PTZCTL || {}).Canon);
-    if (ctlL) adds.unshift(t('oneCtl', ctlL.who.length) + ' · ' + P[ctlL.id].name);
+    const ctlL = ev.bom.find(l => (l.id && l.id === (D.PTZCTL || {}).Canon) || (l.code === 'CTRL' && /Canon/.test(l.name || '')));
+    if (ctlL) adds.unshift(t('oneCtl', ctlL.who.length) + ' · ' + (ctlL.id ? P[ctlL.id].name : 'RC-IP300'));
     return `<p class="meta"><span class="tally"></span>${esc(t('sumK'))} · ${n}</p>
       <h2>${esc(title(ev))}</h2>
       <dl class="csdl">
@@ -867,7 +883,7 @@
   }
 
   /* ----- step 4 (round 3): production + lights ----- */
-  const ROLL = { cam:['cam'], prod:['sw', 'mon', 'aud', 'net'], lit:['lit'], cab:['cab', 'mnt'] };
+  const ROLL = { cam:['cam'], prod:['sw', 'mon', 'aud', 'net'], lit:['lit'], cab:['cab', 'mnt'], svc:['svc'] };
   function rollup(bom) {
     const o = {}; Object.keys(ROLL).forEach(k => { const ls = bom.filter(l => !l.info && ROLL[k].includes(l.g === 'net' && l.code === 'PWR' && l.why === PL.t('w_npf') ? 'net' : l.g));
       o[k] = { tot:ls.filter(l => !l.own && l.id && P[l.id]).reduce((a, l) => a + P[l.id].usd * l.qty, 0), q:ls.filter(l => !l.own && !(l.id && P[l.id])).length }; });
@@ -892,12 +908,34 @@
       <div class="ch-col ch-outs"><span class="meta">${esc(t('chOut'))}</span>${outs.length ? outs.map(([k, cut, via]) => `<span class="ch-o"><b>${esc(t(k))}</b><span>${esc(cut)}</span>${via ? `<span class="meta-s">${esc(via)}</span>` : ''}</span>`).join('') : '<span class="ch-o"><span class="meta-s">—</span></span>'}</div>
     </figure>`;
   }
+  /* round 4: lighting by role; each role shows its pick (any brand) and a picker of the store's lights */
+  const LUI = { role:null, b:'' };
+  function lightRoles(lt) {
+    const plan = D.lightPlan({ ...lt, k:Z.k, big: Z.k === 'church' && Z.w * Z.d > 450 ? 1 : 0 }, Z.n), dmx = lt.ctl === 'dmx' || lt.ctl === 'crmx';
+    const spec = sp => [sp.bi ? 'bi-colour' : sp.rgb ? 'colour' : '', '≥ ' + Math.round(sp.min / 9).toLocaleString('en-US') + ' lx at 3 m', sp.quiet ? 'quiet' : '', dmx ? 'DMX' : ''].filter(Boolean).join(' · ');
+    const fact = id => { const f = D.FIXT[id]; return f && f.lux1 ? `${Math.round(f.lux1 / 9).toLocaleString('en-US')} lx at 3 m · ${f.W} W${f.dmx ? ' · DMX' : ' · no DMX'}${f.quiet ? ' · quiet' : ''}` : 'no published data'; };
+    const rows = plan.map(r => { const p = r.id && P[r.id];
+      return `<li class="lr${LUI.role === r.role ? ' on' : ''}"><span class="lr-r"><b>${esc(PL.t('w_l_' + r.role))}</b><span class="meta-s">${r.q} × · ${esc(spec(r.spec))}</span></span>
+        ${p ? `<span class="pk"><img src="${p.src}" alt=""></span><span class="lr-m"><span class="cc-b">${esc(p.brand)}</span><b>${esc(p.name)}</b><span class="meta-s">${esc(fact(r.id))} · ${usd(p.usd)}</span>${r.ok ? `<span class="lr-ok meta-s">${esc(r.auto ? 'meets the spec · cheapest store listing' : 'meets the spec')}</span>` : `<span class="lr-no meta-s">${esc(D.FIXT[r.id] && D.FIXT[r.id].lux1 ? 'below the spec' : 'no published data · verify')}</span>`}</span>`
+          : `<span class="lr-m"><b>${esc('No store listing meets the spec · to quote')}</b></span>`}
+        <button type="button" class="tbtn lr-sw" data-lrole="${r.role}" aria-expanded="${LUI.role === r.role}">${esc(LUI.role === r.role ? 'Close' : 'Swap')}</button></li>`; }).join('');
+    let pick = '';
+    if (LUI.role) { const pool = D.lightPool(), brands = [...new Set(pool.map(id => P[id].brand))].sort(), cur = (plan.find(r => r.role === LUI.role) || {}).id;
+      const list = pool.filter(id => !LUI.b || P[id].brand === LUI.b).sort((a, b) => P[a].usd - P[b].usd).slice(0, 24);
+      const rs = plan.find(r => r.role === LUI.role).spec;
+      pick = `<div class="lpick"><div class="cf" role="group" aria-label="Brand"><span class="meta-s">Brand</span><button type="button" class="chip" data-lb="" aria-pressed="${!LUI.b}">All</button>${brands.map(b => `<button type="button" class="chip" data-lb="${esc(b)}" aria-pressed="${LUI.b === b}">${esc(b)}</button>`).join('')}</div>
+        <ul class="ccards">${list.map(id => { const p = P[id], ok = D.meets(id, rs, dmx);
+          return `<li class="ccard${id === cur ? ' on' : ''}"><span class="pk"><img src="${p.src}" alt="" loading="lazy"></span><div class="cc-t"><span class="cc-b">${esc(p.brand)}</span><b>${esc(p.name)}</b><span class="cc-tags">${ok ? '<span class="cc-badge">meets spec</span>' : D.FIXT[id] && D.FIXT[id].lux1 ? '<span class="cc-badge">below spec</span>' : '<span class="vf">no published data</span>'}</span></div>
+            <dl class="cc-f"><div><dt>Light</dt><dd>${esc(fact(id))}</dd></div></dl><p class="cc-p"><b class="price">${usd(p.usd)}</b><span class="meta-s">${esc(t('beforeTax'))}</span></p>
+            <div class="cc-a"><button type="button" class="btn sm${id === cur ? ' solid' : ''}" data-lpick="${id}" aria-pressed="${id === cur}">${id === cur ? '✓ In the plan' : 'Use for ' + esc(PL.t('w_l_' + LUI.role).toLowerCase())}</button></div></li>`; }).join('')}</ul></div>`; }
+    return `<ul class="lroles">${rows}</ul>${pick}`;
+  }
   function stepProd() {
     const pr = prOf(Z), lt = ltOf(Z), opts = options(), o = opts[shownId(opts)], ev = o.ev;
     const q = (key, k, vals, cur, sub) => `<div class="fq pq"><span class="ql">${esc(t(key))}${sub ? `<span class="meta-s">${esc(sub)}</span>` : ''}</span><span class="seg" role="group" aria-label="${esc(t(key))}">${vals.map(v => `<button type="button" data-pr="${k}:${v}" aria-pressed="${String(cur) === String(v)}">${esc(t(k + '_' + v))}</button>`).join('')}</span></div>`;
-    const lq = (key, k, vals, cur) => `<div class="fq pq"><span class="ql">${esc(t(key))}</span><span class="seg" role="group" aria-label="${esc(t(key))}">${vals.map(v => `<button type="button" data-lt="${k}:${v}" aria-pressed="${String(cur) === String(v)}">${esc(t(v === 1 ? 'yesLights' : v === 0 ? 'noLights' : k + '_' + v))}</button>`).join('')}</span></div>`;
+    const lq = (key, k, vals, cur) => `<div class="fq pq"><span class="ql">${esc(t(key))}</span><span class="seg" role="group" aria-label="${esc(t(key))}">${vals.map(v => `<button type="button" data-lt="${k}:${v}" aria-pressed="${String(cur) === String(v)}">${esc(t(v === 1 ? 'yesLights' : v === 0 ? 'noLights' : v === 2 ? 'unsureLights' : k + '_' + v))}</button>`).join('')}</span></div>`;
     const scr = pr.scr !== 'none';
-    const checks = ev.checks.filter(c => c.lvl !== 'ok' && /screen|telão|cut|corte|aux|stream|transm|multiview|DMX|Companion|vMix|NANLINK|Aputure|wireless|sem fio|ProPresenter/i.test(c.txt)).slice(0, 6);
+    const checks = ev.checks.filter(c => c.lvl !== 'ok' && /screen|telão|cut|corte|aux|stream|transm|multiview|DMX|Companion|vMix|app|spec|wireless|sem fio|ProPresenter/i.test(c.txt)).slice(0, 6);
     return `<div class="pgrid4">
       <div class="pform">
         <h2 class="meta lh4"><span class="tally"></span>${esc(t('st4'))}</h2>
@@ -906,13 +944,18 @@
         ${q('q_scr', 'scr', ['none', 'led', 'proj', 'overflow'], pr.scr)}
         ${scr && pr.scr !== 'overflow' ? `<fieldset class="fs pfeed"><legend class="meta">${esc(t('q_feed'))}</legend><div class="cds">${['same', 'aux', 'mix'].map((f, i) => `<button type="button" class="cd${pr.feed === f ? ' on' : ''}" data-pr="feed:${f}" aria-pressed="${pr.feed === f}"><span class="n">${String(i + 1).padStart(2, '0')}<i aria-hidden="true"></i></span><b>${esc(t('feed_' + f))}</b><span class="meta-s">${esc(t('fd_' + f))}</span></button>`).join('')}</div></fieldset>` : ''}
         ${q('q_gfx', 'gfx', ['none', 'lower', 'lyrics'], pr.gfx, pr.gfx === 'lyrics' ? t('gfxNote') : '')}
-        ${q('q_how', 'how', ['hw', 'pc'], pr.how)}
+        ${q('q_how', 'how', ['hw', 'pc'], pr.how, pr.how === 'pc' ? t('howNote') : '')}
+        ${pr.how === 'hw' ? q('q_pnl', 'pnl', ['none', 'yes'], pr.pnl || 'none', t('pnlNote')) : ''}
+        ${ev.cams.filter(c => P[c.m] && P[c.m].brand === 'Canon' && (c.k === 'ptz' || (D.CANON_IP || []).includes(c.m))).length >= 2 && ev.cams.some(c => c.k === 'ptz' && P[c.m].brand === 'Canon') ? q('q_cctl', 'cctl', ['auto', '300', '1000'], pr.cctl || 'auto', t('cctlNote')) : ''}
         ${q('q_lvl', 'lvl', ['s', 'm', 'p'], pr.lvl)}
         <h2 class="meta lh4"><span class="tally"></span>${esc(t('lightK'))}</h2>
-        ${lq('q_lights', 'on', [1, 0], lt.on)}
-        ${lt.on ? lq('q_ctl', 'ctl', ['app', 'dmx', 'crmx'], lt.ctl) : ''}
-        ${lt.on && lt.ctl !== 'app' ? `<div class="fq pq"><span class="ql">${esc(t(Z.k === 'podcast' ? 'q_relay' : 'q_panel'))}<span class="meta-s">${esc(t(Z.k === 'podcast' ? 'panelNoteP' : 'panelNote'))}</span></span>
+        ${lq('q_lights', 'on', [1, 0, 2], lt.on)}
+        ${lt.on === 1 ? lightRoles(lt) : ''}
+        ${lt.on === 1 ? lq('q_ctl', 'ctl', ['app', 'dmx', 'crmx'], lt.ctl) : ''}
+        ${lt.on === 1 && lt.ctl !== 'app' ? lq('q_ctrl', 'ctrl', ['vp', 'splay'], lt.ctrl || 'vp') : ''}
+        ${lt.on === 1 && lt.ctl !== 'app' ? `<div class="fq pq"><span class="ql">${esc(t(Z.k === 'podcast' ? 'q_relay' : 'q_panel'))}<span class="meta-s">${esc(t(Z.k === 'podcast' ? 'panelNoteP' : 'panelNote'))}</span></span>
           <label class="csame"><input type="checkbox" data-ltc="${Z.k === 'podcast' ? 'relay' : 'panel'}"${(Z.k === 'podcast' ? lt.relay : lt.panel) ? ' checked' : ''}><span class="box" aria-hidden="true"></span><span>${esc(t('yes'))}</span></label></div>
+          ${lt.panel && Z.k !== 'podcast' ? lq('q_ptype', 'ptype', ['kiosc', 'ipad', 'bstation'], lt.ptype || 'kiosc') : ''}
           <p class="meta-s pnote">${esc(t('noArt'))}</p>` : ''}
       </div>
       <aside class="psum4" aria-label="${esc(t('chainK'))}">
@@ -995,22 +1038,52 @@
   }
 
   /* ----- step 6: 3D ----- */
+  const G3UI = { vf: !matchMedia('(max-width:699px)').matches, mv:false, fr:false, q:'auto' };
   function step6() {
-    const S = PL.state;
+    const S = PL.state, lt = S.lt;
+    const tb = (id, on, label) => `<button type="button" class="tbtn pv3-t" data-g3="${id}" aria-pressed="${!!on}">${esc(label)}</button>`;
     return `<div class="g3">
-      <div class="g3bar"><div class="seg sm g3v" role="group" aria-label="${esc(t('st6'))}"><button type="button" data-v3="o" aria-pressed="true">${esc(t('overview'))}</button>${S.cams.map((c, i) => `<button type="button" data-v3="${i}" aria-pressed="false">${esc(PL.camLab(i))}</button>`).join('')}</div>
+      <div class="g3bar"><div class="seg sm g3v" role="group" aria-label="${esc(t('st7'))}"><button type="button" data-v3="o" aria-pressed="true">${esc(t('overview'))}</button>${S.cams.map((c, i) => `<button type="button" data-v3="${i}" aria-pressed="false">${esc(PL.camLab(i))}</button>`).join('')}</div>
+        ${tb('vf', G3UI.vf, t('vfB'))}${tb('mv', G3UI.mv, t('mvB'))}${tb('fr', G3UI.fr, t('frB'))}
+        <span class="seg sm pv3-q" role="group" aria-label="${esc(t('qB'))}"><button type="button" data-g3q="auto" aria-pressed="${G3UI.q === 'auto'}">${esc(t('qB'))} · ${esc(t('qAuto'))}</button><button type="button" data-g3q="low" aria-pressed="${G3UI.q === 'low'}">${esc(t('qLow'))}</button></span>
         <button type="button" class="tbtn" id="g3-reset">${esc(t('reset'))}</button><span class="meta-s g3h">${esc(t('g3dHint'))}</span></div>
       <div class="g3box" id="g3box"><div class="g3msg" id="g3msg"><span class="meta"><span class="tally"></span>${esc(t('loading3d'))}</span></div><p class="g3pov meta" id="g3pov" hidden></p></div>
+      ${lt && lt.on ? `<div class="pv3-sc"><span class="seg sm" role="group" aria-label="${esc(t('isoK'))}"><span class="meta-s">${esc(t('isoK'))}</span>${[400, 800, 1600, 3200].map(v => `<button type="button" data-iso="${v}" aria-pressed="${(lt.iso || 800) === v}">${v}</button>`).join('')}</span>
+        <span class="seg sm" role="group" aria-label="${esc(t('cctK'))}"><span class="meta-s">${esc(t('cctK'))}</span>${[3200, 4300, 5600].map(v => `<button type="button" data-cct="${v}" aria-pressed="${(lt.cct || 5600) === v}">${v}K</button>`).join('')}</span></div>` : ''}
+      <div class="pv3-read" id="pv3-read">${readouts()}</div>
       <p class="meta-s g3note">${esc(t('g3dNote'))}</p>
     </div>`;
   }
+  /* the readouts work without WebGL: they come from planner.js's light model, not from the render */
+  function readouts() {
+    const L = PL.lightCalc(); if (!L) return `<p class="meta-s pv3-none">${esc(t('rdNone'))}</p>`;
+    const n0 = v => Math.round(v).toLocaleString('en-US'), S = PL.state;
+    const cam = r => { const c = S.cams[r.i], nm = PL.camLab(r.i) + ' · ' + (P[c.m] ? P[c.m].name : c.m);
+      if (r.lux == null) return `<li><b>${esc(nm)}</b><span class="meta-s">${esc(t('rdNoT'))}</span></li>`;
+      if (r.need == null) return `<li><b>${esc(nm)}</b><span class="meta-s">${esc(n0(r.lux))} lx · ${esc(t('rdAuto'))}</span></li>`;
+      return `<li class="${r.ok ? 'ok' : 'bad'}" data-exp="${r.i}"><b>${esc(nm)} · ${esc(PL.fNum(r.N))}</b><span class="meta-s">${esc(t('rdNeeds', n0(r.need), n0(r.lux)))}</span><span class="xv">${esc(r.ok ? t('rdOk') : t('rdLow'))}</span></li>`; };
+    return `<div class="pv3-r"><p class="meta"><span class="tally"></span>${esc(t('rdPres', PL.pname(S.ppl[0].n)))}</p>
+        <dl><div><dt>${esc(t('rdKey'))}</dt><dd><b>${esc(n0(L.key))} lx</b></dd></div><div><dt>${esc(t('rdRatio'))}</dt><dd><b>${L.ratio ? esc(L.ratio.toFixed(1)) + ' : 1' : esc(t('noFill'))}</b></dd></div><div><dt>${esc(t('rdCct'))}</dt><dd><b>${esc(L.cct)}K</b></dd></div></dl></div>
+      <div class="pv3-r pv3-rx"><p class="meta">${esc(t('rdExp', L.iso))}</p><ul>${L.cams.map(cam).join('')}</ul></div>
+      <div class="pv3-r"><p class="meta">${esc(t('rdPow'))}</p><p class="pv3-pw"><b id="pv3-pw">${esc(t('rdPowV', n0(L.W), (Math.round(L.A * 10) / 10).toFixed(1)))}</b></p><p class="meta-s">${esc(t('rdPowN'))}</p></div>
+      <p class="meta-s pv3-rn">${esc(t('rdNote'))}</p>`;
+  }
+  /* "C50 · S35 crop · 400 mm" / "UE50KPJ · 20.0×": what the viewfinder is looking through */
+  function vfLabel(c) {
+    const nm = P[c.m] ? P[c.m].name.replace(/^EOS /, '') : c.m;
+    if (c.k === 'lens') return `${nm}${c.crop ? ' · S35 crop' : ''} · ${Math.round(c.f)} mm${c.ext && D.EXT[c.ext] ? ' (' + D.EXT[c.ext].x + '×)' : ''}`;
+    return `${nm} · ${PL.zoomX(c).toFixed(1)}×`;
+  }
   function data3d() {
-    const S = PL.state;
+    const S = PL.state, L = PL.lightCalc();
     const lights = PL.bom.filter(l => l.g === 'lit' && l.id && P[l.id]).reduce((a, l) => a + l.qty, 0);
     return { w:S.w, d:S.d, furn:S.furn.map(f => ({ k:f.k, x:f.x, y:f.y, w:f.w, h:f.h })), ppl:S.ppl.map(p => ({ x:p.x, y:p.y, a:p.a })), ctrl:{ ...S.ctrl },
       cams:S.cams.map((c, i) => { const v = PL.view(c); const tg = v.tg ? { x:v.tg.p.x, y:v.tg.p.y } : null;
-        return { x:c.x, y:c.y, a:c.a, h:v.h, mnt:c.mnt, k:c.k, own:!!c.own, label:String(i + 1), tg, all: c.tgt < 0 && v.n > 1 }; }),
-      lights:Math.min(lights, 4), H:D.HEIGHTS, sel: PL.sel && PL.sel.kind === 'cam' ? PL.sel.i : 0 };
+        return { x:c.x, y:c.y, a:c.a, h:v.h, mnt:c.mnt, k:c.k, own:!!c.own, label:String(i + 1), tg, all: c.tgt < 0 && v.n > 1, vf:vfLabel(c) }; }),
+      lights:Math.min(lights, 4), H:D.HEIGHTS, sel: PL.sel && PL.sel.kind === 'cam' ? PL.sel.i : 0,
+      /* round 4: the plan's fixtures as lights (position, height, aim, photometrics) */
+      fx:(L ? L.fx : []).map(f => { const F = D.FIXT[f.id] || {}; return { ...f, lux1:F.lux1 || 0, beam:F.beam || 55, W:F.W || 0, cct:(S.lt && S.lt.cct) || 5600 }; }).filter(f => f.lux1 > 0),
+      keyLux: L ? L.key : 0, cct:(S.lt && S.lt.cct) || 5600 };
   }
   function hasWebGL() { try { const c = document.createElement('canvas'); return !!(window.WebGLRenderingContext && (c.getContext('webgl2') || c.getContext('webgl'))); } catch (e) { return false; } }
   function mount3d() {
@@ -1020,7 +1093,8 @@
     const want = Z.s;
     import('./planner-3d.js').then(m => {
       if (Z.s !== want || Z.v === 'a' || !document.body.contains(box)) return;
-      try { G3 = m.mount(box, data3d(), { onPov: i => povLabel(i) }); msg.hidden = true; }
+      try { G3 = m.mount(box, data3d(), { onPov: i => povLabel(i), vf:G3UI.vf, quality:G3UI.q }); msg.hidden = true; if (G3UI.mv) G3.setMode('multi'); if (G3UI.fr) G3.setFrusta(true);
+        if (/[?&]fps\b/.test(location.search)) setTimeout(() => { const f = G3.fps(30), n = $('#g3pov'); if (n) { n.hidden = false; n.textContent = `Frame ${f.ms} ms · ${f.fps} fps · shadows ${f.shadows ? 'on' : 'off'} · ${f.low ? 'low' : 'auto'} · px ${f.px}`; } $('#g3box').scrollIntoView({ block:'center' }); }, 600); }
       catch (e) { fail('noGL'); }
     }).catch(() => { if (Z.s === want) fail('noGLload'); });
   }
@@ -1029,7 +1103,7 @@
     $$('[data-v3]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.v3 === (i == null ? 'o' : String(i)))));
     if (i == null) { p.hidden = true; return; }
     const c = PL.state.cams[i], v = PL.view(c);
-    p.hidden = false; p.innerHTML = `<span class="tally"></span>${esc(t('pov'))} ${esc(PL.camLab(i))} · ${esc(PL.modelName(c))} · ${v.h.toFixed(1)}°`;
+    p.hidden = false; p.innerHTML = `<span class="tally"></span>${esc(t('pov'))} ${esc(PL.camLab(i))} · ${esc(vfLabel(c))} · ${v.h.toFixed(1)}°`;
   }
 
   /* ----- step 7: list (the planner's own #bom section shows; this adds the budget bar) ----- */
@@ -1104,6 +1178,9 @@
     if (b.dataset.cd) { Z.cd = b.dataset.cd; Z.dirty = 1; render(); $(`[data-cd="${b.dataset.cd}"]`)?.focus(); return; }
     const keep = sel => { render(); const el = $(sel, panel); if (el) el.focus({ preventScroll:true }); };
     if (b.dataset.pr) { const [k, v] = b.dataset.pr.split(':'); Z.pr = { ...prOf(Z), [k]: k === 'st' ? +v : v }; if (k === 'lvl') { /* level nudges the defaults */ } Z.dirty = 1; if (!Z.om) Z.o = null; keep(`[data-pr="${b.dataset.pr}"]`); save(); return; }
+    if (b.dataset.lrole) { LUI.role = LUI.role === b.dataset.lrole ? null : b.dataset.lrole; LUI.b = ''; keep(`[data-lrole="${b.dataset.lrole}"]`); return; }
+    if (b.dataset.lb != null) { LUI.b = b.dataset.lb; keep(`[data-lb="${b.dataset.lb}"]`); return; }
+    if (b.dataset.lpick) { const lt = ltOf(Z); Z.lt = { ...lt, pick:{ ...(lt.pick || {}), [LUI.role]: b.dataset.lpick } }; Z.dirty = 1; if (!Z.om) Z.o = null; keep(`[data-lpick="${b.dataset.lpick}"]`); save(); return; }
     if (b.dataset.lt) { const [k, v] = b.dataset.lt.split(':'); Z.lt = { ...ltOf(Z), [k]: k === 'on' ? +v : v }; Z.dirty = 1; if (!Z.om) Z.o = null; keep(`[data-lt="${b.dataset.lt}"]`); save(); return; }
     /* step 3: cameras */
     const keep2 = sel => { render(); const el = $(sel, panel); if (el) el.focus({ preventScroll:true }); };
@@ -1131,7 +1208,13 @@
     if (b.id === 'wz-approve') { approve(); go(7, { approve:true }); return; }
     if (b.id === 'wz-fine') { setView('a'); scrollTo(0, 0); return; }
     if (b.dataset.v3 != null && G3) { G3.setView(b.dataset.v3 === 'o' ? null : +b.dataset.v3); return; }
-    if (b.id === 'g3-reset' && G3) { G3.setView(null); G3.reset(); return; }
+    if (b.id === 'g3-reset' && G3) { G3UI.mv = false; $$('[data-g3="mv"]').forEach(x => x.setAttribute('aria-pressed', 'false')); G3.setView(null); G3.reset(); return; }
+    if (b.dataset.g3) { const k = b.dataset.g3; G3UI[k] = !G3UI[k]; b.setAttribute('aria-pressed', String(G3UI[k]));
+      if (G3) { if (k === 'vf') { if (matchMedia('(max-width:699px)').matches) G3.setView(G3UI.vf ? (PL.sel && PL.sel.kind === 'cam' ? PL.sel.i : 0) : null); else G3.setVf(G3UI.vf); }
+        if (k === 'mv') G3.setMode(G3UI.mv ? 'multi' : 'scene'); if (k === 'fr') G3.setFrusta(G3UI.fr); } return; }
+    if (b.dataset.g3q) { G3UI.q = b.dataset.g3q; render(); return; }
+    if (b.dataset.iso) { PL.setLt({ iso:+b.dataset.iso }); $$('[data-iso]').forEach(x => x.setAttribute('aria-pressed', String(x === b))); const r = $('#pv3-read'); if (r) r.innerHTML = readouts(); return; }
+    if (b.dataset.cct) { PL.setLt({ cct:+b.dataset.cct }); render(); return; }
   });
   panel.addEventListener('change', e => {
     const i = e.target;
@@ -1176,5 +1259,6 @@
     save();
   })();
 
-  window.I9WIZ = { get state() { return Z; }, go, options, setView, layout, get g3() { return G3; } };
+  window.I9WIZ = { get state() { return Z; }, go, options, setView, layout, get g3() { return G3; }, rollup, readouts,
+    chain: () => { const opts = options(), o = opts[shownId(opts)]; return o ? chain(o.ev, prOf(Z)) : ''; } };
 })();

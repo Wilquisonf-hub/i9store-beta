@@ -207,8 +207,12 @@
      Blackmagic facts: blackmagicdesign.com /products/atemmini, /atemsdi, /atemconstellation techspecs (read 25 Nov 2026). */
   D.PROD = {
     iso:['atemproiso', 'atemxiso', 'atemsdipro', 'atemsdix'],            /* record every camera separately */
-    stream:['atemmp', 'atemproiso', 'atemext', 'atemxiso', 'atemsdipro', 'atemsdix'],   /* built-in RTMP/SRT, one destination */
-    rec:['atemmp', 'atemproiso', 'atemext', 'atemxiso', 'atemsdipro', 'atemsdix'],      /* program recording to USB-C */
+    stream:['atemmp', 'atemproiso', 'atemext', 'atemxiso', 'atemsdipro', 'atemsdix', 'atem-tvs-4k8'],   /* built-in RTMP/SRT (4K8: RTMP), one destination */
+    rec:['atemmp', 'atemproiso', 'atemext', 'atemxiso', 'atemsdipro', 'atemsdix', 'atem-tvs-4k8'],      /* program recording */
+    /* control surfaces (owner: i9 carries the Constellation range and the Advanced Panels; the ATEM Micro Panel, store title
+       "ATEM Micro Live Stream", is a control panel only). The TV Studio 4K8 has its panel built in; the HD8 is not offered. */
+    panel:{ mini:'atemmls', me1:'atem1me-panel', me2:'atem2me-panel' }, tvs4k8:'atem-tvs-4k8',
+    rcip300:{ name:'Canon RC-IP300 PTZ controller', note:'Being added to the i9 store; to quote. Up to 200 IP cameras incl. CR-N, C50, C80, C400.' },
     oneOut:['atemmp', 'atemproiso'],                                     /* one HDMI out: the screen or the operator's multiview */
     aux:{ atemmp:1, atemproiso:1, atemext:2, atemxiso:4, atemsdi:2, atemsdipro:2, atemsdix:4, atem1mehd:6, atem1me:6, 'atem2me-hd':12, 'atem2me-4k':12 },
     me2:{ hd:'atem2me-hd', uhd:'atem2me-4k' }, panel2:'atem2me-panel', rec1:'hyperdeck', enc:'bmenc', dec:'bmdec', bridge:'atem-bridge', conv:'microconv-bidi',
@@ -216,7 +220,10 @@
     src:'https://www.blackmagicdesign.com/products/atemconstellation/techspecs',
   };
   /* Accsoon wireless (accsoon.com product pages, 25 Nov 2026). los = line-of-sight metres; plan on 25 % of it indoors (rule of thumb). */
-  D.WIRELESS = { sdi:'cineview-se', hdmi:'cineview-he', long:'cineview-master-tx', los:{ 'cineview-se':400, 'cineview-he':350, 'cineview-master-tx':2500 }, indoor:0.25, alt:'bolt6',
+  /* owner, 25 Nov 2026: i9 stocks only the CineView SE 4K and the Master 4K (and its versions; the Master 4K II is not on the
+     store, so to quote). The SE 4K receiver has an HDMI out and an SDI out (SDI is off when the source is 4K HDMI), so it
+     serves SDI and HDMI switchers and a computer's capture card. accsoon.com/cineview-se-4k (spec text did not load: verify). */
+  D.WIRELESS = { sdi:'cineview-se', hdmi:'cineview-se', long:'cineview-master-tx', los:{ 'cineview-se':400, 'cineview-master-tx':2500 }, indoor:0.25, alt:'bolt6', next:'Accsoon CineView Master 4K II (not on the store, to quote)',
     kitVerify:{ 'cineview-master-tx':'Store title says "transmitter"; at TX $445 + RX $445 it is probably the kit — verify' } };
   /* Nanlite (nanlite.com product API + manuals, 25 Nov 2026). dmx = wired DMX/RDM; crmx = built-in wireless DMX; quiet = 20 dBA or fanless. */
   D.FIXT = {
@@ -224,16 +231,45 @@
     pavoslim60cl:{ dmx:true, crmx:true, quiet:true }, pavoslim240c:{ dmx:true, crmx:true, quiet:true }, pavoslim240cl:{ dmx:true, crmx:true, quiet:true },
     'pavotube2-6c':{ dmx:false, quiet:true }, 'pavotube15c-2':{ dmx:true, quiet:true, verify:'DMX over a 3.5 mm cable: verify' }, 'pavotube2-60x':{ dmx:true, quiet:true },
   };
-  /* starting light plan per room type: [fixture, role, how many] with n = people on camera (planning choice, not data) */
-  D.LIGHTPLAN = {
-    podcast:n => n <= 2 ? [['forza60bii', 'key', n], ['forza60bii', 'fill', 1], ['pavotube2-6c', 'back', n], ['pavotube15c-2', 'bg', 1]] : [['forza150b', 'key', Math.ceil(n / 2)], ['forza60bii', 'fill', 1], ['pavotube2-6c', 'back', n], ['pavotube15c-2', 'bg', 1]],
-    church:(n, big) => big ? [['forza500bii', 'key', Math.max(2, Math.min(4, n + 1))], ['forza300bii', 'back', 2], ['pavoslim240cl', 'wash', 2]] : [['forza300bii', 'key', Math.max(2, Math.min(4, n))], ['forza60bii', 'back', 2]],
-    studio:n => [['forza300bii', 'key', Math.max(1, n)], ['forza150b', 'fill', 1], ['forza60bii', 'back', Math.max(1, n)], ['pavotube15c-2', 'bg', 1]],
-    event:n => [['forza720b', 'key', 2], ['forza300bii', 'back', 2]],
-    school:n => [['forza300bii', 'key', 2], ['forza60bii', 'back', 2]],
-    corp:n => [['pavoslim60cl', 'key', Math.max(1, n)], ['forza60bii', 'back', Math.max(1, n)]],
+  /* round 4: photometrics for the 3D view and the readouts. lux1 = lux on axis at 1 m, 5600K, with the standard reflector
+     (PavoSlim / PavoTube: the bare panel or tube); W = maximum power draw. Source: nanlite.com product API behind
+     https://www.nanlite.com/product-<key>#/en, read 25 Nov 2026 (tmp-planner3/notes-D.md). The Forza 720B publishes 7,919 lx at 3 m:
+     ×9 gives the 1 m figure. beam = the light's spread for drawing and falloff: NOT a Nanlite figure for every fixture,
+     so beamV:false marks it "approx. — verify" (rule of thumb: ~55° for a Forza with its standard reflector, ~110° for a
+     panel or tube). */
+  const PH = { forza60bii:[14350, 72, 'forza-60-60b-ii'], forza150b:[23130, 170, 'forza-150b'], forza300bii:[43480, 350, 'forza-300-300b-500-500b-ii'],
+    forza500bii:[67320, 580, 'forza-300-300b-500-500b-ii'], forza720b:[7919 * 9, 800, 'forza-720-720b'], pavoslim60cl:[7094, 72, 'pavoslim-60cl'], pavoslim240cl:[21030, 260, 'pavoslim-240cl'],
+    'pavotube2-6c':[145, 30, 'pavotube-ii-6c'], 'pavotube15c-2':[423, 30, 'pavotube-ii-15c-30c'] };
+  Object.keys(PH).forEach(id => { const [lux1, W, key] = PH[id]; D.FIXT[id] = { ...(D.FIXT[id] || {}), lux1, W, beam: /pavo/.test(id) ? 110 : 55, beamV:false, read:READ,
+    src:'https://www.nanlite.com/product-' + key + '#/en', bi: /forza(60b|150b|300b|500b|720b)/.test(id) } });
+  D.FIXT['pavotube15c-2'].per = 2;   /* the kit holds two tubes: lux and watts are per tube */
+  D.EXPO = { C:250, t:1 / 50, iso:800, note:'Incident-light rule of thumb: E = 250 × N² ÷ (t × ISO). Working ISO 800 unless you set yours.' };
+  /* owner, 25 Nov 2026: no brand is built into the light plan. The plan is ROLES with a spec target; each role is filled with
+     the cheapest store listing (any brand) whose published data meets the spec, unless the customer picks another one.
+     min = lux at 1 m on axis (Nanlite-style 1 m figure; ÷9 = at 3 m); bi = bi-colour; rgb = colour; quiet = podcast / sermon;
+     dmx = required when scenes are wanted. Listings without published photometrics can be picked by hand ("no published data")
+     but are never the automatic pick, because the spec can't be checked. Planning choices, not data. */
+  Object.keys(D.FIXT).forEach(id => { const f = D.FIXT[id]; if (/pavo/.test(id)) f.rgb = true; if (f.src && /nanlite/.test(f.src)) f.app = 'NANLINK'; });
+  D.LROLES = (k, n, big) => {
+    const R = (role, q, spec) => ({ role, q, spec });
+    if (k === 'podcast') return [R('key', n <= 2 ? n : Math.ceil(n / 2), { min: n <= 2 ? 10000 : 20000, bi:true, quiet:true }), R('fill', 1, { min:10000, bi:true, quiet:true }), R('back', n, { min:100, quiet:true }), R('bg', 2, { min:300, rgb:true, quiet:true })];
+    if (k === 'church') return big ? [R('key', Math.max(2, Math.min(4, n + 1)), { min:60000, bi:true }), R('back', 2, { min:40000, bi:true }), R('wash', 2, { min:15000, rgb:true })] : [R('key', Math.max(2, Math.min(4, n)), { min:40000, bi:true }), R('back', 2, { min:10000, bi:true })];
+    if (k === 'studio') return [R('key', Math.max(1, n), { min:40000, bi:true }), R('fill', 1, { min:20000, bi:true }), R('back', Math.max(1, n), { min:10000, bi:true }), R('bg', 2, { min:300, rgb:true })];
+    if (k === 'event') return [R('key', 2, { min:60000, bi:true }), R('back', 2, { min:40000, bi:true })];
+    if (k === 'school') return [R('key', 2, { min:40000, bi:true }), R('back', 2, { min:10000, bi:true })];
+    return [R('key', Math.max(1, n), { min:7000, bi:true, quiet:true }), R('back', Math.max(1, n), { min:7000, bi:true, quiet:true })];
   };
-  D.LIGHTCTL = { ctl:'cuecore', panel:'vptouch', relay:'din-relay4', crmxTx:'exalux-tx100n-basic', crmxRx:'exalux-rx100s', src:'https://www.visualproductions.nl/products/cuecore3' };
+  D.meets = (id, spec, dmx) => { const f = D.FIXT[id]; return !!(f && f.lux1 && f.lux1 >= spec.min && (!spec.bi || f.bi) && (!spec.rgb || f.rgb) && (!spec.quiet || f.quiet) && (!dmx || f.dmx)); };
+  /* every lighting listing on the store (any brand) the picker offers */
+  D.lightPool = () => Object.keys(I9.P).filter(id => { const p = I9.P[id]; return (p.dept === 'Lighting' || p.cat === 'Lighting') && /LED|light/i.test((p.subcat || '') + ' ' + p.sub + ' ' + p.name) && !/modifier|softbox|grid|stand|controller|dmx|touch|relay/i.test((p.subcat || '') + ' ' + p.sub + ' ' + p.name) && p.usd > 20; });
+  /* the plan for these answers: [{ id, role, q (units on the plan), buy (listings to buy), spec, auto, ok }] */
+  D.lightPlan = (lt, n) => { const dmx = lt.ctl === 'dmx' || lt.ctl === 'crmx', picks = lt.pick || {};
+    return D.LROLES(lt.k, Math.max(1, n), !!lt.big).map(r => {
+      const cands = Object.keys(D.FIXT).filter(id => I9.P[id] && D.meets(id, r.spec, dmx)).sort((a, b) => I9.P[a].usd / (D.FIXT[a].per || 1) - I9.P[b].usd / (D.FIXT[b].per || 1));
+      const pick = picks[r.role] && I9.P[picks[r.role]] ? picks[r.role] : null, id = pick || cands[0] || null, per = (id && D.FIXT[id] && D.FIXT[id].per) || 1;
+      return { id, role:r.role, q:r.q, buy:Math.ceil(r.q / per), spec:r.spec, auto:!pick, ok:!!id && D.meets(id, r.spec, dmx) };
+    }); };
+  D.LIGHTCTL = { ctl:'cuecore', panel:'vptouch', relay:'din-relay4', src:'https://www.visualproductions.nl/products/cuecore3' };
 
   /* ---------- the curated picker: a bit from each brand, three families ---------- */
   /* fam: ptz | cc (camcorder) | lens (mirrorless / cine / studio, interchangeable lens). sub = the badge under the family. */
