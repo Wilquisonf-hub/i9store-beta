@@ -165,6 +165,12 @@
     g_pc:['Computer for streaming and slides','Computador para transmissão e slides'], w_pc:['Slides, lyrics or playback into the switcher','Slides, letras ou playback no switcher'],
     w_pcNdi:['Runs the NDI switching software','Roda o software de corte NDI'],
     g_ndisoft:['NDI production software (vMix class), licence','Software de produção NDI (classe vMix), licença'], w_ndisoft:['Runs on your computer and takes every camera off the network','Roda no seu computador e recebe as câmeras pela rede'],
+    /* version F: the camera picker's accessories and the reach check */
+    w_cage:['Rig for handles, monitor and mic','Rig para alças, monitor e microfone'], w_pwrDummy:['Mains power instead of batteries','Energia da tomada em vez de baterias'],
+    g_pwrBody:['Mains power for {0}','Alimentação na tomada para {0}'], w_pwrBody:['A long service outlasts batteries; check what ships in the box','Um culto longo dura mais que as baterias; confira o que vem na caixa'],
+    w_ptzCtl:['One joystick for {0} {1} PTZ over IP','Um joystick para {0} PTZ {1} via IP'],
+    c_poeAC:['{0}: draws more than a 60 W PoE++ port. Planned on its AC adaptor.','{0}: consome mais que uma porta PoE++ de 60 W. Planejada na fonte AC.'],
+    c_reach:['{0} is at full zoom and still frames {1} across at {2}: wider than a close-up. Move it closer, or use a longer lens or zoom.','{0} está no zoom máximo e ainda enquadra {1} em {2}: mais aberto que um close. Aproxime a câmera ou use lente / zoom maior.'],
     camLabel:['CAM {0}','CAM {0}'], ctrlLabel:['CTRL · switcher','CTRL · switcher'], facing:['facing','virada para'],
   };
   let LANG = 'en';
@@ -286,7 +292,7 @@
     if (k === 'lens') { const b = D.BODIES[m]; c.sf = b.fmt; if (!c.lens) c.lens = defaultLens(m); c.f = lensRange(c)[0]; }
     return c;
   }
-  function defaultLens(m) { const b = D.BODIES[m]; if (b.kit) return 'kit'; const l = Object.keys(D.LENSES).find(k => D.LENSES[k].mount === b.mount); return l || 'other'; }
+  function defaultLens(m) { const b = D.BODIES[m]; if (b.kit) return 'kit'; const pre = ((D.PRESETS || {})[b.mount] || []).find(k => D.LENSES[k] && P[k]); if (pre) return pre; const l = Object.keys(D.LENSES).find(k => D.LENSES[k].mount === b.mount && P[k]); return l || 'other'; }
   function lensRange(c) {
     const b = D.BODIES[c.m];
     if (c.lens === 'kit' && b.kit) return [b.kit.min, b.kit.max];
@@ -620,6 +626,7 @@
 
   /* ======================= equipment list (BOM) + checks ======================= */
   const GROUPS = ['cam', 'sw', 'cab', 'net', 'mnt', 'aud', 'lit', 'mon'];
+  const REACH_FW = 1.6;   /* m: wider than this at full zoom, aimed at one person, is not a close-up any more */
   let BOM = [], CHECKS = [];
   function build() {
     const out = [], chk = [];
@@ -647,6 +654,9 @@
         const b = D.BODIES[c.m];
         if (D.LENSES[c.lens]) add('cam', { id:c.lens, qty:1, why:t('w_lensFor'), who:[lab], own:!!c.own });
         else if (c.lens === 'other') { const [lo, hi] = lensRange(c); add('cam', { name:t('g_lens', b.mount), spec:t('g_lensSpec', lo, hi), qty:1, why:t('w_lensFor'), who:[lab], code:'LENS', own:!!c.own }); }
+        /* version F: a cage made for this body, and mains power (a priced dummy battery, else a line to quote) */
+        if (b.cage && P[b.cage]) add('mnt', { id:b.cage, qty:1, why:t('w_cage'), who:[lab], own:!!c.own });
+        if (b.pwr) { if (P[b.pwr]) add('net', { id:b.pwr, qty:1, why:t('w_pwrDummy'), who:[lab], own:!!c.own }); else add('net', { name:t('g_pwrBody', modelName(c)), spec:b.pwr, qty:1, why:t('w_pwrBody'), who:[lab], code:'PWR', own:!!c.own }); }
       }
       const z = zspec(c);
       if (S.tr === 'ip') {
@@ -660,9 +670,12 @@
     if (apx.length) warn(t('c_approx', apx.join(', ')), 'info');
     if (cpoe.length) warn(t('c_canonPoe', cpoe.join(', ')), 'info');
     const ptz = cams.map((c, i) => [c, i]).filter(([c]) => c.k === 'ptz');
-    const pan = ptz.filter(([c]) => P[c.m].brand === 'Panasonic'), can = ptz.filter(([c]) => P[c.m].brand === 'Canon');
+    const pan = ptz.filter(([c]) => P[c.m].brand === 'Panasonic'), can = ptz.filter(([c]) => P[c.m].brand === 'Canon'), sny = ptz.filter(([c]) => P[c.m].brand === 'Sony');
+    const ctl = D.PTZCTL || {};
     if (pan.length >= 2) add('cam', { id:'rp60', qty:1, why:t('w_rp60', pan.length), who:pan.map(([, i]) => labs[i]) });
-    if (can.length >= 2) add('cam', { name:t('g_canonCtl'), spec:'RC-IP100 / RC-IP300', qty:1, why:t('w_canonCtl'), who:can.map(([, i]) => labs[i]), code:'CTRL' });
+    if (can.length >= 2) { if (ctl.Canon && P[ctl.Canon]) add('cam', { id:ctl.Canon, qty:1, why:t('w_ptzCtl', can.length, 'Canon'), who:can.map(([, i]) => labs[i]) });
+      else add('cam', { name:t('g_canonCtl'), spec:'RC-IP100 / RC-IP300', qty:1, why:t('w_canonCtl'), who:can.map(([, i]) => labs[i]), code:'CTRL' }); }
+    if (sny.length >= 2 && ctl.Sony && P[ctl.Sony]) add('cam', { id:ctl.Sony, qty:1, why:t('w_ptzCtl', sny.length, 'Sony'), who:sny.map(([, i]) => labs[i]) });
 
     /* --- switching & streaming --- */
     const nIn = nC + S.ext;
@@ -729,7 +742,7 @@
       const z = zspec(c), lab = labs[i];
       if (c.k === 'ptz' && (S.tr === 'ip' || S.ctl === 'ip')) {
         ethDev++;
-        if (z.poeAC) { acCams.push(lab); warn(t('c_ue150', lab)); }
+        if (z.poeAC) { acCams.push(lab); warn(t(c.m === 'ue150' ? 'c_ue150' : 'c_poeAC', lab)); }
         else { poeW += z.poeW; poePorts++; if (z.poe === 'PoE++') poePP++; }
       } else if (c.k === 'ptz') acCams.push(lab);
       else if (S.tr === 'ip') { ethDev++; poeW += 15; poePorts++; acCams.push(lab); }
@@ -801,6 +814,10 @@
 
     /* --- framing checks --- */
     views.forEach((v, i) => { if (!v.tg) warn(t('c_noTgt', labs[i])); else if (v.out) warn(t('c_tgtOut', labs[i], pname(v.tg.p.n))); });
+    /* version F: a camera aimed at one person, at the end of its zoom, still framing wider than a medium close-up */
+    views.forEach((v, i) => { const c = cams[i]; if (c.tgt < 0 || !v.tg || v.out || !v.fw) return;
+      const atLimit = zspec(c) ? c.z >= 0.995 : c.f >= lensRange(c)[1] - 0.01;
+      if (atLimit && v.fw > REACH_FW) warn(t('c_reach', labs[i], lenTxt(v.fw), pname(v.tg.p.n))); });
     if (fromThisSetup()) {
       const nm = id => P[id].brand + ' ' + P[id].name, list = a => a.map(x => `${x.q} × ${nm(x.m || x.id)}`).join(', ');
       if (SETUP.loaded.length) { warn(t('c_setCams', SETUP.title, list(SETUP.loaded), t('t_' + SETUP.tpl)), 'info'); if (SETUP.missing.length) warn(t('c_setSome', list(SETUP.missing)), 'info'); }
@@ -820,7 +837,7 @@
     const ownedValue = owned.filter(l => l.id && P[l.id]).reduce((a, l) => a + P[l.id].usd * l.qty, 0);
     return { lines, priced, quote, owned, total, ownedValue };
   }
-  const CODEGLYPH = { SDI:'SDI', CAT6:'CAT6', XLR:'XLR', AUD:'AUD', HDMI:'HDMI', FIBER:'FIBER', BNC:'BNC', NET:'NET', AC:'AC', UPS:'UPS', BRKT:'BRKT', ARM:'ARM', LENS:'LENS', NDI:'NDI', SW:'SW', CTRL:'CTRL', DMX:'DMX', MON:'MON', ICOM:'ICOM', PC:'PC' };
+  const CODEGLYPH = { SDI:'SDI', CAT6:'CAT6', XLR:'XLR', AUD:'AUD', HDMI:'HDMI', FIBER:'FIBER', BNC:'BNC', NET:'NET', AC:'AC', UPS:'UPS', BRKT:'BRKT', ARM:'ARM', LENS:'LENS', NDI:'NDI', SW:'SW', CTRL:'CTRL', DMX:'DMX', MON:'MON', ICOM:'ICOM', PC:'PC', PWR:'PWR' };
   function renderBOM() {
     const { priced, quote, owned, total } = tally(BOM);
     $('#bom-m').textContent = `${t('t_' + S.tpl)} · ${lenTxt(S.w)} × ${lenTxt(S.d)} · ${S.cams.length} ${t('q_cams').toLowerCase()} · ${S.tr === 'ip' ? 'IP / NDI' : S.tr.toUpperCase()} · ${S.fmt === 'hd' ? '1080p' : '2160p'}`;
@@ -959,7 +976,7 @@
     Z = null;
     const m = h.match(/^#p=([\w-]+)/);
     if (m) { try { if (unpack(JSON.parse(b64d(m[1])))) return true; } catch (e) {} }
-    const tm = h.match(/^#(?:tpl|for)=?-?([\w-]+)/);
+    const tm = h.match(/^#(?:tpl|for|adv)=?-?([\w-]+)/);
     const map = { church:'church', podcast:'podcast', studio:'studio', event:'event', events:'event', corporate:'event', broadcast:'studio', education:'event', empty:'empty' };
     if (tm && SETS()[tm[1]]) { SETUP = fromSetup(tm[1]); return true; }
     if (tm && map[tm[1]]) { SETUP = null; fromTemplate(map[tm[1]]); return true; }
@@ -1182,7 +1199,7 @@
   update({ stat:true, force:true, now:true });
   if ('ResizeObserver' in window) { let rt = 0; new ResizeObserver(() => { clearTimeout(rt); rt = setTimeout(() => { renderStatic(); renderPlan(); }, 60); }).observe(box); }
   const clearPools = () => { Object.values(pool).forEach(m => { m.forEach(x => x.remove()); m.clear(); }); L.ctrl.innerHTML = ''; };
-  window.addEventListener('hashchange', () => { const h = location.hash; if (/^#p=/.test(h) && h === '#p=' + b64e(JSON.stringify(pack()))) return; if (/^#(p|tpl)=/.test(h)) { clearPools(); hideConfirm(); loadHash(); settle(); sel = S.cams.length ? { kind:'cam', i:0 } : null; update({ stat:true, force:true }); document.dispatchEvent(new CustomEvent('i9plan:load')); } });
+  window.addEventListener('hashchange', () => { const h = location.hash; if (/^#p=/.test(h) && h === '#p=' + b64e(JSON.stringify(pack()))) return; if (/^#(p|tpl|adv)=/.test(h)) { clearPools(); hideConfirm(); loadHash(); settle(); sel = S.cams.length ? { kind:'cam', i:0 } : null; update({ stat:true, force:true }); document.dispatchEvent(new CustomEvent('i9plan:load')); } });
 
   /* ======================= API for the guided wizard (planner-wizard.js) and the 3D view (planner-3d.js) =======================
      compose(spec)  -> a packed plan from a layout spec (fromSpec), without touching the open plan
@@ -1217,8 +1234,8 @@
   window.I9PLANNER = { get state() { return S; }, view, hfov, runOf, get bom() { return BOM; }, get checks() { return CHECKS; }, select, update,
     get setup() { return fromThisSetup() ? SETUP : null; }, get edited() { return planKey() !== BASE; },
     /* wizard + 3D */
-    evaluate, compose, loadPlan, loadSetup, tally: () => tally(BOM), TPL, ROLES, t, lenTxt, modelName, camLab, runCable, pname,
+    evaluate, compose, loadPlan, loadSetup, tally: () => tally(BOM), TPL, ROLES, t, lenTxt, modelName, camLab, runCable, pname, defaultLens,
     get lang() { return LANG; }, get z() { return Z; }, set zGet(f) { zGet = f; }, save: () => { clearTimeout(hashT); saveHash(); }, planKey,
-    get sel() { return sel; }, get queryTemplate() { return queryTemplate(); }, get hashKind() { return /^#p=/.test(BOOT_HASH) ? 'p' : /^#(tpl|for)/.test(BOOT_HASH) ? 'tpl' : ''; },
+    get sel() { return sel; }, get queryTemplate() { return queryTemplate(); }, get bootHash() { return BOOT_HASH; }, get hashKind() { return /^#p=/.test(BOOT_HASH) ? 'p' : /^#adv|^#(tpl|for)=[\w-]+&v=a/.test(BOOT_HASH) ? 'adv' : /^#(tpl|for)/.test(BOOT_HASH) ? 'tpl' : ''; },
     setUnit(u) { S.unit = u === 'ft' ? 'ft' : 'm'; update({ stat:true, force:true }); }, renderPlanNow() { renderStatic(); renderPlan(); } };
 })();

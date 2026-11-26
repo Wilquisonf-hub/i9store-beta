@@ -1,5 +1,6 @@
-/* i9Store room planner — guided wizard (direction G). Vanilla JS over planner.js.
-   Seven steps: 1 what you're making · 2 the room · 3 what you have · 4 budget (three priced options + why) · 5 the 2D plan
+/* i9Store room planner — guided wizard (direction H / version F). Vanilla JS over planner.js.
+   Seven steps: 1 what you're making · 2 the room · 3 cameras (type first, then a model per position, from the curated
+   store models in shared/planner-cams.js) · 4 budget + what you already have (three priced options + why) · 5 the 2D plan
    (approve) · 6 3D view (planner-3d.js, imported only when the step opens) · 7 list and quote.
    There is one plan. The wizard composes it (I9PLANNER.compose), prices it (evaluate) and loads it (loadPlan); the 2D plan in
    step 5 and the advanced editor are the same SVG and the same state. The wizard's own answers ride in the same #p= hash
@@ -24,16 +25,46 @@
     kick:['Room planner · Guided','Planejador de sala · Guiado'], toAdv:['Advanced editor','Editor avançado'],
     advK:['Advanced editor','Editor avançado'], advT:['The same plan as the guided steps, with every control.','O mesmo plano dos passos guiados, com todos os controles.'], toWiz:['Back to the guided steps','Voltar aos passos guiados'],
     back:['Back','Voltar'], next:['Next','Avançar'], stepOf:['Step {0} of 7','Passo {0} de 7'],
-    st1:['What you’re making','O que vai produzir'], st2:['The room','A sala'], st3:['What you have','O que você tem'], st4:['Budget','Orçamento'],
+    st1:['What you’re making','O que vai produzir'], st2:['The room','A sala'], st3:['Cameras','Câmeras'], st4:['Budget','Orçamento'],
     st5:['The plan','O plano'], st6:['3D view','Vista 3D'], st7:['List & quote','Lista e cotação'],
     h1:['What are you making?','O que você vai produzir?'],
     l1:['Pick the closest. It sets a starting room, the people on camera and the gear. You can change all of it.','Escolha o mais próximo. Ele define a sala, as pessoas em cena e os equipamentos iniciais. Tudo pode mudar.'],
     h2:['Tell us about the room.','Conte como é a sala.'],
     l2:['Rough numbers are fine. We place the stage, the people and the control desk for you.','Números aproximados servem. Nós posicionamos o palco, as pessoas e a mesa de controle.'],
-    h3:['What do you already have?','O que você já tem?'],
-    l3:['Tick what you own. It stays in the plan, marked “You have this”, and is left out of the shopping list.','Marque o que você já tem. Fica no plano como “Você já tem” e sai da lista de compras.'],
+    h3:['Choose your cameras.','Escolha suas câmeras.'],
+    l3:['Pick the type of camera first, then a model for each position in the room. Every model is a store listing at today’s price.','Escolha primeiro o tipo de câmera, depois um modelo para cada posição da sala. Todo modelo é um produto da loja, com o preço de hoje.'],
     h4:['Set a budget.','Defina um orçamento.'],
-    l4:['We price three ways to do it from live store listings and say which one fits, and why.','Calculamos três formas de montar com os preços da loja e dizemos qual cabe, e por quê.'],
+    l4:['Tick what you already own, set a budget, and we price three ways to do it from live store listings, and say which one fits.','Marque o que você já tem, defina um orçamento, e calculamos três formas de montar com os preços da loja, dizendo qual cabe.'],
+    haveK:['Already have','Já tenho'], haveL:['Ticked items stay on the plan at $0 and leave the shopping list.','Itens marcados ficam no plano a $0 e saem da lista de compras.'],
+    /* step 3: cameras */
+    camType:['Camera type','Tipo de câmera'], ourPick:['Our pick for this room','Nossa escolha para esta sala'],
+    f_ptz:['PTZ','PTZ'], fb_ptz:['One operator runs several cameras from the desk. Remote, on wall or ceiling mounts.','Um operador comanda várias câmeras da mesa. Remotas, em suporte de parede ou teto.'],
+    f_cc:['Camcorder','Filmadora'], fb_cc:['A long built-in zoom. A run-and-gun operator on a tripod.','Zoom longo embutido. Um operador no tripé, pronto para tudo.'],
+    f_lens:['Mirrorless / cine','Mirrorless / cinema'], fb_lens:['Shallow depth of field, interchangeable lenses, the cinematic look.','Fundo desfocado, lentes intercambiáveis, o visual de cinema.'],
+    f_mix:['Mix','Misto'], fb_mix:['PTZ for the wides, a cine camera for the close-up.','PTZ nos planos abertos, uma câmera de cinema no close.'],
+    fromP:['from {0}','a partir de {0}'], famMix:['PTZ + cine','PTZ + cinema'],
+    posK:['Positions','Posições'], nCams:['Cameras','Câmeras'], sameAll:['Same model for every position','Mesmo modelo em todas as posições'],
+    rl_pulpit:['Pulpit / presenter','Púlpito / apresentador'], rl_wide:['Wide','Plano aberto'], rl_close:['Close-up','Close'], rl_side:['Side angle','Ângulo lateral'], rl_corner:['Corner angle','Ângulo de canto'],
+    everyone:['everyone','todos'], haveCam:['I have this camera','Já tenho esta câmera'], youHaveS:['You have this · $0','Você já tem · $0'],
+    pickFor:['Choose for CAM {0} · {1}','Escolher para CAM {0} · {1}'], pickAll:['Choose for all {0} positions','Escolher para as {0} posições'],
+    useFor:['Use on CAM {0}','Usar na CAM {0}'], useAll:['Use on all {0}','Usar nas {0}'], onCam:['On CAM {0}','Na CAM {0}'], onAll:['On every position','Em todas as posições'],
+    cmp:['Compare','Comparar'], cmpH:['Side by side','Lado a lado'], cmpClear:['Clear','Limpar'], cmpMax:['Up to three cameras','Até três câmeras'],
+    fltBrand:['Brand','Marca'], fltOut:['Output','Saída'], fltPrice:['Price','Preço'], all:['All','Todas'], any:['Any','Qualquer'],
+    p1:['Under $2,500','Até $2.500'], p2:['$2,500–5,000','$2.500–5.000'], p3:['Over $5,000','Acima de $5.000'],
+    shown:['{0} of {1} cameras','{0} de {1} câmeras'], noneMatch:['No camera matches these filters.','Nenhuma câmera com esses filtros.'], resetF:['Clear filters','Limpar filtros'],
+    tab_all:['All types','Todos os tipos'],
+    fx_zoom:['Zoom','Zoom'], fx_sensor:['Sensor','Sensor'], fx_out:['Outputs','Saídas'], fx_max:['Max','Máx.'], fx_ctl:['Control','Controle'], fx_lens:['Lens','Lente'], fx_aov:['Angle','Ângulo'], fx_price:['Price','Preço'], fx_type:['Type','Tipo'], fx_data:['Data','Dados'], fx_ndi:['NDI','NDI'], fx_power:['Power','Energia'],
+    lensIncl:['{0} included','{0} incluída'], lensPick:['pick below','escolha abaixo'], lensK:['Lens','Lente'], lensKit:['{0}–{1} mm, included','{0}–{1} mm, incluída'], lensOther:['Other lens · to quote','Outra lente · a cotar'],
+    beforeTax:['before sales tax and shipping','antes de sales tax e frete'], verify:['verify','verificar'], verified:['Manufacturer spec page','Página do fabricante'], src:['Source','Fonte'],
+    paid:['paid','pago'], none:['—','—'],
+    reachFar:['At full zoom it still frames {0} across at {1}: a medium shot, not a close-up. Move it closer or pick a longer lens.','No zoom máximo ainda enquadra {0} em {1}: plano médio, não close. Aproxime ou use lente maior.'],
+    reachNarrow:['Widest is {0}°; this shot needs about {1}° to fit everyone. Pick a wider lens or a camera with a wider angle.','O mais aberto é {0}°; este plano precisa de uns {1}° para caber todos. Use lente mais aberta.'],
+    reachOk:['Frames {0} across, {1} away','Enquadra {0} de largura, a {1}'],
+    sumK:['Your cameras','Suas câmeras'], sCams:['Cameras','Câmeras'], sSw:['Switcher','Switcher'], sSig:['Signal','Sinal'], sAdds:['Adds','Inclui'], sPlan:['Whole plan','Plano inteiro'],
+    sCamsV:['lenses included','lentes incluídas'], posAll:['All','Todas'], posSw:['Position','Posição'], sNote:['Live store prices, before sales tax and shipping. Lines to quote are priced by a specialist and come on top.','Preços da loja, antes de sales tax e frete. Linhas a cotar são precificadas por um especialista, à parte.'],
+    sWarn:['{0} camera can’t frame its shot from there','{0} câmera não enquadra o plano daí'], sWarnN:['{0} cameras can’t frame their shot from there','{0} câmeras não enquadram o plano daí'],
+    a_conv:['{0} × HDMI→SDI converter','{0} × conversor HDMI→SDI'], a_ctl:['PTZ joystick','Joystick PTZ'], a_cage:['{0} × cage','{0} × gaiola'], a_poe:['PoE switch','Switch PoE'], a_enc:['{0} × NDI encoder (to quote)','{0} × encoder NDI (a cotar)'], a_tri:['{0} × tripod','{0} × tripé'], a_brk:['{0} × bracket (to quote)','{0} × suporte (a cotar)'], a_pwr:['{0} × mains power','{0} × energia na tomada'],
+    camsSub:['Cameras','Câmeras'], t_c:['Your cameras','Suas câmeras'],
     h5:['Here’s your plan.','Este é o seu plano.'],
     l5:['Drag a camera to move it, drag its dot to aim. When it looks right, approve it.','Arraste uma câmera para mover, arraste o ponto para mirar. Quando estiver certo, aprove.'],
     h6:['See it in 3D.','Veja em 3D.'],
@@ -98,7 +129,7 @@
     why_ip:['IP / NDI: one network cable per camera carries picture, control and power (PoE). The fewest cables across a big room, and one person steers every camera.','IP / NDI: um cabo de rede por câmera leva imagem, controle e energia (PoE). Menos cabos numa sala grande, e uma pessoa comanda todas as câmeras.'],
     why_ptz:['PTZ (robotic) cameras: one volunteer moves and zooms them all from the desk.','Câmeras PTZ (robóticas): um voluntário move e dá zoom em todas, da mesa.'],
     why_studio:['Studio cameras with zoom lenses: an operator on each, the most control over the picture.','Câmeras de estúdio com lente zoom: um operador em cada, o maior controle da imagem.'],
-    why_cine:['Cinema-style cameras: soft backgrounds, the look people expect from a podcast.','Câmeras estilo cinema: fundo desfocado, o visual que se espera de um podcast.'],
+    why_cine:['Cinema-style cameras: interchangeable lenses and soft backgrounds, the cinematic look.','Câmeras estilo cinema: lentes intercambiáveis e fundo desfocado, o visual de cinema.'],
     why_cc:['Camcorders: a long built-in zoom, one operator each.','Filmadoras: zoom longo embutido, um operador em cada.'],
     why_own:['Your own {0} cameras are in the plan at $0.','Suas {0} câmeras entram no plano a $0.'], why_own1:['Your own camera is in the plan at $0.','Sua câmera entra no plano a $0.'],
     /* step 5 */
@@ -162,6 +193,99 @@
   const BUDGETS = [2000, 3000, 4000, 5000, 6000, 8000, 10000, 12500, 15000, 20000, 25000, 30000, 40000, 50000, 75000, 100000, 150000];
   const SETUP_KIND = { church:'church', podcast:'podcast', broadcast:'studio', events:'event', corporate:'corp', education:'school', creator:'podcast', production:'studio', integrator:'event' };
   const TPL_KIND = { church:'church', podcast:'podcast', studio:'studio', event:'event', empty:'corp' };
+  /* #tpl=<word> links (guides, product pages) open the guided steps on that kind */
+  const HASH_KIND = { church:'church', podcast:'podcast', studio:'studio', event:'event', events:'event', corporate:'corp', corp:'corp', broadcast:'studio', education:'school', school:'school', empty:'corp' };
+  const kindFromHash = h => { const m = /^#(?:tpl|for)=?-?([\w-]+)/.exec(h || ''); return m && !/&v=a/.test(h) ? HASH_KIND[m[1]] || null : null; };
+
+  /* ----- cameras (step 3): families, the curated store models, recipes per family ----- */
+  const FAMS = ['ptz', 'cc', 'lens', 'mix'];
+  /* the family each kind's own recipes already use (those recipes stay the starting picks for that family) */
+  const FAMDEF = { church:'ptz', podcast:'mix', studio:'mix', event:'mix', school:'ptz', corp:'ptz' };
+  const CAMS = (D.CAMS || []).filter(c => P[c.id]);
+  const CAMBY = {}; CAMS.forEach(c => { CAMBY[c.id] = c; });
+  const kOf = m => D.PTZ[m] ? 'ptz' : D.CAMCORDER[m] ? 'cc' : 'lens';
+  const famOfM = m => (CAMBY[m] && CAMBY[m].fam) || kOf(m);
+  const specOf = m => D.PTZ[m] || D.CAMCORDER[m] || D.BODIES[m] || {};
+  const famOf = z => z.fam || FAMDEF[z.k] || 'ptz';
+  /* Three starting picks per family (i9 planning choices from the curated store models, not data). Short-run rooms
+     (podcast, corporate) start on HDMI; the rest on SDI or IP. In Mix, the first position is the cine camera and the
+     rest are PTZ. HDMI moves to SDI by itself when a run passes 15 m. */
+  function frec(k, fam, tier) {
+    const sm = k === 'podcast' || k === 'corp', h = sm ? 'hdmi' : 'sdi';
+    const T = {
+      ptz:  sm ? { e:['hdmi', ['tail2']], r:['hdmi', ['ue20']], p:['ip', ['ue80']] } : { e:['sdi', ['ue20']], r:['ip', ['crn300']], p:['ip', ['ue80']] },
+      cc:   { e:[h, ['pxw-z90']], r:[h, ['xf605']], p:[h, ['ag-cx350']] },
+      lens: k === 'studio' ? { e:['sdi', ['bm4k']], r:['sdi', ['bmstudio6k']], p:['sdi', ['c80']] }
+          : sm ? { e:['hdmi', ['r50v']], r:['hdmi', ['canon-r6v']], p:['hdmi', ['canon-c50']] } : { e:['sdi', ['canon-r6v']], r:['sdi', ['canon-c50']], p:['sdi', ['c80']] },
+      mix:  sm ? { e:['hdmi', ['r50v', 'tail2']], r:['hdmi', ['canon-r6v', 'ue20']], p:['hdmi', ['canon-c50', 'ue20']] } : { e:['sdi', ['r50v', 'ue20']], r:['sdi', ['canon-c50', 'ue50']], p:['sdi', ['c80', 'ue80']] },
+    }[fam][tier];
+    return { tr:T[0], ms:T[1].filter(m => P[m]) };
+  }
+  /* the camera lineup a tier proposes for the current answers: [{ k, m, lens, man }] */
+  function lineupTier(z, tier) {
+    const base = RECIPES[z.k][tier], fam = famOf(z), n = z.cn || base.cams.length;
+    if (fam === FAMDEF[z.k]) return { tr:base.tr, cams:Array.from({ length:n }, (_, i) => ({ ...base.cams[Math.min(i, base.cams.length - 1)] })) };
+    const f = frec(z.k, fam, tier);
+    return { tr:f.tr, cams:Array.from({ length:n }, (_, i) => { const m = f.ms[Math.min(i, f.ms.length - 1)]; return { k:kOf(m), m, lens:null }; }) };
+  }
+  /* the customer's own lineup: the transport of our "recommended" pick, moved off IP when a camera has no NDI */
+  function lineupCustom(z) {
+    const base = lineupTier(z, 'r');
+    const cams = z.cl.map(c => ({ k:kOf(c.m), m:c.m, lens:c.lens || null, own:!!c.own }));
+    const tr = base.tr === 'ip' && cams.some(c => !specOf(c.m).ndi) ? 'sdi' : base.tr;
+    return { tr, cams };
+  }
+  const manFor = (z, k) => k !== 'ptz' && z.k !== 'podcast';
+
+  /* geometry for a position: where the camera stands, the shot it is there for, the angle it needs */
+  const slotOf = (L, i, n) => n === 1 ? { ...L.slots[0], aim:'all', shot:'wide' } : L.slots[i];
+  function camAt(L, s, k) {
+    let { x, y } = s;
+    if (k !== 'ptz' && s.near) ({ x, y } = s.near);   /* a manned camera stands mid-aisle, not on the back wall */
+    if (k !== 'ptz' && s.mnt === 'wall') x = x < L.w / 2 ? x + 0.8 : x - 0.8;
+    return { x, y };
+  }
+  function need(L, s, at) {
+    const ppl = L.ppl; if (!ppl.length) return null;
+    const rad = d => d * Math.PI / 180, deg = r => r * 180 / Math.PI;
+    if (s.aim === 'all' || s.shot === 'wide' || typeof s.aim !== 'number') {
+      const cx = ppl.reduce((a, p) => a + p.x, 0) / ppl.length, cy = ppl.reduce((a, p) => a + p.y, 0) / ppl.length;
+      const a = Math.atan2(cx - at.x, -(cy - at.y)), dx = Math.sin(a), dy = -Math.cos(a);
+      const offs = ppl.map(p => { const vx = p.x - at.x, vy = p.y - at.y, dp = vx * dx + vy * dy, lat = vx * -dy + vy * dx; return { dp, off:Math.abs(deg(Math.atan2(lat, dp))) }; })
+        .filter(q => q.dp > 0.2).map(q => q.off + deg(Math.atan(0.35 / Math.max(q.dp, 0.5))));
+      return { wide:true, h:Math.max(8, 2 * Math.max(...offs, 4)), d:Math.hypot(cx - at.x, cy - at.y) };
+    }
+    const p = ppl[s.aim] || ppl[0], d = Math.hypot(p.x - at.x, p.y - at.y);
+    return { wide:false, h:2 * deg(Math.atan(R.frameFor[s.shot] / (2 * d))), d, p, shot:s.shot };
+  }
+  /* horizontal angle range [tightest, widest] of a camera (+ lens) */
+  function hRange(k, m, lens) {
+    const z = D.PTZ[m] || D.CAMCORDER[m]; if (z) return [z.hT, z.hW];
+    const b = D.BODIES[m]; if (!b) return [5, 60];
+    const r = lens === 'kit' && b.kit ? [b.kit.min, b.kit.max] : D.LENSES[lens] ? [D.LENSES[lens].min, D.LENSES[lens].max] : (D.OTHER_LENS[b.mount] || [12, 120]);
+    const h = f => 2 * Math.atan(b.w / (2 * f)) * 180 / Math.PI;
+    return [h(r[1]), h(r[0])];
+  }
+  const REACH_FW = 1.6;
+  /* the store lens presets that fit a body's mount (APS-C-only lenses are left off full-frame bodies) */
+  const lensesFor = b => ((D.PRESETS || {})[b.mount] || []).filter(l => D.LENSES[l] && P[l] && !(D.LENSES[l].apsc && b.fmt === 'ff'));
+  function reach(L, i, n, k, m, lens) {
+    const s = slotOf(L, i, n), at = camAt(L, s, k), nd = need(L, s, at); if (!nd) return null;
+    const [lo, hi] = hRange(k, m, lens), rad = d => d * Math.PI / 180;
+    if (nd.wide) return nd.h > hi * 1.1 ? { bad:'narrow', hi, nd } : { nd, ok:true };   /* 10 %: shoulders at the edge are fine */
+    const h = Math.max(lo, Math.min(hi, nd.h)), fw = 2 * nd.d * Math.tan(rad(h / 2));
+    return fw > REACH_FW && nd.h < lo ? { bad:'far', fw, nd } : { nd, fw, ok:true };
+  }
+  /* the store lens that best frames this position: in range first, then the cheapest (an included kit lens costs $0) */
+  function autoLens(m, L, i, n) {
+    const b = D.BODIES[m]; if (!b) return null;
+    const cands = (b.kit ? ['kit'] : []).concat(lensesFor(b));
+    if (!cands.length) return PL.defaultLens ? PL.defaultLens(m) : 'other';
+    const s = slotOf(L, i, n), nd = need(L, s, camAt(L, s, 'lens')); if (!nd) return cands[0];
+    const score = l => { const [lo, hi] = hRange('lens', m, l); const miss = nd.h < lo ? Math.log(lo / nd.h) : nd.h > hi ? Math.log(nd.h / hi) * 2 : 0; return miss * 1e6 + (l === 'kit' ? 0 : P[l].usd); };
+    return cands.slice().sort((a, b2) => score(a) - score(b2))[0];
+  }
+  const posRole = (L, i, n) => { if (n === 1) return 'wide'; const s = L.slots[i]; return s.role || (s.shot === 'wide' ? 'wide' : 'close'); };
 
   /* the starting layout for the answers: furniture, people, control position and four camera slots */
   function layout(z) {
@@ -181,10 +305,10 @@
       const seatEnd = z.cd === 'near' ? d - 0.9 : ctrl.y - 1.9;
       if (z.au && seatEnd - (sd + 1.4) > 1.4) furn.push({ k:'seats', x:w / 2, y:(sd + 1.4 + seatEnd) / 2, w:Math.max(2, Math.min(w - 2.6, sw * 1.15)), h:seatEnd - sd - 1.4 });
       const backY = z.cd === 'near' ? d - 0.8 : ctrl.y - 1.1;
-      slots.push({ ...inR(w / 2, backY), mnt:'table', aim:0, shot:'mcu' });
-      slots.push({ ...inR(w - 0.5, sd + (d - sd) * 0.3), mnt:'wall', aim:'all', shot:'wide' });
-      slots.push({ ...inR(0.5, sd + (d - sd) * 0.42), mnt:'wall', aim: n > 1 ? 1 : 0, shot:'mcu' });
-      slots.push({ ...inR(Math.max(0.7, w / 2 - sw / 2 - 0.4), sd + 1.3), mnt:'tripod', aim: n > 2 ? 2 : 0, shot:'med' });
+      slots.push({ ...inR(w / 2, backY), mnt:'table', aim:0, shot:'mcu', role:'pulpit', near:inR(w / 2, Math.min(backY, sd + Math.max(2.5, (backY - sd) * 0.45))) });
+      slots.push({ ...inR(w - 0.5, sd + (d - sd) * 0.3), mnt:'wall', aim:'all', shot:'wide', role:'wide' });
+      slots.push({ ...inR(0.5, sd + (d - sd) * 0.42), mnt:'wall', aim: n > 1 ? 1 : 0, shot:'mcu', role:'close' });
+      slots.push({ ...inR(Math.max(0.7, w / 2 - sw / 2 - 0.4), sd + 1.3), mnt:'tripod', aim: n > 2 ? 2 : 0, shot:'med', role:'side' });
     } else if (K.lay === 'desk') {
       if (K.set) furn.push({ k:'set', x:w / 2, y:0.25, w:Math.min(w - 1, 8), h:0.4 });
       const dy = clamp(d * 0.32, 1.6, 3.2), dw = clamp(0.9 * n + 0.6, 1.6, w - 1);
@@ -192,10 +316,10 @@
       spread(w / 2, Math.min(dw - 0.6, (n - 1) * 0.9), n).sort((a, b) => a - b).forEach((x, i) => ppl.push({ n:nm(i), x, y:dy - 0.65, a:180 }));
       ctrl = inR(w / 2, d - 0.5);   /* centred: the shortest runs, whether the desk is near or at the back */
       const far = clamp(d * 0.42, 2.2, 6);
-      slots.push({ ...inR(w / 2, Math.min(dy + far, ctrl.y - 0.9)), mnt:'tripod', aim:'all', shot:'wide' });
-      slots.push({ ...inR(w / 2 - clamp(w * 0.22, 1, 3), dy + far * 0.72), mnt:'tripod', aim:n - 1, shot:'mcu' });
-      slots.push({ ...inR(w / 2 + clamp(w * 0.22, 1, 3), dy + far * 0.72), mnt:'tripod', aim:0, shot:'mcu' });
-      slots.push({ ...inR(w * 0.12, dy + far * 0.95), mnt:'tripod', aim:'all', shot:'med' });
+      slots.push({ ...inR(w / 2, Math.min(dy + far, ctrl.y - 0.9)), mnt:'tripod', aim:'all', shot:'wide', role:'wide' });
+      slots.push({ ...inR(w / 2 - clamp(w * 0.22, 1, 3), dy + far * 0.72), mnt:'tripod', aim:n - 1, shot:'mcu', role:'close' });
+      slots.push({ ...inR(w / 2 + clamp(w * 0.22, 1, 3), dy + far * 0.72), mnt:'tripod', aim:0, shot:'mcu', role:'close' });
+      slots.push({ ...inR(w * 0.12, dy + far * 0.95), mnt:'tripod', aim:'all', shot:'med', role:'side' });
     } else {
       const tw = n <= 2 ? 1.4 : n <= 4 ? 1.8 : 2.4, th = 0.9, tx = w / 2, ty = clamp(d * 0.42, 1.4, d - 2.2);
       furn.push({ k:'table', x:tx, y:ty, w:tw, h:th });
@@ -206,10 +330,10 @@
       while (pos.length < n) pos.push({ x:tx + (pos.length % 2 ? 0.6 : -0.6), y:ty - th / 2 - 0.5, a:180 });
       pos.forEach((p, i) => ppl.push({ n:nm(i), ...p }));
       ctrl = z.cd === 'near' ? inR(tx, Math.min(d - 0.35, ty + 2.4)) : inR(tx, d - 0.35);   /* behind the wide camera: the shortest runs */
-      slots.push({ ...inR(tx, Math.min(d - 0.7, ty + 2.0)), mnt:'tripod', aim:'all', shot:'wide' });
-      slots.push({ ...inR(Math.max(0.5, tx - tw / 2 - 1.0), Math.min(d - 0.9, ty + 1.5)), mnt:'tripod', aim: n > 1 ? 1 : 0, shot:'mcu' });
-      slots.push({ ...inR(Math.min(w - 0.5, tx + tw / 2 + 1.0), Math.min(d - 0.9, ty + 1.5)), mnt:'tripod', aim:0, shot:'mcu' });
-      slots.push({ ...inR(0.5, 0.5), mnt:'tripod', aim:'all', shot:'med' });
+      slots.push({ ...inR(tx, Math.min(d - 0.7, ty + 2.0)), mnt:'tripod', aim:'all', shot:'wide', role:'wide' });
+      slots.push({ ...inR(Math.max(0.5, tx - tw / 2 - 1.0), Math.min(d - 0.9, ty + 1.5)), mnt:'tripod', aim: n > 1 ? 1 : 0, shot:'mcu', role:'close' });
+      slots.push({ ...inR(Math.min(w - 0.5, tx + tw / 2 + 1.0), Math.min(d - 0.9, ty + 1.5)), mnt:'tripod', aim:0, shot:'mcu', role:'close' });
+      slots.push({ ...inR(0.5, 0.5), mnt:'tripod', aim:'all', shot:'med', role:'corner' });
     }
     if (xr) ctrl = inR(ctrl.x, d - 0.35);
     const tpl = K.tplSmall && w * d < 150 ? K.tplSmall : K.tpl;
@@ -222,24 +346,26 @@
     const r = rec.cams.find(c => c.k === 'lens'); return r ? { ...r } : C('lens', 'r50v', { lens:'kit', man:false });
   }
   function specFor(z, tier, trOverride) {
-    const rec = RECIPES[z.k][tier], L = layout(z);
+    const rec = tier === 'c' ? lineupCustom(z) : lineupTier(z, tier), L = layout(z);
     let cams = rec.cams.map(c => ({ ...c }));
-    const on = z.oc && z.oc !== 'none' ? clamp(z.on, 0, 4) : 0;
+    /* links saved before step 3 had cameras: "I have N cameras of a kind" still marks the first N as owned */
+    const on = tier !== 'c' && z.oc && z.oc !== 'none' ? clamp(z.on, 0, 4) : 0;
     for (let i = 0; i < on; i++) { const oc = { ...ownedCam(z, rec), own:true }; if (i < cams.length) cams[i] = oc; else cams.push(oc); }
     cams = cams.slice(0, 4);
     const n = cams.length;
+    cams.forEach((c, i) => { if (c.k === 'lens' && !c.lens) c.lens = autoLens(c.m, L, i, n); if (c.man == null) c.man = manFor(z, c.k); });
     return { tpl:L.tpl, w:L.w, d:L.d, tr:trOverride || rec.tr, fmt:'hd', ext: z.k === 'podcast' || z.k === 'studio' ? 0 : 1, xr:L.xr, own:z.ow.slice(),
       furn:L.furn, ppl:L.ppl, ctrl:L.ctrl,
       cams:cams.map((c, i) => { const s = n === 1 ? { ...L.slots[0], aim:'all', shot:'wide' } : L.slots[i];
-        let { x, y } = s; if (c.k !== 'ptz' && s.mnt === 'wall') x = x < L.w / 2 ? x + 0.8 : x - 0.8;   /* manned cameras stand on tripods, off the wall */
+        const { x, y } = camAt(L, s, c.k);   /* manned cameras stand on tripods, off the wall / mid-aisle */
         return { k:c.k, m:c.m, lens:c.lens || null, x, y, mnt: c.k === 'ptz' ? s.mnt : 'tripod', man: c.man ?? (c.k !== 'ptz'), aim:s.aim, shot:s.shot, own:!!c.own }; }) };
   }
   let OPT_CACHE = { key:'', opts:null };
   function options() {
-    const key = JSON.stringify([Z.k, Z.w, Z.d, Z.n, Z.au, Z.cd, Z.oc, Z.on, Z.ow, Z.st, PL.lang]);
+    const key = JSON.stringify([Z.k, Z.w, Z.d, Z.n, Z.au, Z.cd, Z.oc, Z.on, Z.ow, Z.st, Z.fam, Z.cn, Z.cl, PL.lang]);
     if (OPT_CACHE.key === key) return OPT_CACHE.opts;
     const opts = {};
-    TIERS.forEach(tier => {
+    (Z.cl ? ['c'] : []).concat(TIERS).forEach(tier => {
       let spec = specFor(Z, tier), forced = false;
       let packed = PL.compose(spec), ev = PL.evaluate(packed);
       if (spec.tr === 'hdmi' && ev.maxRun > R.hdmiActive) { spec = specFor(Z, tier, 'sdi'); packed = PL.compose(spec); ev = PL.evaluate(packed); forced = true; }
@@ -249,8 +375,9 @@
     OPT_CACHE = { key, opts };
     return opts;
   }
-  const order = () => (Z.st ? ['s'] : []).concat(TIERS);
+  const order = () => (Z.cl ? ['c'] : []).concat(Z.st ? ['s'] : []).concat(TIERS);
   function pickFor(opts) {
+    if (Z.cl && opts.c) return 'c';   /* the customer chose these cameras in step 3 */
     if (!Z.b) return Z.st ? 's' : 'r';
     /* Recommended when it fits; Pro only when it fits with a quarter of the budget to spare; otherwise Essential */
     if (opts.p.ev.total <= Z.b * 0.75) return 'p';
@@ -292,7 +419,8 @@
   }
 
   /* ======================= wizard state (rides in the plan hash as z) ======================= */
-  const DEF = () => ({ v:'w', s:1, mx:1, k:null, rp:'m', w:16, d:24, fr:'s', n:3, au:1, cd:'back', oc:'none', on:0, ow:[], b:null, o:null, om:0, lo:null, pl:0, dirty:1, ap:0, apk:'', st:null });
+  const DEF = () => ({ v:'w', s:1, mx:1, k:null, rp:'m', w:16, d:24, fr:'s', n:3, au:1, cd:'back', oc:'none', on:0, ow:[], b:null, o:null, om:0, lo:null, pl:0, dirty:1, ap:0, apk:'', st:null,
+    fam:null, cn:null, cl:null, same:0, pos:0 });
   let Z = DEF();
   function valid(z) {
     const d = DEF(); if (!z || typeof z !== 'object') return d;
@@ -302,11 +430,18 @@
     o.au = o.au ? 1 : 0; o.cd = ['near', 'back', 'booth'].includes(o.cd) ? o.cd : 'back'; o.fr = o.fr === 'l' ? 'l' : 's';
     o.oc = ['none', 'ptz', 'cc', 'lens'].includes(o.oc) ? o.oc : 'none'; o.on = clamp(Math.round(+o.on || 0), 0, 4);
     o.ow = Array.isArray(o.ow) ? o.ow.filter(r => OWN.includes(r)) : []; o.b = o.b ? clamp(+o.b, 500, 1e6) : null;
-    o.o = ['e', 'r', 'p', 's'].includes(o.o) ? o.o : null; o.st = o.st && window.I9S && window.I9S.SET && window.I9S.SET[o.st] ? o.st : null;
+    o.fam = FAMS.includes(o.fam) ? o.fam : null; o.cn = o.cn ? clamp(Math.round(+o.cn), 1, 4) : null;
+    /* the customer's camera picks: [model, lens, owned] per position, store models only */
+    o.cl = Array.isArray(o.cl) ? o.cl.slice(0, 4).map(c => Array.isArray(c) ? { m:c[0], lens:c[1] || null, own:!!c[2] } : c)
+      .filter(c => c && P[c.m] && (D.PTZ[c.m] || D.CAMCORDER[c.m] || D.BODIES[c.m])).map(c => ({ m:c.m, lens:D.BODIES[c.m] && (c.lens === 'kit' || c.lens === 'other' || D.LENSES[c.lens]) ? c.lens : null, own:!!c.own })) : null;
+    if (o.cl && !o.cl.length) o.cl = null;
+    o.same = o.same ? 1 : 0; o.pos = clamp(Math.round(+o.pos || 0), 0, 3);
+    o.o = ['e', 'r', 'p', 's', 'c'].includes(o.o) ? o.o : null; o.st = o.st && window.I9S && window.I9S.SET && window.I9S.SET[o.st] ? o.st : null;
     if (o.o === 's' && !o.st) o.o = null;
+    if (o.o === 'c' && !o.cl) o.o = null;
     return o;
   }
-  PL.zGet = () => { const o = {}; Object.keys(Z).forEach(k => { const v = Z[k]; if (v !== null && v !== '' && !(Array.isArray(v) && !v.length)) o[k] = v; }); return o; };
+  PL.zGet = () => { const o = {}; Object.keys(Z).forEach(k => { let v = Z[k]; if (k === 'cl' && v) v = v.map(c => [c.m, c.lens || 0, c.own ? 1 : 0]); if (v !== null && v !== '' && !(Array.isArray(v) && !v.length)) o[k] = v; }); return o; };
   const save = () => PL.save();
   const hasPlan = () => Z.pl && !Z.dirty && Z.lo === Z.o;
   const hashOf = s => { let h = 5381; for (let i = 0; i < s.length; i++) h = ((h << 5) + h + s.charCodeAt(i)) | 0; return (h >>> 0).toString(36); };
@@ -318,6 +453,7 @@
     if (Z.k === k) return;
     const K = KINDS[k]; Z.k = k; Z.rp = K.rp || 'm'; const pd = presetDims(k, Z.rp); Z.w = pd[0]; Z.d = pd[1]; Z.fr = 's';
     Z.n = K.n; Z.au = K.au; Z.cd = K.lay === 'stage' ? 'back' : 'near'; Z.dirty = 1; Z.om = 0; Z.o = null; Z.st = null;
+    Z.fam = null; Z.cn = null; Z.cl = null; Z.same = 0; Z.pos = 0;
   }
 
   /* answers follow a plan made in the advanced editor (room size, people), without redrawing it */
@@ -382,6 +518,7 @@
     let sum = `<span class="meta">${esc(t('stepOf', Z.s))}</span>`;
     if (Z.s >= 5 && Z.pl) { const tt = PL.tally(); sum += `<span class="tot"><b class="price">${usd(tt.total)}</b><span class="meta-s">${esc(tt.quote.length === 1 ? t('plusQuote1') : t('plusQuote', tt.quote.length))}</span></span>`; }
     else if (Z.s === 4 && Z.b) sum += `<span class="tot"><span class="meta-s">${esc(t('upTo'))}</span> <b class="price">${usd0(Z.b)}</b></span>`;
+    else if (Z.s === 3 && Z.k) { const cs = camSum(); sum += `<span class="tot"><span class="meta-s">${esc(t('camsSub'))}</span> <b class="price">${usd(cs.cam)}</b><span class="meta-s">· ${esc(t('sPlan'))} ${usd(cs.ev.total)}</span></span>`; }
     $('#wz-sum').innerHTML = sum;
   }
   function canNext() { return Z.s === 1 ? !!Z.k : Z.s === 7 ? true : true; }
@@ -454,17 +591,182 @@
     cam:'<rect x="3" y="7" width="13" height="10"/><path d="M16 11l5-3v8l-5-3"/>',
   };
   const gly = k => `<svg class="gly" viewBox="0 0 24 24" aria-hidden="true">${GLY[k]}</svg>`;
-  function step3() {
-    return `<div class="haves">
-      <div class="have camrow${Z.oc !== 'none' ? ' on' : ''}">
-        <span class="oh">${gly('cam')}<span><b>${esc(t('o_cam'))}</b><span class="od">${esc(t('od_cam'))}</span></span></span>
-        <span class="oc"><span class="seg" role="group" aria-label="${esc(t('o_cam'))}">${['none', 'ptz', 'cc', 'lens'].map(k => `<button type="button" data-oc="${k}" aria-pressed="${Z.oc === k}">${esc(t('oc_' + k))}</button>`).join('')}</span>
-        <span class="ocn"${Z.oc === 'none' ? ' hidden' : ''}><span class="meta-s">${esc(t('howMany'))}</span><span class="step"><button type="button" data-on="-1" aria-label="−1"${Z.on <= 1 ? ' disabled' : ''}>${icon('minus')}</button><output>${Z.on}</output><button type="button" data-on="1" aria-label="+1"${Z.on >= 4 ? ' disabled' : ''}>${icon('plus')}</button></span></span></span>
-        ${Z.oc !== 'none' ? `<p class="meta-s onote">${esc(t('ownNote'))}</p>` : ''}
+  /* ----- step 3: cameras — the type first, then a model per position ----- */
+  const UI = { b:'', o:'', p:'', tab:null, cmp:[] };   /* picker filters + compare: this visit only, not saved in the link */
+  const brandShort = b => b === 'Blackmagic Design' ? 'Blackmagic' : b;
+  /* the lineup on screen: the customer's picks, else the cameras of the chosen (or recommended) option */
+  function shownId(opts) { if (Z.cl && (Z.o === 'c' || !Z.o)) return 'c'; return Z.o && opts[Z.o] ? Z.o : Z.st && opts.s ? 's' : 'r'; }
+  function lineupShown() {
+    const opts = options(), id = shownId(opts);
+    if (id === 'c') return Z.cl.map(c => ({ k:kOf(c.m), m:c.m, lens:D.BODIES[c.m] ? c.lens || opts.c.ev.cams[Z.cl.indexOf(c)]?.lens || null : null, own:!!c.own }));
+    return opts[id].ev.cams.slice(0, 4).map(c => ({ k:c.k, m:c.m, lens:c.k === 'lens' ? c.lens : null, own:!!c.own }));
+  }
+  function editLineup(fn) {
+    const cl = lineupShown().map(c => ({ m:c.m, lens:c.lens, own:c.own }));
+    fn(cl, layout(Z));
+    Z.cl = cl; Z.cn = cl.length; Z.o = 'c'; Z.om = 1; Z.dirty = 1;
+  }
+  function pickModel(m) {
+    editLineup((cl, L) => { const n = cl.length, idx = Z.same ? cl.map((_, i) => i) : [clamp(Z.pos, 0, n - 1)];
+      idx.forEach(i => { cl[i].m = m; cl[i].lens = D.BODIES[m] ? autoLens(m, L, i, n) : null; }); });
+  }
+  function setCount(n) {
+    n = clamp(n, 1, 4);
+    if (Z.cl) editLineup((cl, L) => { while (cl.length > n) cl.pop(); while (cl.length < n) { const last = cl[cl.length - 1], i = cl.length; cl.push({ m:last.m, lens:D.BODIES[last.m] ? autoLens(last.m, L, i, n) : null, own:false }); } });
+    else { Z.cn = n; Z.dirty = 1; if (!Z.om) Z.o = null; }
+    Z.pos = clamp(Z.pos, 0, n - 1);
+  }
+  const FGLY = {
+    ptz:'<rect x="22" y="31" width="20" height="5"/><path d="M26 31v-5h12v5"/><circle cx="32" cy="16" r="10"/><circle cx="32" cy="16" r="4"/>',
+    cc:'<rect x="12" y="15" width="25" height="15"/><path d="M37 18h7l7-4v18l-7-4h-7"/><path d="M16 15v-5h15v5M12 23H8"/>',
+    lens:'<rect x="17" y="13" width="20" height="17"/><rect x="37" y="16" width="11" height="11"/><path d="M48 18h4v7h-4M13 9h28M13 9v25h28"/>',
+    mix:'<rect x="6" y="25" width="13" height="4"/><circle cx="12.5" cy="17" r="6.5"/><rect x="30" y="13" width="15" height="13"/><rect x="45" y="16" width="8" height="8"/><path d="M27 9h20M27 9v20"/>',
+  };
+  function famCard(f, i, fam) {
+    const on = f === fam, def = f === FAMDEF[Z.k];
+    const pr = CAMS.filter(c => c.fam === f).map(c => P[c.id].usd);
+    const from = f === 'mix' ? t('famMix') : pr.length ? t('fromP', usd0(Math.min(...pr))) : '';
+    return `<button type="button" class="fam${on ? ' on' : ''}" role="radio" aria-checked="${on}" data-fam="${f}">
+      <span class="fg"><svg viewBox="0 0 64 42" aria-hidden="true">${FGLY[f]}</svg>${def ? `<span class="fp meta">${esc(t('pick'))}</span>` : ''}</span>
+      <span class="ft"><span class="n">${String(i + 1).padStart(2, '0')}<i aria-hidden="true"></i></span><b>${esc(t('f_' + f))}</b><span class="fd">${esc(t('fb_' + f))}</span><span class="ff meta-s">${esc(from)}</span></span>
+    </button>`;
+  }
+  const outsOf = m => { const s = specOf(m); return [s.sdi ? s.sdi + '-SDI' : null, s.hdmi ? 'HDMI' : null, s.ndi ? (s.ndiKey ? 'NDI (' + t('paid') + ')' : 'NDI') : null].filter(Boolean).join(' · ') || t('none'); };
+  function facts(m) {
+    const s = specOf(m), f = famOfM(m), out = [];
+    if (f === 'lens') { const fm = D.FORMATS[s.fmt]; out.push(['fx_sensor', `${fm ? fm.label : ''} · ${s.mount}`]); }
+    else out.push(['fx_zoom', `${s.zoom}× · ${s.hW}°–${s.hT}°`]);
+    out.push(['fx_out', outsOf(m)]);
+    if (s.res) out.push(['fx_max', s.res]);
+    if (f === 'ptz') out.push(['fx_ctl', (s.ctl || []).join(' · ') + (s.poe ? ' · ' + s.poe : '')]);
+    else if (f === 'lens') out.push(['fx_lens', s.kit ? t('lensIncl', `${s.kit.min}–${s.kit.max} mm`) : t('lensPick')]);
+    return out.slice(0, 4);
+  }
+  function pickList() {
+    const fam = famOf(Z), tab = fam === 'mix' ? (UI.tab || 'all') : fam;
+    const pool = CAMS.filter(c => tab === 'all' || c.fam === tab);
+    let list = pool;
+    if (UI.b) list = list.filter(c => P[c.id].brand === UI.b);
+    if (UI.o) list = list.filter(c => { const s = specOf(c.id); return UI.o === 'sdi' ? !!s.sdi : UI.o === 'hdmi' ? !!s.hdmi : !!s.ndi; });
+    if (UI.p) list = list.filter(c => { const u = P[c.id].usd; return UI.p === '1' ? u < 2500 : UI.p === '2' ? u >= 2500 && u <= 5000 : u > 5000; });
+    return { list:list.slice().sort((a, b) => P[a.id].usd - P[b.id].usd), total:pool.length, tab, brands:[...new Set(pool.map(c => P[c.id].brand))].sort() };
+  }
+  function camCard(c, sel, n, ti) {
+    const p = P[c.id], s = specOf(c.id), on = sel.has(c.id), inCmp = UI.cmp.includes(c.id);
+    const use = Z.same ? t('useAll', n) : t('useFor', ti + 1), onL = Z.same ? t('onAll') : t('onCam', ti + 1);
+    return `<li class="ccard${on ? ' on' : ''}">
+      <span class="pk"><img src="${p.src}" alt="" loading="lazy"></span>
+      <div class="cc-t"><span class="cc-b">${esc(brandShort(p.brand))}</span><b>${esc(p.name)}</b>
+        <span class="cc-tags"><span class="cc-badge">${esc(c.sub)}</span>${s.approx ? `<span class="vf" title="${esc(s.note || '')}">${esc(t('verify'))}</span>` : ''}</span></div>
+      <dl class="cc-f">${facts(c.id).map(([k, v]) => `<div><dt>${esc(t(k))}</dt><dd>${esc(v)}</dd></div>`).join('')}</dl>
+      <p class="cc-p"><b class="price">${usd(p.usd)}</b><span class="meta-s">${esc(t('beforeTax'))}</span></p>
+      <div class="cc-a"><button type="button" class="btn sm${on ? ' solid' : ''}" data-pick="${c.id}" aria-pressed="${on}" aria-label="${esc((on ? onL : use) + ': ' + p.brand + ' ' + p.name)}">${on ? '✓ ' + esc(onL) : esc(use)}</button>
+        <label class="cc-cmp"><input type="checkbox" data-cmp="${c.id}"${inCmp ? ' checked' : ''}${!inCmp && UI.cmp.length >= 3 ? ' disabled' : ''}><span>${esc(t('cmp'))}</span></label></div>
+    </li>`;
+  }
+  function compare() {
+    if (UI.cmp.length < 2) return UI.cmp.length ? `<p class="ccmp-hint meta-s"><i class="qd"></i>${esc(t('cmpMax'))} · ${esc(P[UI.cmp[0]].name)}</p>` : '';
+    const ms = UI.cmp, row = (k, f) => `<tr><th scope="row">${esc(t(k))}</th>${ms.map(m => `<td>${f(m)}</td>`).join('')}</tr>`;
+    const sp = specOf;
+    return `<div class="ccmp" id="ccmp"><div class="ccmp-hd"><h3 class="meta"><span class="tally"></span>${esc(t('cmpH'))}</h3><button type="button" class="tbtn" data-cmpclear>${esc(t('cmpClear'))}</button></div>
+      <div class="ccmp-sc"><table><thead><tr><td></td>${ms.map(m => `<th scope="col"><span class="pk"><img src="${P[m].src}" alt=""></span><span class="cc-b">${esc(brandShort(P[m].brand))}</span>${esc(P[m].name)}</th>`).join('')}</tr></thead><tbody>
+      ${row('fx_price', m => `<b>${usd(P[m].usd)}</b>`)}
+      ${row('fx_type', m => esc(CAMBY[m] ? CAMBY[m].sub : ''))}
+      ${row('fx_zoom', m => famOfM(m) === 'lens' ? esc(`${(D.FORMATS[sp(m).fmt] || {}).label || ''} · ${sp(m).w} mm`) : esc(`${sp(m).zoom}× · ${sp(m).hW}°–${sp(m).hT}°`))}
+      ${row('fx_out', m => esc(outsOf(m)))}
+      ${row('fx_ndi', m => esc(sp(m).ndi || t('none')))}
+      ${row('fx_power', m => esc(sp(m).poe ? sp(m).poe + (sp(m).poeAC ? ' · AC' : '') : sp(m).pwr && P[sp(m).pwr] ? P[sp(m).pwr].name : sp(m).pwr || t('none')))}
+      ${row('fx_max', m => esc(sp(m).res || t('none')))}
+      ${row('fx_ctl', m => famOfM(m) === 'ptz' ? esc((sp(m).ctl || []).join(' · ')) : famOfM(m) === 'lens' ? esc(sp(m).mount + ' · ' + (sp(m).kit ? t('lensIncl', sp(m).kit.min + '–' + sp(m).kit.max + ' mm') : t('lensPick'))) : esc(t('none')))}
+      ${row('fx_data', m => `${sp(m).approx ? `<span class="vf">${esc(t('verify'))}</span> ` : esc(t('verified')) + ' · '}${/^https?:/.test(sp(m).src || '') ? `<a href="${esc(sp(m).src)}" target="_blank" rel="noopener">${esc(t('src'))}</a>` : ''}`)}
+      </tbody></table></div></div>`;
+  }
+  function lensChips(c, i) {
+    const b = D.BODIES[c.m]; if (!b) return '';
+    const ls = (b.kit ? ['kit'] : []).concat(lensesFor(b));
+    if (!ls.length) ls.push('other');
+    const lab = l => l === 'kit' ? t('lensKit', b.kit.min, b.kit.max) : l === 'other' ? t('lensOther') : `${D.LENSES[l].min}–${D.LENSES[l].max} mm`;
+    const nm = l => l === 'kit' ? b.kit.name : l === 'other' ? t('lensOther') : P[l].brand + ' ' + P[l].name + ' · ' + usd(P[l].usd);
+    return `<div class="lchips" role="group" aria-label="${esc(t('lensK') + ' · CAM ' + (i + 1))}"><span class="meta-s">${esc(t('lensK'))}</span>${ls.map(l => `<button type="button" class="lchip${l === c.lens ? ' on' : ''}" data-lens="${i}:${l}" aria-pressed="${l === c.lens}" title="${esc(nm(l))}" aria-label="${esc(nm(l))}">${esc(lab(l))}${l !== 'kit' && l !== 'other' ? `<small>${usd0(P[l].usd)}</small>` : ''}</button>`).join('')}</div>`;
+  }
+  function posRow(c, i, n, L) {
+    const p = P[c.m], role = posRole(L, i, n), s = slotOf(L, i, n);
+    const tgt = typeof s.aim === 'number' && n > 1 ? L.ppl[s.aim] : null;
+    const framing = !tgt ? PL.t('s_' + (s.shot === 'med' ? 'med' : 'wide')) + ' · ' + t('everyone') : PL.t('s_' + s.shot) + ' · ' + PL.pname(tgt.n);
+    const rc = reach(L, i, n, c.k, c.m, c.lens), act = !Z.same && i === Z.pos;
+    const msg = rc && rc.bad === 'far' ? t('reachFar', PL.lenTxt(rc.fw), PL.pname(rc.nd.p.n)) : rc && rc.bad === 'narrow' ? t('reachNarrow', Math.round(rc.hi), Math.round(rc.nd.h)) : '';
+    return `<li class="cpos-i${act || Z.same ? ' on' : ''}${c.own ? ' own' : ''}${msg ? ' bad' : ''}">
+      <button type="button" class="cp-sel" data-pos="${i}" aria-pressed="${act}" aria-controls="cpick"><span class="cn">${i + 1}</span><span class="cp-r"><b>${esc(t('rl_' + role))}</b><span class="meta-s">${esc(framing)}</span></span></button>
+      <span class="pk"><img src="${p.src}" alt=""></span>
+      <span class="cp-m"><span class="cc-b">${esc(brandShort(p.brand))}</span><b>${esc(p.name)}</b><span class="meta-s">${c.own ? esc(t('youHaveS')) : usd(p.usd)}${specOf(c.m).approx ? ` <span class="vf">${esc(t('verify'))}</span>` : ''}</span></span>
+      <label class="cp-own"><input type="checkbox" data-owncam="${i}"${c.own ? ' checked' : ''}><span class="box" aria-hidden="true"></span><span>${esc(t('haveCam'))}</span></label>
+      ${lensChips(c, i)}
+      ${msg ? `<p class="cp-w"><i aria-hidden="true"></i><span>${esc(msg)}</span></p>` : rc && rc.ok && !rc.nd.wide ? `<p class="cp-ok meta-s">${esc(t('reachOk', PL.lenTxt(rc.fw), PL.lenTxt(rc.nd.d)))}</p>` : ''}
+    </li>`;
+  }
+  function camSum() {
+    const opts = options(), o = opts[shownId(opts)], ev = o.ev;
+    const camLines = ev.bom.filter(l => l.g === 'cam' && !l.own && l.id && P[l.id]);
+    return { o, ev, cam:camLines.reduce((a, l) => a + P[l.id].usd * l.qty, 0) };
+  }
+  function csum(lu) {
+    const { o, ev, cam } = camSum(), L = layout(Z), n = lu.length;
+    const q = id => ev.bom.filter(l => l.id === id && !l.own).reduce((a, l) => a + l.qty, 0);
+    const ctlIds = ['rp60'].concat(Object.values(D.PTZCTL || {}));
+    const cages = ev.bom.filter(l => l.g === 'mnt' && l.id && P[l.id] && P[l.id].subcat === 'Cages & rigs' && !l.own).reduce((a, l) => a + l.qty, 0);
+    const tri = ev.bom.filter(l => l.g === 'mnt' && (l.id === 'ad01' || l.id === 'focus12') && !l.own).reduce((a, l) => a + l.qty, 0);
+    const brk = ev.bom.filter(l => l.code === 'BRKT').reduce((a, l) => a + l.qty, 0);
+    const enc = ev.bom.filter(l => l.code === 'NDI' && /encoder/i.test(l.name || '')).reduce((a, l) => a + l.qty, 0);
+    const pwr = ev.bom.filter(l => l.g === 'net' && (l.code === 'PWR' || (l.id && P[l.id] && P[l.id].subcat === 'Batteries & power')) && !l.own).reduce((a, l) => a + l.qty, 0);
+    const adds = [q('microconv') ? t('a_conv', q('microconv')) : '', ev.bom.some(l => ctlIds.includes(l.id) || l.code === 'CTRL') ? t('a_ctl') : '',
+      ev.bom.some(l => l.g === 'net' && l.role === 'net') ? t('a_poe') : '', enc ? t('a_enc', enc) : '', cages ? t('a_cage', cages) : '', pwr ? t('a_pwr', pwr) : '',
+      tri ? t('a_tri', tri) : '', brk ? t('a_brk', brk) : ''].filter(Boolean);
+    const bad = lu.filter((c, i) => { const r = reach(L, i, n, c.k, c.m, c.lens); return r && r.bad; }).length;
+    const tr = ev.tr === 'ip' ? 'IP / NDI' : ev.tr.toUpperCase();
+    return `<p class="meta"><span class="tally"></span>${esc(t('sumK'))} · ${n}</p>
+      <h2>${esc(title(ev))}</h2>
+      <dl class="csdl">
+        <div><dt>${esc(t('sCams'))}</dt><dd><b class="price">${usd(cam)}</b><span class="meta-s">${esc(t('sCamsV'))}</span></dd></div>
+        <div><dt>${esc(t('sSw'))}</dt><dd>${esc(switcherOf(ev))}</dd></div>
+        <div><dt>${esc(t('sSig'))}</dt><dd>${esc(tr)} · ${esc(t('lng'))} ${esc(PL.lenTxt(ev.maxRun))}${o.forced ? ' · HDMI → SDI' : ''}</dd></div>
+        ${adds.length ? `<div><dt>${esc(t('sAdds'))}</dt><dd>${adds.map(esc).join('<br>')}</dd></div>` : ''}
+        <div class="tot"><dt>${esc(t('sPlan'))}</dt><dd><b class="price">${usd(ev.total)}</b><span class="meta-s">${esc(ev.quote.length === 1 ? t('plusQuote1') : t('plusQuote', ev.quote.length))}</span></dd></div>
+      </dl>
+      ${bad ? `<p class="warn"><i aria-hidden="true"></i><span>${esc(t(bad === 1 ? 'sWarn' : 'sWarnN', bad))}</span></p>` : ''}
+      <p class="lsn meta-s">${esc(t('sNote'))}</p>`;
+  }
+  function picker(lu) {
+    const n = lu.length, L = layout(Z), fam = famOf(Z), { list, total, tab, brands } = pickList();
+    const ti = clamp(Z.pos, 0, n - 1), sel = new Set(Z.same ? lu.map(c => c.m) : [lu[ti].m]);
+    const head = Z.same ? t('pickAll', n) : t('pickFor', ti + 1, t('rl_' + posRole(L, ti, n)));
+    const chip = (attr, v, cur, label) => `<button type="button" class="chip" ${attr}="${v}" aria-pressed="${cur === v}">${esc(label)}</button>`;
+    return `<section class="cpick" id="cpick" aria-labelledby="cpick-h">
+      <div class="cpick-hd"><h2 id="cpick-h">${esc(head)}</h2><p class="meta-s" aria-live="polite">${esc(t('shown', list.length, total))}</p></div>
+      ${n > 1 ? `<div class="seg sm cpsw" role="group" aria-label="${esc(t('posSw'))}">${lu.map((c, i) => `<button type="button" data-psw="${i}" aria-pressed="${!Z.same && i === ti}">CAM ${i + 1}</button>`).join('')}<button type="button" data-psw="all" aria-pressed="${!!Z.same}">${esc(t('posAll'))}</button></div>` : ''}
+      ${fam === 'mix' ? `<div class="seg ctabs" role="group" aria-label="${esc(t('camType'))}">${['all', 'ptz', 'cc', 'lens'].map(f => `<button type="button" data-tab="${f}" aria-pressed="${tab === f}">${esc(f === 'all' ? t('tab_all') : t('f_' + f))}</button>`).join('')}</div>` : ''}
+      <div class="cflt">
+        <div class="cf" role="group" aria-label="${esc(t('fltBrand'))}"><span class="meta-s">${esc(t('fltBrand'))}</span>${chip('data-fb', '', UI.b, t('all'))}${brands.map(b => chip('data-fb', b, UI.b, brandShort(b))).join('')}</div>
+        <div class="cf" role="group" aria-label="${esc(t('fltOut'))}"><span class="meta-s">${esc(t('fltOut'))}</span>${chip('data-fo', '', UI.o, t('any'))}${chip('data-fo', 'sdi', UI.o, 'SDI')}${chip('data-fo', 'hdmi', UI.o, 'HDMI')}${chip('data-fo', 'ip', UI.o, 'NDI / IP')}</div>
+        <div class="cf" role="group" aria-label="${esc(t('fltPrice'))}"><span class="meta-s">${esc(t('fltPrice'))}</span>${chip('data-fp', '', UI.p, t('any'))}${chip('data-fp', '1', UI.p, t('p1'))}${chip('data-fp', '2', UI.p, t('p2'))}${chip('data-fp', '3', UI.p, t('p3'))}</div>
       </div>
-      ${OWN.map(r => `<label class="have${Z.ow.includes(r) ? ' on' : ''}"><input type="checkbox" data-ow="${r}"${Z.ow.includes(r) ? ' checked' : ''}><span class="box" aria-hidden="true"></span>${gly(r)}<span><b>${esc(t('o_' + r))}</b><span class="od">${esc(t('od_' + r))}</span></span></label>`).join('')}
-      <div class="have hnote"><p>${esc(t('hnote'))}</p></div>
-    </div>`;
+      ${compare()}
+      ${list.length ? `<ul class="ccards">${list.map(c => camCard(c, sel, n, ti)).join('')}</ul>` : `<p class="cnone meta-s">${esc(t('noneMatch'))} <button type="button" class="textlink sm" data-freset>${esc(t('resetF'))}</button></p>`}
+    </section>`;
+  }
+  function step3() {
+    const fam = famOf(Z), lu = lineupShown(), L = layout(Z), n = lu.length;
+    Z.pos = clamp(Z.pos, 0, n - 1);
+    return `<div class="cfam" role="radiogroup" aria-label="${esc(t('camType'))}">${FAMS.map((f, i) => famCard(f, i, fam)).join('')}</div>
+      <div class="cgrid">
+        <div class="cposw">
+          <div class="cposh"><h2 class="meta"><span class="tally"></span>${esc(t('posK'))}</h2>
+            <div class="cposc"><span class="meta-s">${esc(t('nCams'))}</span><span class="step"><button type="button" data-cn="-1" aria-label="${esc(t('nCams'))} −1"${n <= 1 ? ' disabled' : ''}>${icon('minus')}</button><output aria-live="polite">${n}</output><button type="button" data-cn="1" aria-label="${esc(t('nCams'))} +1"${n >= 4 ? ' disabled' : ''}>${icon('plus')}</button></span>
+            <label class="csame"><input type="checkbox" id="wz-same"${Z.same ? ' checked' : ''}><span class="box" aria-hidden="true"></span><span>${esc(t('sameAll'))}</span></label></div></div>
+          <ol class="cpos">${lu.map((c, i) => posRow(c, i, n, L)).join('')}</ol>
+        </div>
+        <aside class="csum" id="wz-csum" aria-label="${esc(t('sumK'))}">${csum(lu)}</aside>
+        ${picker(lu)}
+      </div>`;
   }
 
   /* ----- step 4: budget ----- */
@@ -489,6 +791,9 @@
         ${allOver ? `<p class="warn"><i aria-hidden="true"></i>${esc(t('allOver', usd0(opts.e.ev.total - Z.b)))}</p>` : ''}
       </div>
     </div>
+    <fieldset class="haves4"><legend class="meta">${esc(t('haveK'))}<span class="meta-s">${esc(t('haveL'))}</span></legend>
+      <div class="hv">${OWN.map(r => `<label class="have sm${Z.ow.includes(r) ? ' on' : ''}"><input type="checkbox" data-ow="${r}"${Z.ow.includes(r) ? ' checked' : ''}><span class="box" aria-hidden="true"></span>${gly(r)}<b>${esc(t('o_' + r))}</b></label>`).join('')}</div>
+    </fieldset>
     <div class="opts" role="radiogroup" aria-label="${esc(t('st4'))}">${order().map((k, i) => optCard(opts[k], i, k === pick, k === Z.o)).join('')}</div>
     <p class="meta-s fnote">${esc(t('footP'))}${Z.pl ? ' ' + esc(t('redraw')) : ''}</p>`;
   }
@@ -615,7 +920,10 @@
       if (Z.s >= 4) renderChrome();
     });
   });
-  document.addEventListener('i9plan:load', () => { Z = valid(PL.z); if (!PL.z) Z.v = 'a'; Z.dirty = 0; Z.lo = Z.o; OPT_CACHE.key = ''; render(); });
+  document.addEventListener('i9plan:load', () => {
+    const hk = kindFromHash(location.hash);
+    if (!PL.z && hk) { Z = DEF(); chooseKind(hk); Z.s = 2; Z.mx = 2; OPT_CACHE.key = ''; render(); save(); return; }   /* a #tpl= link: the guided steps */
+    Z = valid(PL.z); if (!PL.z) Z.v = 'a'; Z.dirty = 0; Z.lo = Z.o; OPT_CACHE.key = ''; render(); });
 
   /* ======================= events ======================= */
   $('#to-adv').addEventListener('click', () => { if (Z.k && Z.s >= 4) ensurePlan(); setView('a'); scrollTo(0, 0); $('#advbar .btn')?.focus(); });
@@ -637,6 +945,20 @@
     if (b.dataset.n) { Z.n = clamp(Z.n + +b.dataset.n, 1, 8); Z.dirty = 1; render(); $(`[data-n="${b.dataset.n}"]`)?.focus(); return; }
     if (b.dataset.au) { Z.au = +b.dataset.au; Z.dirty = 1; render(); return; }
     if (b.dataset.cd) { Z.cd = b.dataset.cd; Z.dirty = 1; render(); $(`[data-cd="${b.dataset.cd}"]`)?.focus(); return; }
+    /* step 3: cameras */
+    const keep = sel => { render(); const el = $(sel, panel); if (el) el.focus({ preventScroll:true }); };
+    if (b.dataset.fam) { if (famOf(Z) !== b.dataset.fam) { Z.fam = b.dataset.fam; Z.cl = null; Z.o = null; Z.om = 0; Z.dirty = 1; UI.tab = null; UI.b = ''; } keep(`[data-fam="${b.dataset.fam}"]`); save(); return; }
+    if (b.dataset.cn) { setCount(lineupShown().length + +b.dataset.cn); keep(`[data-cn="${b.dataset.cn}"]`); save(); return; }
+    if (b.dataset.pos != null) { Z.pos = +b.dataset.pos; Z.same = 0; UI.tab = null; render(); const h = $('#cpick-h'); if (h) { h.setAttribute('tabindex', '-1'); if (matchMedia('(max-width:1099px)').matches) h.scrollIntoView({ block:'start', behavior:'smooth' }); } $(`[data-pos="${b.dataset.pos}"]`, panel)?.focus({ preventScroll:true }); save(); return; }
+    if (b.dataset.psw != null) { if (b.dataset.psw === 'all') { Z.same = 1; const lu = lineupShown(), m = lu[clamp(Z.pos, 0, lu.length - 1)].m; if (lu.some(c => c.m !== m)) pickModel(m); } else { Z.same = 0; Z.pos = +b.dataset.psw; } keep(`[data-psw="${b.dataset.psw}"]`); save(); return; }
+    if (b.dataset.pick) { pickModel(b.dataset.pick); keep(`[data-pick="${b.dataset.pick}"]`); save(); return; }
+    if (b.dataset.lens) { const [i, l] = b.dataset.lens.split(':'); editLineup(cl => { cl[+i].lens = l; }); keep(`[data-lens="${b.dataset.lens}"]`); save(); return; }
+    if (b.dataset.tab) { UI.tab = b.dataset.tab; UI.b = ''; keep(`[data-tab="${b.dataset.tab}"]`); return; }
+    if (b.dataset.fb != null) { UI.b = b.dataset.fb; keep(`[data-fb="${b.dataset.fb}"]`); return; }
+    if (b.dataset.fo != null) { UI.o = b.dataset.fo; keep(`[data-fo="${b.dataset.fo}"]`); return; }
+    if (b.dataset.fp != null) { UI.p = b.dataset.fp; keep(`[data-fp="${b.dataset.fp}"]`); return; }
+    if (b.hasAttribute('data-freset')) { UI.b = UI.o = UI.p = ''; keep('[data-fb=""]'); return; }
+    if (b.hasAttribute('data-cmpclear')) { UI.cmp = []; keep('#cpick-h'); return; }
     if (b.dataset.oc) { Z.oc = b.dataset.oc; Z.on = Z.oc === 'none' ? 0 : Math.max(1, Z.on); Z.dirty = 1; render(); $(`[data-oc="${b.dataset.oc}"]`)?.focus(); return; }
     if (b.dataset.on) { Z.on = clamp(Z.on + +b.dataset.on, 1, 4); Z.dirty = 1; render(); $(`[data-on="${b.dataset.on}"]`)?.focus(); return; }
     if (b.dataset.b != null) { Z.b = +b.dataset.b || null; render(); save(); $(`[data-b="${b.dataset.b}"]`)?.focus(); return; }
@@ -649,6 +971,9 @@
   });
   panel.addEventListener('change', e => {
     const i = e.target;
+    if (i.dataset.owncam != null) { const k = +i.dataset.owncam, v = i.checked; editLineup(cl => { cl[k].own = v; }); render(); $(`[data-owncam="${k}"]`)?.focus(); save(); return; }
+    if (i.dataset.cmp) { const id = i.dataset.cmp; UI.cmp = i.checked ? UI.cmp.filter(x => x !== id).concat(id).slice(-3) : UI.cmp.filter(x => x !== id); render(); $(`[data-cmp="${id}"]`)?.focus(); return; }
+    if (i.id === 'wz-same') { Z.same = i.checked ? 1 : 0; if (Z.same) { const lu = lineupShown(), m = lu[clamp(Z.pos, 0, lu.length - 1)].m; if (lu.some(c => c.m !== m)) pickModel(m); } render(); $('#wz-same')?.focus(); save(); return; }
     if (i.dataset.ow) { const s = new Set(Z.ow); if (i.checked) s.add(i.dataset.ow); else s.delete(i.dataset.ow); Z.ow = OWN.filter(r => s.has(r)); Z.dirty = 1; render(); $(`[data-ow="${i.dataset.ow}"]`)?.focus(); return; }
     if (i.id === 'wz-w' || i.id === 'wz-d') {
       const v = parseFloat(String(i.value).replace(',', '.')) / (unit() === 'ft' ? FT : 1);
@@ -671,7 +996,8 @@
   (function boot() {
     const hk = PL.hashKind, q = PL.queryTemplate;
     if (hk === 'p' && PL.z) { Z = valid(PL.z); Z.dirty = 0; if (Z.pl) Z.lo = Z.o; }
-    else if (hk === 'p' || hk === 'tpl') { Z = DEF(); Z.v = 'a'; const k = TPL_KIND[PL.state.tpl]; if (k) chooseKind(k); syncRoom(); Z.pl = 1; Z.dirty = 0; Z.o = Z.lo = 'r'; Z.s = 5; Z.mx = 5; }
+    else if (hk === 'tpl' && kindFromHash(PL.bootHash)) { Z = DEF(); chooseKind(kindFromHash(PL.bootHash)); Z.s = 2; Z.mx = 2; }   /* guides, product pages: the guided steps on that kind */
+    else if (hk === 'p' || hk === 'tpl' || hk === 'adv') { Z = DEF(); Z.v = 'a'; const k = TPL_KIND[PL.state.tpl]; if (k) chooseKind(k); syncRoom(); Z.pl = 1; Z.dirty = 0; Z.o = Z.lo = 'r'; Z.s = 5; Z.mx = 5; }
     else if (q) {
       const st = window.I9S.SET[q], S = PL.state;
       Z = DEF(); Z.k = SETUP_KIND[st.sol] || TPL_KIND[S.tpl] || 'church'; Z.w = S.w; Z.d = S.d; Z.rp = 'c';
