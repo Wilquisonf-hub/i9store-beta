@@ -1,0 +1,140 @@
+/* Direction H — the funnel exemplar pages (26 Nov 2026, SEO-FUNIL.md §2): best cameras under $3,000 (T23), Canon EOS R6 V
+   model guide (T22), Canon EOS R6 V vs Nikon ZR (T09N). Loaded after seo3.css; every rule is scoped to a class only these
+   pages use. Same On Air grammar: i9 Black chrome, pure-white lit stages for packshots, zero radius, hairlines, Inter 700
+   display, PT Mono for labels and numbers, orange only for live / selected / act. Breakpoints as g.css. */
+
+/* ---------- funnel strip: where this page sits (TOFU → MOFU → BOFU → after) ---------- */
+.fstrip{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));margin:30px 0 0;border:1px solid var(--rule);list-style:none;padding:0}
+.fstrip li{position:relative;padding:12px 14px 12px;border-left:1px solid var(--rule);min-width:0}
+.fstrip li:first-child{border-left:0}
+.fstrip .meta{display:block;color:var(--ink-3);font-size:10px}
+.fstrip a,.fstrip span.t{display:block;margin-top:4px;font-size:14px;font-weight:600;line-height:1.3;text-decoration:none;color:var(--ink-2)}
+.fstrip a:hover{color:var(--ink);text-decoration:underline}
+.fstrip li[aria-current]{background:var(--panel);box-shadow:inset 0 3px 0 var(--signal)}
+.fstrip li[aria-current] span.t{color:var(--ink)}
+
+/* ---------- "start here": if you… → pick ---------- */
+.qpick{list-style:none;margin:0;padding:0;border-top:1px solid var(--rule-2)}
+.qpick li{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,4fr) auto;gap:18px;align-items:center;padding:16px 0;border-bottom:1px solid var(--rule)}
+.qpick .if{font-size:17px;line-height:1.4;color:var(--ink-2)}
+.qpick .if b{color:var(--ink);font-weight:600}
+.qpick .to{display:flex;align-items:center;gap:12px;min-width:0}
+.qpick .to .pk{width:56px;height:56px;flex:none;padding:4px}
+.qpick .to a{font-weight:700;font-size:17px;letter-spacing:-.015em;text-decoration:none}
+.qpick .to a:hover{text-decoration:underline}
+.qpick .to small{display:block;font:400 11px/1.4 var(--mono);color:var(--ink-3);margin-top:2px}
+.qpick .price{font-size:18px;white-space:nowrap}
+
+/* ---------- not sold here: callout ---------- */
+.ns-note{display:grid;grid-template-columns:minmax(0,180px) minmax(0,1fr) auto;gap:26px;align-items:center;border:1px solid var(--rule-2);border-left:3px solid var(--signal);background:var(--panel);padding:20px 24px}
+.ns-note .pk{height:140px;padding:10px}
+.ns-note .meta{display:flex;gap:10px;align-items:center;margin:0 0 6px;color:var(--ink-3)}
+.ns-note h3{font:700 24px/1.15 var(--sans);letter-spacing:-.025em;margin:0 0 8px}
+.ns-note p{margin:0 0 8px;color:var(--ink-2);font-size:15px;line-height:1.55;max-width:46em}
+.ns-note p:last-child{margin-bottom:0}
+.ns-note .acts{display:flex;flex-direction:column;gap:8px;min-width:220px}
+
+/* ---------- kit total (what else you'll need) ---------- */
+.kit{border:1px solid var(--rule-2);background:var(--panel)}
+.kit-h{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 16px;border-bottom:1px solid var(--rule);color:var(--ink-3)}
+.kit-r{display:grid;grid-template-columns:52px minmax(0,1fr) auto;gap:14px;align-items:center;padding:10px 16px;border-bottom:1px solid var(--rule)}
+.kit-r .pk{width:52px;height:52px;padding:3px}
+.kit-r b{display:block;font-size:14.5px;font-weight:600;line-height:1.3}
+.kit-r b a{text-decoration:none}.kit-r b a:hover{text-decoration:underline}
+.kit-r .why{display:block;font:400 11px/1.45 var(--mono);color:var(--ink-3);margin-top:3px}
+.kit-r .price{font-size:15px;text-align:right}
+.kit-r .av{display:flex;justify-content:flex-end;margin-top:4px}
+.kit-t{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:12px 20px;padding:16px}
+.kit-t .tt{display:flex;flex-direction:column;gap:2px}
+.kit-t .tt .meta-s{color:var(--ink-3)}
+.kit-t .tt b{font:700 30px/1 var(--sans);letter-spacing:-.03em}
+.kit-t .acts{display:flex;flex-wrap:wrap;gap:8px}
+
+/* ---------- model guide: hero buy panel ---------- */
+.mbuy{border:1px solid var(--rule-2);background:var(--panel)}
+.mbuy-pk{height:300px;padding:30px 10%;border-bottom:1px solid var(--rule)}
+
+.mbuy-b{padding:18px 20px 20px}
+.mbuy-b .meta{display:flex;justify-content:space-between;gap:10px;color:var(--ink-3);margin:0}
+.mbuy-p{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 16px;margin:10px 0 14px}
+.mbuy-p .price{font:700 34px/1 var(--sans);letter-spacing:-.035em}
+.mbuy-acts{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.mbuy-acts .btn{min-height:48px;padding:0 14px}
+.mbuy-links{display:flex;flex-wrap:wrap;gap:6px 16px;margin:14px 0 0;padding:12px 0 0;border-top:1px solid var(--rule)}
+.mbuy-links a{font-size:13.5px;color:var(--ink-2)}
+.mbuy-links a:hover{color:var(--ink)}
+
+/* ---------- model guide: four facts ---------- */
+.facts4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));border-top:2px solid var(--s-ink)}
+.facts4>div{padding:22px 22px 24px 0;border-bottom:1px solid var(--s-rule)}
+.facts4>div+div{padding-left:22px;border-left:1px solid var(--s-rule)}
+.facts4 .n{font:700 clamp(30px,3.2vw,44px)/1 var(--sans);letter-spacing:-.045em;color:var(--s-ink)}
+.facts4 .n small{font-size:.45em;letter-spacing:-.01em;margin-left:4px;color:var(--s-ink-2)}
+.facts4 .meta{display:block;margin:10px 0 8px;color:var(--s-ink-3)}
+.facts4 p{margin:0;color:var(--s-ink-2);font-size:15px;line-height:1.55}
+
+/* ---------- spec explained (3 columns) ---------- */
+.spx td:first-of-type{width:34%}
+.spx td:last-child{font:400 14.5px/1.55 var(--sans);color:var(--ink-2)}
+.spx tbody th{width:18%}
+
+/* ---------- lens and accessory cards on the lit stage ---------- */
+.lensg{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px}
+.lensg .bp-pk{height:150px}
+.lensg .bp p.why{margin:8px 0 0;font-size:13.5px;line-height:1.5;color:var(--s-ink-2)}
+
+/* ---------- three Canon bodies, one table ---------- */
+.trio td:not(:first-child),.trio th{min-width:0}
+.trio tbody tr.me th{box-shadow:inset 3px 0 0 var(--signal);padding-left:12px}
+
+/* ---------- compare: the not-sold column ---------- */
+.cmp-col.ns .cmp-pk{position:relative}
+.ns-band{display:flex;align-items:center;gap:10px;margin:0 0 12px;padding:8px 10px;border:1px solid var(--s-rule-2);background:#f4f4f2;font:400 11px/1.4 var(--mono);letter-spacing:.04em;color:var(--s-ink)}
+.ns-band i{width:8px;height:8px;background:var(--signal);flex:none}
+.cmp-p .mk{font:400 12px/1.4 var(--mono);color:var(--s-ink-3)}
+.cmp-t td.na{color:var(--s-ink-3)}
+.cmp-t td small.src{display:block;margin-top:3px;font:400 10.5px/1.4 var(--mono);color:var(--s-ink-3)}
+.vd-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.vd-grid>div{border:1px solid var(--rule);background:var(--panel);padding:20px 22px}
+.vd-grid .meta{margin:0 0 8px;color:var(--ink-3)}
+.vd-grid h3{font:700 20px/1.2 var(--sans);letter-spacing:-.02em;margin:0 0 8px}
+.vd-grid p{margin:0;color:var(--ink-2);font-size:15px;line-height:1.55}
+.vd-grid .pickto{display:inline-flex;align-items:center;gap:8px;margin-top:12px;padding:4px 8px;border:1px solid var(--rule-2);font:400 11px/1.4 var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--ink)}
+.vd-grid .pickto i{width:7px;height:7px;background:var(--signal)}
+.vd-grid .pickto.zr i{background:transparent;border:1px solid var(--ink)}
+.alt3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+
+/* ---------- tablet ---------- */
+@media (max-width:1099px){
+  .fstrip{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .fstrip li:nth-child(3){border-left:0}
+  .fstrip li:nth-child(n+3){border-top:1px solid var(--rule)}
+  .qpick li{grid-template-columns:minmax(0,1fr) auto;gap:8px 16px}
+  .qpick .if{grid-column:1/-1}
+  .ns-note{grid-template-columns:minmax(0,140px) minmax(0,1fr)}
+  .ns-note .acts{grid-column:1/-1;flex-direction:row;flex-wrap:wrap;min-width:0}
+  .facts4{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .facts4>div:nth-child(3){padding-left:0;border-left:0}
+  .lensg{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .vd-grid,.alt3{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+/* ---------- phone ---------- */
+@media (max-width:699px){
+  .fstrip{grid-template-columns:1fr}
+  .fstrip li,.fstrip li:nth-child(3){border-left:0;border-top:1px solid var(--rule)}
+  .fstrip li:first-child{border-top:0}
+  .qpick .to a{font-size:16px}
+  .ns-note{grid-template-columns:1fr;padding:18px 16px}
+  .ns-note .pk{height:120px}
+  .ns-note .acts .btn{flex:1 1 100%}
+  .kit-r{grid-template-columns:44px minmax(0,1fr);padding:10px 12px}
+  .kit-r .pk{width:44px;height:44px}
+  .kit-r>div:last-child{grid-column:2;display:flex;justify-content:space-between;align-items:center;gap:10px}
+  .kit-r .av{margin-top:0}
+  .kit-t .acts,.kit-t .acts .btn{width:100%}
+  .mbuy-pk{height:230px}
+  .facts4{grid-template-columns:1fr}
+  .facts4>div,.facts4>div+div{padding:18px 0;border-left:0}
+  .spx td:first-of-type,.spx tbody th{width:auto}
+  .lensg,.vd-grid,.alt3{grid-template-columns:1fr}
+}

@@ -26,7 +26,9 @@
     'tools.html', 'led-wall-calculator.html', 'led-wall-church.html', 'guide-podcast-studio.html',   /* SEO intent pages: tools hub, calculator, church LED, podcast guide (25 Nov) */
     /* the ten exemplar intent pages (26 Nov, tmp-seo3/build.cjs): On Air (Pro) ground on every one */
     'showroom-miami.html', 'solutions-churches.html', 'setup-small-church-livestream.html', 'guide-best-ptz-camera-church.html', 'compare-atem-mini-pro-vs-iso.html',
-    'ptz-camera-distance-calculator.html', 'services-installation.html', 'tax-exempt-purchasing.html', 'brand-visual-productions.html', 'br-camera-ptz-igreja.html'];
+    'ptz-camera-distance-calculator.html', 'services-installation.html', 'tax-exempt-purchasing.html', 'brand-visual-productions.html', 'br-camera-ptz-igreja.html',
+    /* the funnel exemplar pages (26 Nov, tmp-seo4/build.cjs, SEO-FUNIL.md §2): same On Air ground */
+    'guide-best-cameras-under-3000.html', 'guide-canon-eos-r6-v.html', 'compare-canon-eos-r6-v-vs-nikon-zr.html'];
   const read = () => { try { const v = localStorage.getItem(KEY); return MODES.includes(v) ? v : null; } catch (e) { return null; } };
   const save = m => { try { localStorage.setItem(KEY, m); } catch (e) {} };
 
