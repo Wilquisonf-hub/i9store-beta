@@ -23,7 +23,8 @@
 .carriers .cl{list-style:none;margin:0;padding:0;border-top:1px solid var(--s-rule-2)}
 .carriers .cl li{display:flex;justify-content:space-between;align-items:center;gap:12px;min-height:46px;border-bottom:1px solid var(--s-rule)}
 .carriers .cn{font-size:15px;font-weight:600;color:var(--s-ink)}
-.carriers .cr{font:400 12px/1 var(--mono);color:var(--s-ink-3);border:1px dashed var(--s-rule-2);padding:6px 8px}
+.carriers .cr{font:400 12px/1.4 var(--mono);color:var(--s-ink-2);text-align:right}   /* 26 Nov: real values (flat US rule), no placeholder pill */
+.carriers .cs a{color:var(--s-ink)}
 .carriers .cs{display:flex;justify-content:space-between;gap:6px 16px;flex-wrap:wrap;margin:10px 0 0;color:var(--s-ink-3)}
 .carriers .cs span:first-child{color:var(--s-ink-2)}
 .pickup{grid-column:1/-1;display:grid;grid-template-columns:22px minmax(0,1fr);gap:12px;padding:16px;border:1px solid var(--s-ink);background:#f7f6f2}

@@ -400,3 +400,33 @@
 @media (min-width:700px) and (max-width:1099px){.pkcomp-in{aspect-ratio:16/7}.pkcomp-in .pk{max-height:220px}}
 .br-nav .br-links a{min-height:44px;box-shadow:none}
 .br-nav .br-links .talk{padding:0 14px}
+
+/* ---------- returns + shipping pages (tmp-returns/build.cjs, 26 Nov 2026): scoped to .pol-* ---------- */
+.pol-sum>div b{max-width:64%}
+/* the black "figure" row keeps light text when Store mode flips --ink to black */
+.pol-sum .ex span{color:rgba(247,246,242,.72)}.pol-sum .ex b{color:#f7f6f2}
+/* these two pages also open in Store mode: the open-FAQ "–" sits on --ink, so it needs a light glyph there */
+html[data-mode="store"] .pol-page .faq details[open] summary::after{color:#fff}
+.pol-ct{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:26px}
+.pol-ct a{display:flex;flex-direction:column;gap:8px;min-height:44px;padding:16px 18px;border:1px solid var(--rule);background:var(--panel);text-decoration:none;transition:border-color .2s}
+.pol-ct a:hover{border-color:var(--rule-2)}
+.pol-ct .meta{display:flex;align-items:center;gap:8px;margin:0;color:var(--ink-3)}
+.pol-ct .ic{width:16px;height:16px}
+.pol-ct b{font:400 14px/1.35 var(--mono);color:var(--ink);overflow-wrap:anywhere}
+.pol-ul{list-style:none;margin:16px 0 0;padding:0;border-top:1px solid var(--rule)}
+.pol-ul li{padding:9px 0;border-bottom:1px solid var(--rule);color:var(--ink-2);font-size:15px;line-height:1.5}
+.pol-ul li b{color:var(--ink);font-weight:600}
+.certs .pol-ul{margin-top:14px}
+.stage .pol-ul{border-color:var(--s-rule)}
+.stage .pol-ul li{border-color:var(--s-rule);color:var(--s-ink-2)}
+.pol-tbl th{width:34%}
+.pol-tbl td{color:var(--ink-2);font:400 15px/1.55 var(--sans)}
+.pol-sec .rules li{grid-template-columns:190px minmax(0,1fr)}
+.pol-sec .rules a,.pol-tbl a,.certs a{color:var(--ink);text-decoration:underline}
+@media (max-width:1099px){.pol-ct{grid-template-columns:1fr}}
+@media (max-width:699px){
+  .pol-sum>div{flex-direction:column;gap:4px}
+  .pol-sum>div b{max-width:none;text-align:left}
+  .pol-sec .rules li{grid-template-columns:1fr}
+  .pol-tbl th{width:100%}
+}

@@ -67,29 +67,33 @@
 
         <fieldset class="grp">
           <legend><span><span class="n">02</span>Delivery</span><span class="meta">Ships from Miami</span></legend>
-          <!-- Owner 25 Nov: US shipping options come live from i9's GoShippo integration (FedEx, UPS, USPS…), plus free pickup at
-               the Miami showroom. Design only: no carrier is called and no rate is shown; tax.js switches the states. -->
+          <!-- US shipping, 26 Nov 2026 (coordinator, relaying the owner; matches Google Merchant Center): free on orders over $500,
+               otherwise $25 flat; in-stock items ship in 1–3 business days; free pickup at the Miami showroom. Delivery about 1–5
+               business days after shipping and the 4 pm Miami cutoff are the coordinator's assumptions: shown as estimates.
+               The label is still bought through i9's GoShippo integration (FedEx, UPS, USPS). tax.js fills the states.
+               [TO CONFIRM] exactly $500 (the rule says "over $500": $500.00 pays $25 here); oversized/freight and PR/USVI/Guam
+               still go by quote (shipping.html) — confirm the flat rule doesn't cover them; whether the buyer still picks a carrier. -->
           <div class="dm full" role="radiogroup" aria-label="How you get it">
-            <label class="dm-o"><input type="radio" name="dm" value="ship" checked><span class="dot" aria-hidden="true"></span><span><b>Ship to my address</b><small>FedEx · UPS · USPS, live rates from the carrier</small></span><svg class="ic" aria-hidden="true"><use href="#ic-truck"/></svg></label>
+            <label class="dm-o"><input type="radio" name="dm" value="ship" checked><span class="dot" aria-hidden="true"></span><span><b>Ship to my address</b><small>Free over $500, otherwise $25 · FedEx · UPS · USPS</small></span><svg class="ic" aria-hidden="true"><use href="#ic-truck"/></svg></label>
             <label class="dm-o"><input type="radio" name="dm" value="pickup"><span class="dot" aria-hidden="true"></span><span><b>Pick up at our Miami showroom</b><small>Free · sales tax still applies</small></span><svg class="ic" aria-hidden="true"><use href="#ic-storefront"/></svg></label>
           </div>
           <div class="f full ship-f"><label for="ad">Street address</label><input id="ad" autocomplete="street-address" placeholder="Start typing; we’ll suggest matches"></div>
           <div class="f ship-f"><label for="apt">Apt, suite, building <span>(optional)</span></label><input id="apt" autocomplete="address-line2"></div>
           <div class="f ship-f"><label for="co-zip">ZIP code</label><input id="co-zip" inputmode="numeric" autocomplete="postal-code" maxlength="10" aria-describedby="co-ziph"><span class="h" id="co-ziph">Sales tax and shipping are calculated from it.</span></div>
           <div class="carriers ship-f" id="co-carriers" aria-live="polite">
-            <p class="cz" id="co-cz">Enter ZIP to see FedEx · UPS · USPS options</p>
-            <ul class="cl" id="co-cl" hidden aria-label="Carrier options, design placeholder">
-              <li><span class="cn">FedEx</span><span class="cr">Rate —</span></li>
-              <li><span class="cn">UPS</span><span class="cr">Rate —</span></li>
-              <li><span class="cn">USPS</span><span class="cr">Rate —</span></li>
+            <p class="cz" id="co-cz">US shipping: free on orders over $500, otherwise $25 flat. Enter ZIP for the delivery estimate.</p>
+            <ul class="cl" id="co-cl" hidden aria-label="Shipping from Miami">
+              <li><span class="cn">Ships from Miami</span><span class="cr">In stock: 1–3 business days</span></li>
+              <li><span class="cn">Delivery</span><span class="cr">About 1–5 business days after it ships · estimate</span></li>
+              <li><span class="cn">Carrier</span><span class="cr">FedEx, UPS or USPS</span></li>
             </ul>
-            <p class="cs meta-s" id="co-cs" hidden><span>Live rates from carrier</span><span>Design placeholder · no rates in this prototype</span></p>
+            <p class="cs meta-s" id="co-cs" hidden><span>Ordered after 4 pm Miami time, or on a weekend? Counted from the next business day (estimate).</span><span>Backorder items ship on their own lead time, shown on the product page. <a href="shipping.html">Shipping &amp; pickup</a></span></p>
           </div>
           <div class="pickup" id="co-pickup" hidden>
             <svg class="ic" aria-hidden="true"><use href="#ic-map-pin"/></svg>
-            <div><b>i9Store showroom, Miami</b><span>20815 NE 16th Ave, STE B33, Miami, FL 33179</span><small>Mon–Fri, 9 am–5 pm · we tell you when your order is ready to collect.</small></div>
+            <div><b>i9Store showroom, Miami</b><span>20815 NE 16th Ave, STE B33, Miami, FL 33179</span><small>Mon–Fri, 9 am–5 pm · we tell you when your order is ready to collect. <a href="shipping.html#pickup">How pickup works</a></small></div>
           </div>
-          <div class="dline ship-f"><span>Delivery date</span><span class="meta-s">Appears when your address is in</span></div>
+          <div class="dline ship-f"><span>Delivery estimate</span><span class="meta-s" id="co-dl">Appears when your address is in</span></div>
           <div class="f full org"><label for="org">Church, school or company <span>(optional)</span></label><input id="org" autocomplete="organization"></div>
         </fieldset>
 
@@ -116,19 +120,19 @@
           </div>
           <div class="totals">
             <div class="sl meta"><span><span class="tally"></span>Your order</span><span>USD</span></div>
-            <!-- OWNER 25 NOV: tax not included. No rate or shipping cost is invented: the two lines wait for a ZIP, then show a
-                 marked placeholder for the live calculation. -->
+            <!-- OWNER 25 NOV: tax not included. Shipping (26 Nov): free over $500, otherwise $25 flat, added to the total by tax.js;
+                 pickup free. Sales tax waits for a ZIP, then shows a marked placeholder for the live calculation. -->
             <div class="sums" id="co-sums" data-zip="" data-exempt="0">
               <div><span>Subtotal <small class="sq">before tax and shipping</small></span><span class="num" id="co-sub">$0.00</span></div>
-              <div><span>Shipping</span><span class="calc" id="co-ship">Enter ZIP to calculate</span></div>
+              <div><span>Shipping</span><span class="calc" id="co-ship">$25.00</span></div>
               <div><span>Sales tax</span><span class="calc" id="co-tax">Enter ZIP to calculate</span></div>
               <div class="g"><span>Total</span><span class="tt"><span class="num" id="co-tot">$0.00</span><small id="co-totq">+ shipping and sales tax</small></span></div>
-              <small id="co-note">Prices are in USD, before sales tax and shipping. Both are calculated from your ZIP; the total you pay shows here before you pay.</small>
+              <small id="co-note">Prices are in USD, before sales tax and shipping. US shipping is free over $500, otherwise $25; sales tax is calculated from your ZIP. The total you pay shows here before you pay.</small>
             </div>
             <div class="assure">
-              <div><span class="meta">Ships from</span><span>I9Store USA LLC, Miami, FL</span></div>
+              <div><span class="meta">Ships from</span><span>I9Store USA LLC, Miami, FL · <a href="shipping.html">Shipping &amp; pickup</a></span></div>
               <div><span class="meta">Warranty</span><span>i9Store USA · terms as on each listing</span></div>
-              <div><span class="meta">Returns</span><span data-returns>30-day returns from delivery or pickup.</span></div>
+              <div><span class="meta">Returns</span><span><span data-returns>30-day returns from delivery or pickup.</span> <a href="returns.html">Return policy</a></span></div>
               <div><span class="meta">People</span><span>WhatsApp or <a href="tel:+13053334374">+1 (305) 333-4374</a></span></div>
             </div>
           </div>
