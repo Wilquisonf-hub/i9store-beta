@@ -1,0 +1,1321 @@
+<!doctype html>
+<html lang="pt-BR" data-mode="store">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Guia de marca i9Store</title>
+<meta name="description" content="A linguagem visual e verbal da i9Store (design F): marca, voz, cor, tipografia, layout, componentes, imagens e o que não fazer. Para o time de desenvolvimento.">
+<link rel="icon" href="../shared/i9-seal.webp">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=PT+Mono&display=swap" rel="stylesheet">
+<script>
+/* modo da página: Store (claro) por padrão; Pro (escuro) salvo por visitante. Roda antes de pintar. */
+(function(){try{var m=localStorage.getItem('i9-brand-mode');if(m==='pro'||m==='store')document.documentElement.setAttribute('data-mode',m);}catch(e){}})();
+</script>
+<style>
+/* Tokens: cópia de brand-guide/tokens.css (papéis por modo) + aliases do F. */
+:root,[data-mode="store"]{
+  --black:#0a0a0a;--white:#fff;--warm:#f7f6f2;--deep:#f4f4f2;
+  --signal:#f53c00;--signal-hover:#ff5522;--signal-text:#b42c00;--success:#1a7f37;
+  --bg:#fff;--surface:#f7f6f2;--win:#fff;--stage:#fff;
+  --ink:#0a0a0a;--ink-2:rgba(10,10,10,.72);--ink-3:rgba(10,10,10,.58);
+  --rule:rgba(10,10,10,.12);--rule-2:rgba(10,10,10,.3);--rule-strong:#0a0a0a;--field:rgba(10,10,10,.5);
+  --signal-ink:#b42c00;--sel-bg:#0a0a0a;--sel-ink:#fff;--field-bg:#fff;
+  --sans:"Inter",system-ui,-apple-system,"Segoe UI",Arial,sans-serif;--mono:"PT Mono",ui-monospace,"SF Mono",Menlo,monospace;
+  --wrap:90rem;--g:clamp(1rem,4vw,3.5rem);--ease:cubic-bezier(.16,1,.3,1);
+  color-scheme:light;
+}
+[data-mode="pro"]{
+  --bg:#0a0a0a;--surface:#111111;--win:#0d0d0d;
+  --ink:#f7f6f2;--ink-2:rgba(247,246,242,.72);--ink-3:rgba(247,246,242,.56);
+  --rule:rgba(247,246,242,.14);--rule-2:rgba(247,246,242,.3);--rule-strong:rgba(247,246,242,.14);--field:rgba(247,246,242,.45);
+  --signal-ink:#ff5522;--sel-bg:#f7f6f2;--sel-ink:#0a0a0a;--field-bg:#0a0a0a;
+  color-scheme:dark;
+}
+.stage{background:#fff;color:#0a0a0a;--bg:#fff;--win:#fff;--surface:#f7f6f2;--ink:#0a0a0a;--ink-2:rgba(10,10,10,.72);--ink-3:rgba(10,10,10,.58);--rule:rgba(10,10,10,.12);--rule-2:rgba(10,10,10,.3);--field:rgba(10,10,10,.5);--signal-ink:#b42c00;--sel-bg:#0a0a0a;--sel-ink:#fff;--field-bg:#fff}
+.dark{background:#0a0a0a;color:#f7f6f2;--bg:#0a0a0a;--win:#0d0d0d;--surface:#111;--ink:#f7f6f2;--ink-2:rgba(247,246,242,.72);--ink-3:rgba(247,246,242,.56);--rule:rgba(247,246,242,.14);--rule-2:rgba(247,246,242,.3);--field:rgba(247,246,242,.45);--signal-ink:#ff5522;--sel-bg:#f7f6f2;--sel-ink:#0a0a0a;--field-bg:#0a0a0a}
+
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html{-webkit-text-size-adjust:100%;scroll-padding-top:88px}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 16px/1.6 var(--sans);-webkit-font-smoothing:antialiased;overflow-x:clip;transition:background .3s var(--ease),color .3s var(--ease)}
+::selection{background:var(--signal);color:#000}
+img{display:block;max-width:100%}
+a{color:inherit;text-underline-offset:.22em;text-decoration-thickness:1px}
+button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--signal);outline-offset:3px}
+h1,h2,h3{text-wrap:balance}
+p{text-wrap:pretty}
+.wrap{max-width:var(--wrap);margin:0 auto;padding:0 var(--g)}
+.sr{position:absolute!important;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.skip{position:absolute;left:-999px;top:8px;z-index:100;background:var(--ink);color:var(--bg);padding:8px 12px}
+.skip:focus{left:8px}
+.ic{width:20px;height:20px;fill:currentColor;flex:none}
+.meta{font:400 11px/1.4 var(--mono);letter-spacing:.14em;text-transform:uppercase}
+.meta-s{font:400 12px/1.5 var(--mono);letter-spacing:.02em}
+.num{font-variant-numeric:tabular-nums}
+.tally{display:inline-block;width:8px;height:8px;background:var(--signal);flex:none}
+.tally.off{background:transparent;border:1px solid currentColor}
+.dim{color:var(--ink-3)}
+code{font:400 .86em/1.4 var(--mono);letter-spacing:0}
+
+/* ---------- header (the F Store/Pro header) ---------- */
+.gnav{position:sticky;top:0;z-index:40;background:rgba(255,255,255,.96);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid var(--rule-strong)}
+[data-mode="pro"] .gnav{background:rgba(10,10,10,.94)}
+.gnav .wrap{display:flex;align-items:center;gap:8px;min-height:72px}
+.logo{display:flex;align-items:center;gap:12px;text-decoration:none;margin-right:20px;flex:none}
+.logo img{width:32px;height:32px;border-radius:50%}
+.logo span{display:flex;flex-direction:column;line-height:1.05}
+.logo b{font-weight:700;font-size:17px;letter-spacing:-.02em}
+.logo small{font:400 10px/1.3 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3)}
+.modesw{display:inline-flex;align-items:stretch;height:34px;border:1px solid var(--rule-2);margin-right:20px;flex:none}
+.modesw a{display:flex;align-items:center;gap:8px;padding:0 12px 0 11px;font:400 11px/1 var(--mono);letter-spacing:.14em;text-transform:uppercase;text-decoration:none;color:var(--ink-3);transition:background .2s,color .2s}
+.modesw a+a{border-left:1px solid var(--rule-2)}
+.modesw a i{width:7px;height:7px;border:1px solid currentColor;flex:none}
+.modesw a:hover{color:var(--ink)}
+.modesw a[aria-current="true"]{background:var(--ink);color:var(--bg)}
+.modesw a[aria-current="true"] i{background:currentColor}
+[data-mode="pro"] .modesw a[data-to="pro"][aria-current="true"] i{background:var(--signal);border-color:var(--signal)}
+.modesw a:focus-visible{outline-offset:-3px}
+.gnav nav{display:flex;min-width:0}
+.gnav nav a{display:flex;align-items:center;min-height:72px;padding:0 12px;font-size:14.5px;font-weight:500;text-decoration:none;color:var(--ink-2);white-space:nowrap}
+.gnav nav a:hover{color:var(--ink)}
+.gnav nav a[aria-current="true"]{color:var(--ink);box-shadow:inset 0 -2px 0 var(--signal)}
+.gnav .right{margin-left:auto;display:flex;align-items:center;gap:4px}
+.vtag{display:inline-flex;align-items:center;gap:10px;color:var(--ink-3);white-space:nowrap}
+
+/* ---------- hero ---------- */
+.hero{background:var(--surface);border-bottom:1px solid var(--rule)}
+.hgrid{display:grid;grid-template-columns:minmax(0,7fr) minmax(0,5fr);gap:64px;align-items:center;padding-top:72px;padding-bottom:64px}
+.hero h1{font:700 clamp(2.6rem,4.9vw,5rem)/.94 var(--sans);letter-spacing:-.045em;margin:0 0 28px;max-width:11.5em}
+.lede{font-size:clamp(1.0625rem,1.35vw,1.3125rem);line-height:1.55;color:var(--ink-2);max-width:33em;margin:0 0 28px}
+.hfacts{display:flex;flex-wrap:wrap;gap:6px 22px;margin:0;padding:16px 0 0;border-top:1px solid var(--rule);color:var(--ink-3)}
+.hfacts b{color:var(--ink);font-weight:400}
+.frame{position:relative;background:var(--win);border:1px solid var(--ink);margin-top:28px}
+.frame .tab{position:absolute;top:-1px;left:-1px;transform:translateY(-100%);display:flex;align-items:center;gap:10px;height:28px;padding:0 12px;background:#0a0a0a;color:#f7f6f2;font:400 11px/1 var(--mono);letter-spacing:.14em;text-transform:uppercase}
+[data-mode="pro"] .frame .tab{background:#f7f6f2;color:#0a0a0a}
+.frame .tab i{width:8px;height:8px;background:var(--signal)}
+.ospec{margin:0;padding:6px 18px 10px}
+.ospec div{display:flex;justify-content:space-between;align-items:baseline;gap:16px;padding:11px 0;border-bottom:1px solid var(--rule)}
+.ospec div:last-child{border-bottom:0}
+.ospec dt{flex:none;font:400 10px/1.4 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3)}
+.ospec dd{margin:0;min-width:0;font:400 13px/1.45 var(--mono);text-align:right;color:var(--ink)}
+
+/* ---------- index ---------- */
+.idx{border-bottom:1px solid var(--rule)}
+.idx ol{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(8,minmax(0,1fr))}
+.idx li{min-width:0}
+.idx li+li{border-left:1px solid var(--rule)}
+.idx a{display:flex;flex-direction:column;gap:3px;min-height:76px;padding:14px 16px;text-decoration:none;color:var(--ink)}
+.idx li:first-child a{padding-left:0}
+.idx a .meta{color:var(--ink-3)}
+.idx a b{font-size:15px;font-weight:600;letter-spacing:-.01em}
+.idx a:hover b{text-decoration:underline;text-underline-offset:.18em}
+
+/* ---------- sections ---------- */
+.sec{padding:88px 0 96px;border-bottom:1px solid var(--rule)}
+.sec.alt{background:var(--surface)}
+.head{display:grid;grid-template-columns:minmax(0,7fr) minmax(0,5fr);gap:64px;align-items:end;margin-bottom:44px}
+.n-tag{display:flex;align-items:center;gap:10px;color:var(--ink-3);margin:0 0 16px}
+.h2{font:700 clamp(1.9rem,3.6vw,3.1rem)/1.02 var(--sans);letter-spacing:-.035em;margin:0}
+.head p{margin:0;color:var(--ink-2);max-width:34em}
+.h3{font:700 clamp(20px,1.8vw,24px)/1.15 var(--sans);letter-spacing:-.025em;margin:0 0 6px}
+.sub{display:flex;align-items:baseline;justify-content:space-between;gap:8px 16px;flex-wrap:wrap;margin:64px 0 20px}
+.sub:first-child{margin-top:0}
+.sub .meta{color:var(--ink-3)}
+.note{margin:18px 0 0;padding:12px 14px;border-left:3px solid var(--signal);background:var(--surface);color:var(--ink-2);font:400 12.5px/1.55 var(--mono);max-width:62em}
+.sec.alt .note{background:var(--bg)}
+.prose{color:var(--ink-2);max-width:40em;margin:0}
+
+/* ---------- brand ---------- */
+.arch{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));border-top:2px solid var(--ink)}
+.arch>div{position:relative;padding:22px 22px 24px 0;border-bottom:1px solid var(--rule);min-width:0}
+.arch>div+div{padding-left:22px;border-left:1px solid var(--rule)}
+.arch>div::before{content:"";position:absolute;top:-7px;left:0;width:12px;height:12px;background:var(--bg);border:1px solid var(--ink)}
+.arch>div+div::before{left:22px}
+.arch>div.me::before{background:var(--signal);border-color:var(--signal)}
+.sec.alt .arch>div::before{background:var(--surface)}
+.sec.alt .arch>div.me::before{background:var(--signal)}
+.arch .meta{color:var(--ink-3)}
+.arch b{display:block;font-size:26px;font-weight:700;letter-spacing:-.035em;line-height:1.05;margin:12px 0 8px}
+.arch p{margin:0;color:var(--ink-2);font-size:15px;line-height:1.55}
+.names{width:100%;border-collapse:collapse}
+.names th,.names td{padding:12px 16px 12px 0;border-bottom:1px solid var(--rule);text-align:left;vertical-align:top}
+.names thead th{font:400 10px/1.4 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3)}
+.names tbody th{font:700 19px/1.2 var(--sans);letter-spacing:-.02em;white-space:nowrap}
+.names td{font-size:14.5px;color:var(--ink-2)}
+.names td.no{font:400 13px/1.5 var(--mono);color:var(--ink-3)}
+.names td.no s{text-decoration-color:var(--signal);text-decoration-thickness:2px;margin-right:10px;display:inline-block}
+.tbl-w{overflow-x:auto;border-top:1px solid var(--rule-2)}
+.logos{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:40px;align-items:start}
+.lockup{position:relative;display:flex;align-items:center;justify-content:center;min-height:260px;border:1px solid var(--rule);background:var(--bg)}
+.lockup.dk{background:#0a0a0a;color:#f7f6f2;border-color:#0a0a0a}
+.lk{position:relative;display:inline-flex;align-items:center;gap:12px;padding:12px;outline:1px dashed var(--signal);outline-offset:0}
+.lk img{width:48px;height:48px;border-radius:50%}
+.lk span{display:flex;flex-direction:column;line-height:1.05}
+.lk b{font-size:26px;font-weight:700;letter-spacing:-.02em}
+.lk small{font:400 13px/1.3 var(--mono);letter-spacing:.14em;text-transform:uppercase;opacity:.6}
+.lk .x{position:absolute;font:400 10px/1 var(--mono);color:var(--signal-ink);letter-spacing:.06em}
+.lk .x.t{top:-16px;left:50%;transform:translateX(-50%)}
+.lk .x.l{left:-24px;top:50%;transform:translateY(-50%)}
+.lockup figcaption{position:absolute;left:14px;bottom:10px;right:14px;display:flex;justify-content:space-between;gap:10px;color:var(--ink-3)}
+.lockup.dk figcaption{color:rgba(247,246,242,.56)}
+.lkrow{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.sizes{display:flex;align-items:flex-end;gap:28px;flex-wrap:wrap;padding:18px 0 0}
+.sizes figure{margin:0;display:flex;flex-direction:column;align-items:center;gap:8px}
+.sizes img{border-radius:50%}
+.sizes figcaption{color:var(--ink-3)}
+.donts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:10px}
+.dn{border:1px solid var(--rule);background:var(--win)}
+.dn .vis{position:relative;display:flex;align-items:center;justify-content:center;height:120px;border-bottom:1px solid var(--rule);background:var(--stage);overflow:hidden}
+.dn .vis::after{content:"";position:absolute;top:10px;right:10px;width:18px;height:18px;background:linear-gradient(45deg,transparent 45%,var(--signal) 45%,var(--signal) 55%,transparent 55%),linear-gradient(-45deg,transparent 45%,var(--signal) 45%,var(--signal) 55%,transparent 55%)}
+.dn .vis img{width:52px;height:52px;border-radius:50%}
+.dn p{margin:0;padding:12px 14px 14px;font-size:14px;line-height:1.45;color:var(--ink-2)}
+.dn p b{display:block;color:var(--ink);font-weight:600}
+.dn .stretch img{width:110px;height:44px}
+.dn .glow img{box-shadow:0 0 0 6px #fff,0 6px 22px rgba(245,60,0,.7)}
+.dn .orange{background:var(--signal)}
+.dn .orange span{font:700 30px/1 var(--sans);letter-spacing:-.04em;color:#fff}
+
+/* ---------- voice ---------- */
+.langs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.lang{border:1px solid var(--rule);background:var(--win);padding:20px 22px 22px;min-width:0}
+.lang .meta{display:flex;align-items:center;gap:10px;color:var(--ink-3);margin:0 0 12px}
+.lang q{display:block;font-size:19px;font-weight:600;letter-spacing:-.02em;line-height:1.3;quotes:none;margin:0 0 12px}
+.lang p{margin:0;color:var(--ink-2);font-size:14.5px;line-height:1.5}
+.say{display:grid;grid-template-columns:1fr 1fr;border-top:1px solid var(--rule-2)}
+.say>div{padding:16px 24px 16px 0;border-bottom:1px solid var(--rule)}
+.say>div:nth-child(even){padding-left:24px;padding-right:0;border-left:1px solid var(--rule)}
+.say .meta{display:flex;align-items:center;gap:10px;color:var(--ink-3);margin:0 0 6px}
+.say p{margin:0;font-size:16px;line-height:1.45}
+.say .bad p:not(.meta){color:var(--ink-3);text-decoration:line-through;text-decoration-color:var(--signal);text-decoration-thickness:1.5px}
+.verbs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:0;border-top:1px solid var(--rule-2)}
+.verbs>div{padding:14px 16px 14px 0;border-bottom:1px solid var(--rule);min-width:0}
+.verbs>div:not(:nth-child(4n+1)){padding-left:16px;border-left:1px solid var(--rule)}
+.verbs b{display:block;font-size:17px;font-weight:600;letter-spacing:-.015em}
+.verbs span{display:block;font-size:13px;color:var(--ink-3);margin-top:2px}
+
+/* ---------- colour ---------- */
+.sw{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:10px}
+.swc{display:flex;flex-direction:column;border:1px solid var(--rule);background:var(--win);min-width:0}
+.swc .swatch{height:132px;border-bottom:1px solid var(--rule);position:relative}
+.swc .swatch span{position:absolute;left:10px;bottom:10px;font:400 11px/1 var(--mono);letter-spacing:.06em}
+.swc>div{padding:12px 14px 14px}
+.swc b{display:block;font-size:16px;font-weight:600;letter-spacing:-.015em}
+.swc code{display:block;color:var(--ink-2);margin-top:2px;font-size:12.5px}
+.swc small{display:block;color:var(--ink-3);font-size:12.5px;line-height:1.45;margin-top:6px}
+.swc.wide{grid-column:span 2}
+.modes2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.mpanel{border:1px solid var(--rule);min-width:0}
+.mpanel.lt{background:#fff;color:#0a0a0a;--ink:#0a0a0a;--ink-2:rgba(10,10,10,.72);--ink-3:rgba(10,10,10,.58);--rule:rgba(10,10,10,.12);--rule-2:rgba(10,10,10,.3)}
+.mpanel.dk{background:#0a0a0a;color:#f7f6f2;--ink:#f7f6f2;--ink-2:rgba(247,246,242,.72);--ink-3:rgba(247,246,242,.56);--rule:rgba(247,246,242,.14);--rule-2:rgba(247,246,242,.3);border-color:#0a0a0a}
+.mpanel .mh{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:14px 18px;border-bottom:1px solid var(--rule)}
+.mpanel .mh b{font-size:20px;letter-spacing:-.025em}
+.mpanel .mh .meta{color:var(--ink-3)}
+.roles{list-style:none;margin:0;padding:4px 18px 10px}
+.roles li{display:grid;grid-template-columns:22px minmax(0,1fr) auto;gap:12px;align-items:center;padding:9px 0;border-bottom:1px solid var(--rule);font-size:14px}
+.roles li:last-child{border-bottom:0}
+.roles i{width:22px;height:22px;box-shadow:inset 0 0 0 1px rgba(128,128,128,.35)}
+.roles span{color:var(--ink-2);min-width:0}
+.roles span b{color:var(--ink);font-weight:600}
+.roles code{color:var(--ink-3);font-size:11.5px;text-align:right}
+.cpairs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.cp{display:flex;flex-direction:column;border:1px solid var(--rule);min-width:0}
+.cp .s{display:flex;align-items:center;justify-content:space-between;gap:8px;height:84px;padding:0 16px;font-size:18px;font-weight:600;letter-spacing:-.015em}
+.cp .s em{font:400 12px/1 var(--mono);font-style:normal}
+.cp .cr{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:10px 14px;background:var(--win);border-top:1px solid var(--rule)}
+.cp .r{font:700 18px/1 var(--sans);letter-spacing:-.02em}
+.vd{display:inline-flex;align-items:center;gap:6px;padding:4px 8px;border:1px solid var(--rule-2);font:400 11px/1.3 var(--mono);color:var(--ink)}
+.vd i{width:7px;height:7px;background:var(--ink)}
+.vd.bad{color:var(--signal-ink);border-color:rgba(245,60,0,.5)}
+.vd.bad i{background:var(--signal)}
+.vd.mid i{background:linear-gradient(90deg,currentColor 50%,transparent 50%);border:1px solid currentColor}
+.cp small{display:block;padding:0 14px 12px;background:var(--win);color:var(--ink-3);font-size:12.5px;line-height:1.4}
+
+/* ---------- type ---------- */
+.ts{border-top:1px solid var(--rule-2)}
+.tr{display:grid;grid-template-columns:minmax(0,3fr) minmax(0,9fr);gap:28px;align-items:baseline;padding:22px 0;border-bottom:1px solid var(--rule)}
+.tr .k{display:flex;flex-direction:column;gap:4px}
+.tr .k b{font:400 12px/1.4 var(--mono);letter-spacing:.02em;color:var(--ink)}
+.tr .k span{font:400 11px/1.5 var(--mono);color:var(--ink-3)}
+.tr .v{min-width:0;overflow-wrap:anywhere}
+.t-dxl{font:700 clamp(3rem,6.6vw,6rem)/.94 var(--sans);letter-spacing:-.045em}
+.t-d{font:700 clamp(2.6rem,4.9vw,5rem)/.94 var(--sans);letter-spacing:-.045em}
+.t-h2{font:700 clamp(1.9rem,3.6vw,3.1rem)/1.02 var(--sans);letter-spacing:-.035em}
+.t-h3{font:700 clamp(22px,2vw,28px)/1.1 var(--sans);letter-spacing:-.03em}
+.t-ti{font:600 19px/1.2 var(--sans);letter-spacing:-.02em}
+.t-le{font-size:clamp(1.0625rem,1.35vw,1.3125rem);line-height:1.55;color:var(--ink-2);max-width:34em}
+.t-bo{font-size:16px;line-height:1.6;max-width:40em;color:var(--ink-2)}
+.t-pr{font:700 52px/1 var(--sans);letter-spacing:-.035em}
+.fams{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
+.fam{border:1px solid var(--rule);background:var(--win);padding:22px 24px;min-width:0}
+.fam .big{font-size:clamp(64px,8vw,120px);line-height:.9;letter-spacing:-.05em;font-weight:700;margin:6px 0 14px}
+.fam.mono .big{font-family:var(--mono);font-weight:400;letter-spacing:-.02em}
+.fam .meta{color:var(--ink-3)}
+.fam p{margin:0;color:var(--ink-2);font-size:14.5px}
+.weights{display:flex;flex-wrap:wrap;gap:6px 18px;margin:0 0 10px;font-size:20px;letter-spacing:-.02em}
+
+/* ---------- layout ---------- */
+.ruler{position:relative;height:150px;margin:8px 0 0;border-top:1px solid var(--rule-2)}
+.ruler .band{position:absolute;top:0;height:44px;display:flex;align-items:center;padding:0 10px;font:400 11px/1 var(--mono);letter-spacing:.1em;text-transform:uppercase;border-right:1px solid var(--rule-2);overflow:hidden;white-space:nowrap}
+.ruler .b1{left:0;width:48.6%;background:var(--surface)}
+.ruler .b2{left:48.6%;width:27.8%;background:var(--win)}
+.ruler .b3{left:76.4%;width:23.6%;background:var(--surface)}
+.ruler .mk{position:absolute;top:44px;bottom:0;border-left:1px solid var(--ink);padding-left:6px;display:flex;flex-direction:column;justify-content:flex-end;font:400 11px/1.3 var(--mono);color:var(--ink-2);white-space:nowrap}
+.ruler .mk b{font-weight:400;color:var(--ink)}
+.ruler .mk.on{border-left-color:var(--signal)}
+.ruler .mk.on b{color:var(--signal-ink)}
+.ruler .mk.lo{bottom:56px}
+.ruler .mk.end{left:auto;right:0;border-left:0;border-right:1px solid var(--signal);padding:0 6px 0 0;align-items:flex-end;text-align:right}
+.space{list-style:none;margin:0;padding:0;border-top:1px solid var(--rule-2)}
+.space li{display:grid;grid-template-columns:96px minmax(0,1fr) 220px;gap:16px;align-items:center;padding:8px 0;border-bottom:1px solid var(--rule)}
+.space i{display:block;height:12px;background:var(--ink)}
+.space li.sec-y i{background:var(--signal)}
+.space code{color:var(--ink-2)}
+.space span{color:var(--ink-3);font-size:13px;text-align:right}
+.grid2{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:56px}
+.ratio{display:flex;flex-direction:column;gap:8px}
+.ratio div{display:grid;gap:6px}
+.ratio span{display:flex;align-items:center;justify-content:center;text-align:center;padding:0 6px;height:52px;border:1px solid var(--rule-2);font:400 11px/1 var(--mono);letter-spacing:.1em;color:var(--ink-2);background:var(--win)}
+.ratio .r75{grid-template-columns:7fr 5fr}
+.ratio .r65{grid-template-columns:6fr 5fr}
+.ratio .r48{grid-template-columns:4fr 8fr}
+.ratio .hl{display:grid;grid-template-columns:repeat(4,1fr);gap:0;border-top:1px solid var(--rule-2);border-left:1px solid var(--rule-2)}
+.ratio .hl span{border:0;border-right:1px solid var(--rule-2);border-bottom:1px solid var(--rule-2);background:var(--stage);color:#0a0a0a}
+
+/* ---------- components: buttons ---------- */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;min-height:52px;padding:0 24px;border:1px solid var(--rule-2);background:none;font-weight:600;font-size:15px;text-decoration:none;cursor:pointer;color:var(--ink);transition:background .2s,border-color .2s,color .2s}
+.btn:hover{border-color:var(--ink)}
+.btn.sig{background:var(--signal);border-color:var(--signal);color:#000}
+.btn.sig:hover,.btn.sig.is-hover{background:var(--signal-hover);border-color:var(--signal-hover)}
+.btn.solid{background:var(--ink);border-color:var(--ink);color:var(--bg)}
+.btn.sm{min-height:44px;padding:0 16px;font-size:14px}
+.btn.done{background:transparent;border-color:var(--ink);color:var(--ink)}
+.btn.done::before{content:"✓";font-weight:700}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.btn.is-focus{outline:2px solid var(--signal);outline-offset:3px}
+.btn .ic{width:18px;height:18px}
+.textlink{display:inline-flex;align-items:center;gap:8px;font-weight:600;text-decoration:none;min-height:44px}
+.textlink:hover{text-decoration:underline}
+.textlink .ic{width:18px;height:18px;transition:transform .3s var(--ease)}
+.textlink:hover .ic{transform:translateX(3px)}
+.add{display:inline-flex;align-items:center;justify-content:center;width:40px;height:40px;background:var(--win);border:1px solid var(--rule-2);cursor:pointer;color:var(--ink);flex:none;transition:background .2s,border-color .2s}
+.add:hover{background:var(--signal);border-color:var(--signal);color:#000}
+.add.done{background:var(--ink);border-color:var(--ink);color:var(--bg)}
+.add .ic{width:18px;height:18px}
+.states{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:10px}
+.state{display:flex;flex-direction:column;gap:10px;min-width:0}
+.state .btn{width:100%;padding:0 12px}
+.state .meta{color:var(--ink-3)}
+.brow{display:flex;flex-wrap:wrap;align-items:center;gap:12px 20px;margin-top:22px;padding-top:18px;border-top:1px solid var(--rule)}
+
+/* ---------- components: chips, segments, swatches ---------- */
+.cgrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.cbox{border:1px solid var(--rule);background:var(--win);padding:18px 18px 20px;min-width:0}
+.cbox>.meta{display:block;color:var(--ink-3);margin:0 0 14px}
+.cbox>p{margin:12px 0 0;font-size:13.5px;line-height:1.5;color:var(--ink-3)}
+.try{display:flex;flex-wrap:wrap;gap:6px}
+.try a{display:inline-flex;align-items:center;min-height:36px;padding:0 12px;border:1px solid var(--rule);background:var(--win);font-size:14px;font-weight:500;text-decoration:none;transition:border-color .2s}
+.try a:hover{border-color:var(--ink)}
+.seg{display:inline-flex;border:1px solid var(--rule-2);max-width:100%}
+.seg button{flex:1 1 auto;min-height:44px;padding:0 14px;background:none;border:0;border-right:1px solid var(--rule);cursor:pointer;font-weight:600;font-size:14px;color:var(--ink-2);white-space:nowrap}
+.seg button:last-child{border-right:0}
+.seg button:hover{color:var(--ink)}
+.seg button[aria-pressed="true"]{background:var(--sel-bg);color:var(--sel-ink);box-shadow:inset 0 -3px 0 var(--signal)}
+.seg button:focus-visible{outline:2px solid var(--signal);outline-offset:-2px}
+.chips{display:flex;flex-wrap:wrap;gap:4px}
+.chip{position:relative;width:44px;height:44px;display:grid;place-items:center;text-decoration:none}
+.chip span{width:32px;height:32px;background:var(--c);box-shadow:inset 0 0 0 1px rgba(10,10,10,.18);transition:transform .2s var(--ease)}
+.chip:hover span{transform:scale(1.06)}
+.chip[aria-current="page"]{box-shadow:inset 0 0 0 2px var(--ink)}
+.chip[aria-current="page"]::after{content:"";position:absolute;left:6px;right:6px;bottom:-6px;height:3px;background:var(--signal)}
+.occ{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;border:0;margin:0;padding:0;min-width:0}
+.occ label{position:relative;display:flex;flex-direction:column;justify-content:space-between;gap:6px;min-height:60px;padding:9px 11px 10px;border:1px solid var(--rule);background:var(--surface);cursor:pointer;color:var(--ink-2);transition:border-color .2s,background .2s,color .2s}
+.occ input{position:absolute;opacity:0;pointer-events:none}
+.occ .n{display:flex;justify-content:space-between;align-items:center;font:400 10px/1 var(--mono);letter-spacing:.12em;color:var(--ink-3)}
+.occ .n i{width:8px;height:8px;border:1px solid var(--rule-2)}
+.occ b{font-size:14.5px;font-weight:600;line-height:1.15}
+.occ label:hover{border-color:var(--rule-2);color:var(--ink)}
+.occ label:has(input:checked){background:var(--sel-bg);border-color:var(--sel-bg);color:var(--sel-ink)}
+.occ label:has(input:checked) .n{color:inherit;opacity:.62}
+.occ label:has(input:checked) .n i{background:var(--signal);border-color:var(--signal);opacity:1}
+.occ label:has(input:focus-visible){outline:2px solid var(--signal);outline-offset:2px}
+
+/* ---------- components: product cards ---------- */
+.shelf{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));border-top:1px solid var(--rule);border-left:1px solid var(--rule)}
+.pc{position:relative;display:flex;flex-direction:column;min-width:0;padding:18px 18px 16px;background:var(--win);border-right:1px solid var(--rule);border-bottom:1px solid var(--rule)}
+.pc .pk{height:190px;margin:0 0 14px;display:flex;align-items:center;justify-content:center;background:#fff;overflow:hidden}
+.pc .pk img{max-width:100%;max-height:100%;width:auto;height:auto;object-fit:contain;transition:transform .6s var(--ease)}
+.pc:hover .pk img{transform:scale(1.035)}
+.pc .br{margin:0 0 2px;color:var(--ink-3);font:400 11px/1.4 var(--mono);letter-spacing:.06em;text-transform:uppercase}
+.pc h3{margin:0;font-size:16px;font-weight:600;letter-spacing:-.015em;line-height:1.25}
+.pc h3 a{text-decoration:none}
+.pc h3 a::after{content:"";position:absolute;inset:0;z-index:0}
+.pc h3 a:hover{text-decoration:underline;text-underline-offset:.18em}
+.pc .b{margin:4px 0 0;font-size:13px;line-height:1.4;color:var(--ink-3)}
+.pc .row{display:flex;align-items:center;gap:10px;margin-top:auto;padding-top:12px}
+.pc .price{font-size:17px;font-weight:700;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.pc .add{position:relative;z-index:1;margin-left:auto}
+.cap{margin:12px 0 0;color:var(--ink-3)}
+
+/* ---------- components: price block, availability, receipt ---------- */
+.pgrid{display:grid;grid-template-columns:minmax(0,6fr) minmax(0,6fr);gap:10px;align-items:start}
+.buy{background:var(--surface);border:1px solid var(--rule);padding:26px 28px 28px;min-width:0}
+.buy .brl{color:var(--ink-3);margin:0 0 10px}
+.buy h3{font:700 clamp(2.2rem,3.4vw,3.2rem)/.94 var(--sans);letter-spacing:-.045em;margin:0 0 10px}
+.buy .subt{margin:0 0 20px;color:var(--ink-2)}
+.pr{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;padding:20px 0;border-top:1px solid var(--ink)}
+.pr .price{font:700 52px/1 var(--sans);letter-spacing:-.035em;font-variant-numeric:tabular-nums}
+.pr small{max-width:17em;text-align:right;color:var(--ink-3)}
+.brr{margin:0 0 10px;border:1px solid var(--rule);background:var(--win)}
+.brr summary{display:flex;align-items:center;gap:10px;min-height:44px;padding:0 14px;cursor:pointer;list-style:none;font-size:14px;color:var(--ink-2)}
+.brr summary::-webkit-details-marker{display:none}
+.brr summary b{color:var(--ink);font-weight:700}
+.brr summary .meta{color:var(--ink-3)}
+.brr p{margin:0;padding:0 14px 14px;font-size:13.5px;color:var(--ink-2)}
+.inst{margin:0 0 10px;padding:12px 14px;background:var(--win);border:1px solid var(--rule);font-size:14.5px;color:var(--ink-2)}
+.inst b{color:var(--ink);font-weight:600}
+.inst a{font-weight:600;color:var(--ink)}
+.acts{display:grid;grid-template-columns:auto 1fr;gap:10px}
+.qty{display:flex;border:1px solid var(--rule-2);height:52px}
+.qty button{width:44px;background:none;border:0;cursor:pointer;display:grid;place-items:center;color:var(--ink)}
+.qty input{width:40px;text-align:center;background:none;border:0;border-left:1px solid var(--rule);border-right:1px solid var(--rule);font-variant-numeric:tabular-nums}
+.qty .ic{width:16px;height:16px}
+.acts .btn{width:100%}
+.logrows{margin:20px 0 0;border-top:1px solid var(--rule)}
+.logrows>div{display:grid;grid-template-columns:110px minmax(0,1fr);gap:14px;padding:12px 0;border-bottom:1px solid var(--rule);font-size:14.5px}
+.logrows .meta{color:var(--ink-3);padding-top:3px}
+.side{display:flex;flex-direction:column;gap:10px;min-width:0}
+.avbox{border:1px solid var(--rule);background:var(--win);color:var(--ink);padding:18px 20px}
+.avbox>.meta{display:block;color:var(--ink-3);margin:0 0 10px}
+.avl{list-style:none;margin:0;padding:0}
+.avl li{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:9px 0;border-bottom:1px solid var(--rule);font-size:13.5px;color:var(--ink-2)}
+.avl li:last-child{border-bottom:0}
+.av{display:inline-flex;align-items:center;gap:7px;font:400 11px/1.3 var(--mono);letter-spacing:.04em;color:var(--ink-3);white-space:nowrap}
+.av i{width:7px;height:7px;border:1px solid currentColor;flex:none}
+.av.in{color:var(--ink)}.av.in i{background:var(--ink);border-color:var(--ink)}
+.stage .av.in i,.avbox.stage .av.in i{background:var(--success);border-color:var(--success)}
+.av.bo i{background:linear-gradient(90deg,currentColor 50%,transparent 50%)}
+.av.out{color:var(--signal-ink)}.av.out i{border-color:var(--signal)}
+.totals{background:#0a0a0a;color:#f7f6f2;padding:24px 26px}
+.totals .sl{display:flex;justify-content:space-between;gap:12px;color:rgba(247,246,242,.6);margin:0 0 14px}
+.totals .sl span:first-child{display:flex;gap:10px;align-items:center}
+.sums div{display:flex;justify-content:space-between;gap:12px;padding:5px 0;color:rgba(247,246,242,.72);font-size:15px}
+.sums div span:last-child{color:#f7f6f2;text-align:right}
+.sums .g{margin-top:10px;padding-top:14px;border-top:1px solid rgba(247,246,242,.14);font:700 30px/1.1 var(--sans);letter-spacing:-.03em;color:#f7f6f2}
+.sums .g span:last-child{font-variant-numeric:tabular-nums}
+.sums small{display:block;color:rgba(247,246,242,.6);font-size:12px;line-height:1.5;margin-top:10px}
+.rcpt{border:1px solid var(--rule-2);background:var(--surface);padding:18px 20px;font-family:var(--mono)}
+.rcpt>.meta{display:flex;gap:10px;align-items:center;margin:0 0 8px;color:var(--ink-3)}
+.rcpt>div{display:flex;justify-content:space-between;gap:16px;padding:10px 0;border-bottom:1px dashed var(--rule-2);font-size:12.5px;color:var(--ink-2)}
+.rcpt>div b{font-weight:400;color:var(--ink);text-align:right}
+.rcpt .ex{border-bottom:0;margin-top:6px;padding:11px 12px;background:#0a0a0a;color:rgba(247,246,242,.72);border-left:3px solid var(--signal)}
+.rcpt .ex b{color:#f7f6f2}
+
+/* ---------- components: forms ---------- */
+.fgrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px 20px}
+.f{display:flex;flex-direction:column;gap:7px;min-width:0}
+.f label{font-size:14px;font-weight:600}
+.f label span{font-weight:400;color:var(--ink-3)}
+.f input,.f select{height:50px;background:var(--field-bg);border:1px solid var(--field);padding:0 16px;font-size:16px;color:var(--ink);min-width:0;border-radius:0;-webkit-appearance:none;appearance:none}
+.f input::placeholder{color:var(--ink-3);opacity:1}
+.f input:hover{border-color:var(--ink-2)}
+.f input:focus,.f input.is-focus{outline:2px solid var(--signal);outline-offset:1px;border-color:var(--ink)}
+.f input[aria-invalid="true"]{border-color:var(--signal);box-shadow:inset 3px 0 0 var(--signal)}
+.f .h{font-size:13px;color:var(--ink-3)}
+.f .err{font-size:13px;color:var(--signal-ink)}
+.lead{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,6fr);gap:48px;align-items:start;margin-top:56px}
+.steps{list-style:none;margin:20px 0 0;padding:0;border-top:1px solid var(--rule);counter-reset:ls}
+.steps li{display:grid;grid-template-columns:36px minmax(0,1fr);padding:12px 0;border-bottom:1px solid var(--rule);color:var(--ink-2);counter-increment:ls}
+.steps li::before{content:counter(ls,decimal-leading-zero);font:400 11px/1.9 var(--mono);letter-spacing:.12em;color:var(--ink-3)}
+.lbox{border:1px solid var(--rule-2);background:var(--surface);padding:22px 22px 20px}
+.lbox .to{display:flex;align-items:center;gap:10px;margin:0 0 16px;color:var(--ink)}
+.lbox .two{display:grid;grid-template-columns:1fr 1fr;gap:14px 16px}
+.lbox .btn{width:100%;margin-top:18px}
+.lbox .fine{margin:10px 0 0;color:var(--ink-3)}
+.lbox .alert{margin:14px 0 0;color:var(--signal-ink)}
+
+/* ---------- components: table, faq, crumbs, funnel, chain ---------- */
+.tbl{width:100%;border-collapse:collapse;font:400 13px/1.45 var(--mono)}
+.tbl caption{text-align:left;padding:0 0 12px;color:var(--ink-3);font:400 12px/1.5 var(--mono)}
+.tbl th,.tbl td{padding:12px 14px 12px 0;border-bottom:1px solid var(--rule);text-align:left;vertical-align:top}
+.tbl thead th{font:400 10px/1.4 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3)}
+.tbl tbody th{font:600 15px/1.3 var(--sans);letter-spacing:-.01em}
+.tbl tr.diff th{box-shadow:inset 3px 0 0 var(--signal);padding-left:12px}
+.tbl tr.diff td.hl{font-weight:700}
+.faq{border-top:1px solid var(--rule-2)}
+.faq details{border-bottom:1px solid var(--rule)}
+.faq summary{display:flex;justify-content:space-between;gap:24px;align-items:center;min-height:64px;padding:14px 0;cursor:pointer;list-style:none;font:600 18px/1.3 var(--sans);letter-spacing:-.015em}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::after{content:"+";flex:none;width:28px;height:28px;display:grid;place-items:center;border:1px solid var(--rule-2);font:400 16px/1 var(--mono);color:var(--ink-2)}
+.faq details[open] summary::after{content:"–";background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.faq summary:focus-visible{outline:2px solid var(--signal);outline-offset:2px}
+.faq .a{padding:0 0 20px;color:var(--ink-2);max-width:44em;font-size:15.5px;line-height:1.65}
+.crumbs{display:flex;gap:10px;flex-wrap:wrap;align-items:center;padding:14px 0;color:var(--ink-3);font:400 12px/1.5 var(--mono);letter-spacing:.02em}
+.crumbs a{text-decoration:none}.crumbs a:hover{color:var(--ink);text-decoration:underline}
+.crumbs span[aria-hidden]{opacity:.5}
+.crumbs [aria-current]{color:var(--ink-2)}
+.fstrip{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));margin:0;border:1px solid var(--rule);list-style:none;padding:0}
+.fstrip li{position:relative;padding:12px 14px;border-left:1px solid var(--rule);min-width:0}
+.fstrip li:first-child{border-left:0}
+.fstrip .meta{display:block;color:var(--ink-3);font-size:10px}
+.fstrip a,.fstrip span.t{display:block;margin-top:4px;font-size:14px;font-weight:600;line-height:1.3;text-decoration:none;color:var(--ink-2)}
+.fstrip a:hover{color:var(--ink);text-decoration:underline}
+.fstrip li[aria-current]{background:var(--surface);box-shadow:inset 0 3px 0 var(--signal)}
+.fstrip li[aria-current] span.t{color:var(--ink)}
+.chain{position:relative;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));border-top:1px solid var(--rule)}
+.chain::before{content:"";position:absolute;left:0;right:0;top:150px;height:1px;background:#0a0a0a}
+.node{position:relative;display:flex;flex-direction:column;padding:20px 18px 0 0;min-width:0}
+.node .pk{height:110px;display:flex;align-items:center;justify-content:center;padding:0 8%}
+.node .pk img{max-width:100%;max-height:100%;object-fit:contain}
+.node .sq{position:relative;z-index:1;display:block;width:12px;height:12px;margin-top:14px;background:#fff;border:1px solid #0a0a0a}
+.node.live .sq{background:var(--signal);border-color:var(--signal)}
+.node .job{margin:14px 0 4px;color:rgba(10,10,10,.58)}
+.node b{font-size:15.5px;font-weight:600;letter-spacing:-.015em;line-height:1.25}
+.node .price{margin-top:6px;font-weight:600;font-size:15px;font-variant-numeric:tabular-nums}
+.chainbox{position:relative;padding:44px 24px 24px;border:1px solid var(--rule)}
+.slate-tab{position:absolute;top:0;left:24px;z-index:2;display:flex;align-items:center;gap:12px;height:30px;padding:0 12px;background:#0a0a0a;color:rgba(247,246,242,.78);font:400 11px/1 var(--mono);letter-spacing:.14em;text-transform:uppercase}
+.slate-tab i{width:8px;height:8px;background:var(--signal)}
+.slate-tab b{font-weight:400;color:#f7f6f2}
+.ctot{display:flex;justify-content:space-between;align-items:baseline;gap:16px;flex-wrap:wrap;margin-top:22px;padding-top:14px;border-top:1px solid rgba(10,10,10,.12)}
+.ctot .meta{color:rgba(10,10,10,.58)}
+.ctot b{font:700 28px/1 var(--sans);letter-spacing:-.03em;font-variant-numeric:tabular-nums}
+
+/* ---------- components: header & footer samples, toast ---------- */
+.hdemo{border:1px solid var(--rule)}
+.hdemo+.hdemo{margin-top:10px}
+.hd{display:flex;align-items:center;gap:8px;min-height:64px;padding:0 18px;overflow:hidden}
+.hd.lt{background:#fff;color:#0a0a0a;border-bottom:1px solid #0a0a0a;--ink:#0a0a0a;--ink-2:rgba(10,10,10,.72);--ink-3:rgba(10,10,10,.58);--rule-2:rgba(10,10,10,.3);--bg:#fff}
+.hd.dk{background:#0a0a0a;color:#f7f6f2;border-bottom:1px solid rgba(247,246,242,.14);--ink:#f7f6f2;--ink-2:rgba(247,246,242,.72);--ink-3:rgba(247,246,242,.56);--rule-2:rgba(247,246,242,.3);--bg:#0a0a0a}
+.hd .logo{margin-right:16px}
+.hd .modesw{margin-right:16px}
+.hd .modesw span{display:flex;align-items:center;gap:8px;padding:0 11px;font:400 11px/1 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3)}
+.hd .modesw span+span{border-left:1px solid var(--rule-2)}
+.hd .modesw span i{width:7px;height:7px;border:1px solid currentColor}
+.hd .modesw .on{background:var(--ink);color:var(--bg)}
+.hd .modesw .on i{background:currentColor}
+.hd.dk .modesw .on i{background:var(--signal);border-color:var(--signal)}
+.hd .tabs{display:flex;min-width:0}
+.hd .tabs span{display:flex;align-items:center;gap:6px;min-height:64px;padding:0 11px;font-size:14px;font-weight:500;color:var(--ink-2);white-space:nowrap}
+.hd .tabs span.open{color:var(--ink);box-shadow:inset 0 -2px 0 var(--signal)}
+.hd .tabs .ic{width:11px;height:11px;opacity:.6}
+.hd .r{margin-left:auto;display:flex;align-items:center;gap:6px}
+.hd .srch{display:block;line-height:36px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;height:38px;width:220px;border:1px solid var(--rule-2);padding:0 12px;font-size:13.5px;color:var(--ink-3)}
+.hd.dk .srch{font:400 12px/1 var(--mono)}
+.hd .ib{display:inline-flex;align-items:center;gap:6px;min-width:40px;min-height:40px;justify-content:center;color:var(--ink-2)}
+.hd .ct{font:400 11px/18px var(--mono);min-width:18px;height:18px;padding:0 4px;background:var(--ink);color:var(--bg);text-align:center}
+.hd .ct.on{background:var(--signal);color:#000}
+.hdemo figcaption,.fdemo figcaption{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:10px 14px;color:var(--ink-3);background:var(--win)}
+.fdemo{border:1px solid var(--rule);margin:10px 0 0}
+.foot{padding:36px 28px 24px;background:var(--surface);font-size:14px;color:var(--ink-2)}
+[data-mode="pro"] .foot{background:#0a0a0a}
+.foot .top{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:32px;padding-bottom:28px}
+.foot .line{font-size:clamp(1.4rem,2.2vw,1.9rem);font-weight:700;letter-spacing:-.035em;line-height:1.05;color:var(--ink);margin:0 0 14px}
+.foot h4{margin:0 0 12px;color:var(--ink-3)}
+.foot ul{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.foot a{text-decoration:none}.foot a:hover{color:var(--ink);text-decoration:underline}
+.foot p{margin:0}
+.foot .bot{display:flex;justify-content:space-between;gap:16px;padding-top:16px;border-top:1px solid var(--rule);color:var(--ink-3)}
+.toastdemo{position:relative;display:flex;align-items:center;justify-content:center;min-height:120px;border:1px solid var(--rule);background:var(--surface);overflow:hidden}
+.toast{display:flex;align-items:center;gap:14px;max-width:calc(100% - 32px);padding:12px 12px 12px 18px;background:#0a0a0a;color:#f7f6f2;border:1px solid rgba(247,246,242,.3);font-size:14px}
+.toast b{font-weight:600}
+.toast .meta-s{color:rgba(247,246,242,.6)}
+.toast a{display:inline-flex;align-items:center;gap:6px;min-height:36px;padding:0 12px;background:var(--signal);color:#000;text-decoration:none;font-weight:600}
+.toast a .ic{width:14px;height:14px}
+.dlg{border:1px solid var(--rule-2);background:var(--surface);min-width:0}
+.dlg .top{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:16px 18px 10px}
+.dlg .top b{font:700 22px/1.15 var(--sans);letter-spacing:-.025em}
+.dlg .top button{width:40px;height:40px;display:grid;place-items:center;background:none;border:1px solid var(--rule-2);cursor:pointer;color:var(--ink)}
+.dlg .top .ic{width:16px;height:16px}
+.dlg pre{margin:0;padding:14px 18px;background:#0a0a0a;color:#f7f6f2;font:12px/1.55 var(--mono);white-space:pre-wrap;border-top:1px solid var(--rule);border-bottom:1px solid var(--rule)}
+.dlg .acts2{display:flex;gap:10px;padding:14px 18px;flex-wrap:wrap}
+.ovl{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px}
+
+/* ---------- imagery ---------- */
+.img2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.ifig{margin:0;border:1px solid var(--rule);background:var(--win);min-width:0}
+.ifig .pkv{height:260px;display:flex;align-items:center;justify-content:center;padding:28px}
+.ifig .pkv img{max-width:100%;max-height:100%;object-fit:contain}
+.ifig .pkv.white{background:#fff}
+.ifig .pkv.beige{background:#e9e4da}
+.ifig .pkv.beige img{mix-blend-mode:multiply;filter:drop-shadow(0 18px 18px rgba(0,0,0,.25))}
+.ifig figcaption{display:flex;align-items:center;gap:10px;padding:12px 14px;border-top:1px solid var(--rule);font-size:14px;color:var(--ink-2)}
+.ifig figcaption b{color:var(--ink)}
+.mark{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;flex:none;font:700 12px/1 var(--mono)}
+.mark.ok{background:var(--ink);color:var(--bg)}
+.mark.no{background:var(--signal);color:#000}
+.photo{position:relative;margin:0;background:#000;overflow:hidden;min-width:0}
+.photo img{width:100%;aspect-ratio:16/10;object-fit:cover;filter:saturate(.92) contrast(1.04)}
+.photo .osd{position:absolute;top:12px;left:12px;padding:4px 8px;background:rgba(0,0,0,.72);color:rgba(247,246,242,.88);font:400 10.5px/1.2 var(--mono);letter-spacing:.12em;text-transform:uppercase}
+.photo figcaption{position:absolute;left:0;right:0;bottom:0;padding:44px 16px 14px;background:linear-gradient(0deg,rgba(0,0,0,.84),rgba(0,0,0,0));color:rgba(247,246,242,.92);font-size:14px;line-height:1.45}
+.photo figcaption .meta{display:block;color:rgba(247,246,242,.62);margin-bottom:4px}
+.icons{display:grid;grid-template-columns:repeat(10,minmax(0,1fr));border-top:1px solid var(--rule);border-left:1px solid var(--rule)}
+.icons div{display:flex;flex-direction:column;align-items:center;gap:8px;padding:16px 6px 12px;border-right:1px solid var(--rule);border-bottom:1px solid var(--rule);min-width:0}
+.icons .ic{width:24px;height:24px}
+.icons span{font:400 10px/1.3 var(--mono);color:var(--ink-3);text-align:center;overflow-wrap:anywhere}
+
+/* ---------- do / don't ---------- */
+.dd{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.ddc{display:grid;grid-template-columns:1fr 1fr;border:1px solid var(--rule);background:var(--win);min-width:0}
+.ddc>div{padding:16px 18px 18px;min-width:0}
+.ddc>div+div{border-left:1px solid var(--rule)}
+.ddc .meta{display:flex;align-items:center;gap:8px;margin:0 0 12px;color:var(--ink-3)}
+.ddc p{margin:12px 0 0;font-size:13.5px;line-height:1.45;color:var(--ink-2)}
+.ddc .vis{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:6px;min-height:86px;padding:12px;background:var(--bg);border:1px solid var(--rule)}
+.slop-pill{display:inline-flex;align-items:center;height:30px;padding:0 14px;border-radius:999px;background:#f3ead9;color:#5c4a2a;font-size:13px}
+.slop-btn{display:inline-flex;align-items:center;height:42px;padding:0 20px;border-radius:10px;background:linear-gradient(90deg,#f53c00,#ff8660);color:#fff;font-weight:600;font-size:14px;box-shadow:0 8px 24px rgba(245,60,0,.45)}
+.slop-card{width:100%;max-width:220px;padding:14px;border-radius:14px;border:1px solid #ece7dc;background:#fbf8f2;box-shadow:0 6px 18px rgba(0,0,0,.08);font-size:12.5px;color:#6b6252}
+.slop-card b{display:block;color:#3b342a;font-size:14px}
+.slop-hero{width:100%;max-width:240px;padding:16px;border-radius:16px;background:radial-gradient(circle at 70% 30%,rgba(245,60,0,.55),#141414 60%);color:#fff;font-size:13px;font-weight:600}
+.slop-chat{display:inline-flex;align-items:center;gap:8px;height:44px;padding:0 18px;border-radius:999px;background:#25d366;color:#fff;font-weight:600;font-size:13px;box-shadow:0 10px 24px rgba(0,0,0,.25)}
+.ok-chip{display:inline-flex;align-items:center;height:36px;padding:0 12px;border:1px solid var(--rule);background:var(--win);font-size:13.5px;font-weight:500}
+.ok-talk{display:inline-flex;align-items:center;gap:8px;min-height:40px;padding:0 14px;border:1px solid var(--rule-2);font-size:13.5px;font-weight:500}
+.ok-talk .ic{width:18px;height:18px}
+.ok-cell{width:100%;max-width:220px;display:grid;grid-template-columns:1fr 1fr;border-top:1px solid var(--rule);border-left:1px solid var(--rule)}
+.ok-cell span{padding:10px;border-right:1px solid var(--rule);border-bottom:1px solid var(--rule);font-size:12.5px;color:var(--ink-2)}
+.ok-cell span b{display:block;color:var(--ink);font-size:13.5px}
+.ok-hero{width:100%;max-width:240px;padding:14px;background:var(--surface);border:1px solid var(--rule)}
+.ok-hero b{display:block;font-size:17px;font-weight:700;letter-spacing:-.03em;line-height:1.05}
+.ok-hero b span{color:var(--ink-3)}
+.ok-hero i{display:flex;margin-top:10px;height:28px;border:1px solid var(--ink);background:var(--win)}
+.ok-hero i::after{content:"Search";margin-left:auto;display:flex;align-items:center;padding:0 10px;background:var(--signal);color:#000;font:600 11px var(--sans);font-style:normal}
+
+/* ---------- footer of this page ---------- */
+.pfoot{padding:48px 0 36px;background:var(--surface);color:var(--ink-2);font-size:14px}
+.pfoot .top{display:grid;grid-template-columns:minmax(0,7fr) minmax(0,5fr);gap:40px;padding-bottom:28px}
+.pfoot .line{font-size:clamp(1.5rem,2.4vw,2.1rem);font-weight:700;letter-spacing:-.035em;line-height:1.05;color:var(--ink);margin:0 0 14px}
+.pfoot ul{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.pfoot code{color:var(--ink)}
+.pfoot .bot{display:flex;justify-content:space-between;gap:20px;padding-top:18px;border-top:1px solid var(--rule);color:var(--ink-3)}
+
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+
+/* =================== ≤ 1439: header tightens =================== */
+@media (max-width:1439px){.gnav .vtag .meta-s{display:none}}
+@media (max-width:1279px){.gnav nav a{padding:0 9px;font-size:14px}}
+/* =================== tablet: 700–1099 =================== */
+@media (max-width:1099px){
+  .gnav nav{display:none}
+  .hgrid{grid-template-columns:1fr;gap:40px;padding-top:48px;padding-bottom:48px}
+  .idx ol{grid-template-columns:repeat(4,minmax(0,1fr))}
+  .idx li:nth-child(5){border-left:0}
+  .idx li:nth-child(5) a{padding-left:0}
+  .idx li:nth-child(n+5){border-top:1px solid var(--rule)}
+  .sec{padding:64px 0 72px}
+  .head{grid-template-columns:1fr;gap:16px;margin-bottom:32px}
+  .arch{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .arch>div:nth-child(3){padding-left:0;border-left:0}
+  .arch>div:nth-child(3)::before{left:0}
+  .arch>div:nth-child(n+3){margin-top:24px}
+  .logos{grid-template-columns:1fr;gap:24px}
+  .langs{grid-template-columns:1fr}
+  .verbs{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .verbs>div:not(:nth-child(4n+1)){padding-left:0;border-left:0}
+  .verbs>div:nth-child(even){padding-left:16px;border-left:1px solid var(--rule)}
+  .sw{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .swc.wide{grid-column:span 1}
+  .modes2{grid-template-columns:1fr}
+  .cpairs{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .fams{grid-template-columns:1fr}
+  .tr{grid-template-columns:1fr;gap:8px;padding:18px 0}
+  .grid2{grid-template-columns:1fr;gap:40px}
+  .states{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .cgrid{grid-template-columns:1fr 1fr}
+  .shelf{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .pgrid{grid-template-columns:1fr}
+  .fgrid{grid-template-columns:1fr 1fr}
+  .lead{grid-template-columns:1fr;gap:24px}
+  .fstrip{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .fstrip li:nth-child(3){border-left:0}
+  .fstrip li:nth-child(n+3){border-top:1px solid var(--rule)}
+  .chain{grid-template-columns:repeat(5,170px);overflow-x:auto;scroll-snap-type:x mandatory}
+  .chain::before{right:auto;width:850px}
+  .node{scroll-snap-align:start}
+  .hd .tabs,.hd .srch{display:none}
+  .foot .top{grid-template-columns:1fr 1fr}
+  .foot .top>div:first-child{grid-column:1/-1}
+  .ovl{grid-template-columns:1fr}
+  .icons{grid-template-columns:repeat(5,minmax(0,1fr))}
+  .dd{grid-template-columns:1fr}
+  .pfoot .top{grid-template-columns:1fr}
+}
+/* =================== phone: < 700 =================== */
+@media (max-width:699px){
+  body{font-size:15px}
+  .gnav .wrap{min-height:60px;gap:4px}
+  .logo span{display:none}
+  .logo{margin-right:10px}
+  .modesw{height:32px;margin-right:6px}
+  .modesw a{padding:0 8px 0 7px;gap:5px;letter-spacing:.08em}
+  .vtag{display:none}
+  .idx ol{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .idx li:nth-child(odd){border-left:0}
+  .idx li:nth-child(odd) a{padding-left:0}
+  .idx li:nth-child(n+3){border-top:1px solid var(--rule)}
+  .idx li:nth-child(5){border-left:0}
+  .sec{padding:56px 0 64px}
+  .sub{margin-top:44px}
+  .arch{grid-template-columns:1fr}
+  .arch>div,.arch>div+div{padding:22px 0;border-left:0;margin-top:0}
+  .arch>div+div{margin-top:12px}
+  .arch>div::before,.arch>div+div::before,.arch>div:nth-child(3)::before{left:0}
+  .names thead{display:none}
+  .names tr{display:block;padding:12px 0;border-bottom:1px solid var(--rule)}
+  .names th,.names td{display:block;padding:2px 0;border:0}
+  .tbl-w{overflow:visible}
+  .lkrow{grid-template-columns:1fr}
+  .lockup{min-height:220px}
+  .lk b{font-size:22px}
+  .donts{grid-template-columns:1fr 1fr}
+  .say{grid-template-columns:1fr}
+  .say>div:nth-child(even){padding-left:0;border-left:0}
+  .say>div{padding-right:0}
+  .verbs{grid-template-columns:1fr}
+  .verbs>div:nth-child(even){padding-left:0;border-left:0}
+  .sw{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .swc .swatch{height:96px}
+  .cpairs{grid-template-columns:1fr}
+  .roles li{grid-template-columns:22px minmax(0,1fr)}
+  .roles code{grid-column:2;text-align:left}
+  .ruler{height:auto;border-top:0}
+  .ruler .band,.ruler .mk{position:static;display:flex;width:auto;height:auto;padding:10px 0;border:0;border-bottom:1px solid var(--rule)}
+  .ruler .band{background:none;padding:12px 0 6px;color:var(--ink)}
+  .ruler .mk.end{padding:10px 0;border-bottom:1px solid var(--rule)}
+  .ruler .mk,.ruler .mk.end{flex-direction:row;gap:10px;justify-content:flex-start;align-items:baseline;padding-left:0;border-right:0}
+  .space li{grid-template-columns:80px minmax(0,1fr)}
+  .ratio span{font-size:10px;letter-spacing:.02em}
+  .arch>div+div{border-top:1px solid var(--rule)}
+  .space span{grid-column:1/-1;text-align:left}
+  .states{grid-template-columns:1fr 1fr}
+  .cgrid{grid-template-columns:1fr}
+  .shelf{grid-template-columns:1fr 1fr}
+  .pc{padding:12px}
+  .pc .pk{height:130px}
+  .pc .b{display:none}
+  .buy{padding:20px 16px 22px}
+  .pr{flex-direction:column;align-items:flex-start;gap:8px}
+  .pr .price{font-size:40px}
+  .pr small{text-align:left}
+  .logrows>div{grid-template-columns:1fr;gap:2px}
+  .fgrid,.lbox .two{grid-template-columns:1fr}
+  .tbl thead{display:none}
+  .tbl tr{display:block;padding:10px 0;border-bottom:1px solid var(--rule)}
+  .tbl th,.tbl td{display:block;padding:2px 0;border:0}
+  .tbl td::before{content:attr(data-k) " · ";color:var(--ink-3)}
+  .tbl tr.diff th{padding-left:10px}
+  .fstrip{grid-template-columns:1fr}
+  .fstrip li,.fstrip li:nth-child(3){border-left:0;border-top:1px solid var(--rule)}
+  .fstrip li:first-child{border-top:0}
+  .chainbox{padding:40px 14px 18px}
+  .slate-tab{left:14px}
+  .foot{padding:28px 16px 20px}
+  .foot .bot{flex-direction:column}
+  .img2{grid-template-columns:1fr}
+  .icons{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .ddc{grid-template-columns:1fr}
+  .ddc>div+div{border-left:0;border-top:1px solid var(--rule)}
+  .pfoot .bot{flex-direction:column}
+  .toast{flex-wrap:wrap}
+}
+@media (max-width:379px){.modesw a{letter-spacing:.04em;padding:0 6px}}
+</style>
+</head>
+<body>
+<script src="../shared/icons.js"></script>
+<a class="skip" href="#main">Pular para o conteúdo</a>
+<div id="live" class="sr" aria-live="polite"></div>
+
+<header class="gnav"><div class="wrap">
+  <a class="logo" href="#top" aria-label="i9Store, guia de marca, início"><img src="../shared/i9-seal.webp" alt="" width="32" height="32"><span><b>i9Store</b><small>i9 / Brand guide</small></span></a>
+  <div class="modesw" role="group" aria-label="Modo da página">
+    <a href="#top" data-to="store" aria-current="true"><i></i>Store</a>
+    <a href="#top" data-to="pro" aria-current="false"><i></i>Pro</a>
+  </div>
+  <nav aria-label="Seções">
+    <a href="#marca">Marca</a><a href="#voz">Voz</a><a href="#cor">Cor</a><a href="#tipo">Tipo</a><a href="#layout">Layout</a><a href="#componentes">Componentes</a><a href="#imagem">Imagem</a><a href="#nao">Não fazer</a>
+  </nav>
+  <div class="right"><span class="vtag meta"><span class="tally"></span>Design F<span class="meta-s">· 26 nov 2026</span></span></div>
+</div></header>
+
+<main id="main">
+  <section class="hero" id="top" aria-labelledby="h1">
+    <div class="wrap hgrid">
+      <div>
+        <h1 id="h1">Uma loja, dois modos. <span class="dim">A linguagem da i9Store.</span></h1>
+        <p class="lede">O guia visual do design F para quem constrói a loja: marca, voz, cor, tipo, layout e componentes, com os valores exatos do CSS publicado. Troque o modo no topo: a página inteira vira Store (claro) ou Pro (escuro, “On Air”), como a loja.</p>
+        <p class="hfacts meta-s"><span>Fonte <b>direction-h/*.css</b></span><span>Texto completo <b>brand-guide/I9-DESIGN-GUIDE.md</b></span><span>Tokens <b>tokens.css · tokens.json · tailwind-theme.css</b></span></p>
+      </div>
+      <aside class="frame" aria-labelledby="sys-h">
+        <div class="tab" aria-hidden="true"><i></i><span>O sistema em uma tela</span></div>
+        <h2 class="sr" id="sys-h">O sistema em uma tela</h2>
+        <dl class="ospec">
+          <div><dt>Fontes</dt><dd>Inter 400–700 · PT Mono 400</dd></div>
+          <div><dt>Canto</dt><dd>0 px, sempre</dd></div>
+          <div><dt>Acento</dt><dd>#F53C00, só para agir</dd></div>
+          <div><dt>Texto no laranja</dt><dd>preto #000</dd></div>
+          <div><dt>Foto de produto</dt><dd>palco branco #FFFFFF</dd></div>
+          <div><dt>Separação</dt><dd>hairline 1 px, sem sombra</dd></div>
+          <div><dt>Modos</dt><dd>data-mode="store" | "pro"</dd></div>
+          <div><dt>Breakpoints</dt><dd>&lt;700 · 700–1099 · ≥1100</dd></div>
+        </dl>
+      </aside>
+    </div>
+  </section>
+
+  <nav class="idx" aria-label="Índice"><div class="wrap"><ol>
+    <li><a href="#marca"><span class="meta">01</span><b>Marca</b></a></li>
+    <li><a href="#voz"><span class="meta">02</span><b>Voz e tom</b></a></li>
+    <li><a href="#cor"><span class="meta">03</span><b>Cor</b></a></li>
+    <li><a href="#tipo"><span class="meta">04</span><b>Tipografia</b></a></li>
+    <li><a href="#layout"><span class="meta">05</span><b>Layout</b></a></li>
+    <li><a href="#componentes"><span class="meta">06</span><b>Componentes</b></a></li>
+    <li><a href="#imagem"><span class="meta">07</span><b>Imagem</b></a></li>
+    <li><a href="#nao"><span class="meta">08</span><b>Não fazer</b></a></li>
+  </ol></div></nav>
+
+  <!-- ===================================================== 01 MARCA ===================================================== -->
+  <section class="sec" id="marca" aria-labelledby="marca-h">
+    <div class="wrap">
+      <div class="head">
+        <div><p class="n-tag meta"><span class="tally"></span>01 · Marca</p><h2 class="h2" id="marca-h">Um grupo, três divisões. <span class="dim">A i9Store é dona do fluxo de equipamento.</span></h2></div>
+        <p>Arquitetura do <i>i9 Brand Architecture &amp; Asset Guide V2.0</i> (julho 2026). Cada divisão é dona de uma parte do resultado. A loja vende o equipamento; quem promete o sistema funcionando é a i9TV.</p>
+      </div>
+      <div class="arch">
+        <div><span class="meta">Grupo</span><b>i9</b><p>O resultado integrado. “Da ideia ao sinal.” / “From idea to signal.”</p></div>
+        <div><span class="meta">Produção</span><b>i9 Studios</b><p>Produção, ao vivo, estúdios, unidade móvel 4K e locação de equipamento.</p></div>
+        <div><span class="meta">Sinal</span><b>i9TV</b><p>Engenharia de broadcast, integração, instalação e suporte. Responde pelo sistema.</p></div>
+        <div class="me"><span class="meta">Equipamento</span><b>i9Store</b><p>E-commerce, venda B2B, distribuição de 140+ marcas, EUA → América Latina. Não aluga.</p></div>
+      </div>
+
+      <div class="sub"><h3 class="h3">Uma grafia certa para cada nome.</h3><span class="meta">guia V2 + 325 usos no F</span></div>
+      <div class="tbl-w">
+        <table class="names">
+          <thead><tr><th scope="col">Use</th><th scope="col">Onde</th><th scope="col">Nunca</th></tr></thead>
+          <tbody>
+            <tr><th scope="row">i9Store</th><td>todo texto corrido, título, botão, alt</td><td class="no"><s>I9Store</s><s>i9 Store</s><s>i9store</s><s>I9STORE</s></td></tr>
+            <tr><th scope="row">i9Store Pro</th><td>o modo Pro e a sua home</td><td class="no"><s>i9Store PRO</s><s>i9 Pro</s></td></tr>
+            <tr><th scope="row">i9Store Brasil</th><td>a loja do Brasil (rótulo curto: “Loja Brasil”)</td><td class="no"><s>i9Store do Brasil</s></td></tr>
+            <tr><th scope="row">I9Store USA LLC</th><td>só a razão social: rodapé (NAP) e <code>legalName</code> [A DEFINIR com o jurídico]</td><td class="no"><s>em texto de marketing</s></td></tr>
+            <tr><th scope="row">i9 Studios</th><td>sempre com espaço</td><td class="no"><s>i9Studios</s></td></tr>
+            <tr><th scope="row">i9TV</th><td>junto; “i9 TV” só no lockup visual</td><td class="no"><s>i9 TV</s><s>I9TV</s></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="sub"><h3 class="h3">Logo e selo.</h3><span class="meta">hoje: selo de lente · depois: mastermark V2 [A DEFINIR]</span></div>
+      <div class="logos">
+        <div>
+          <p class="prose">O F e a i9tv.com.br usam o <b>selo de lente</b> com a palavra <b>i9Store</b> (Inter 700) e o descritor <b>i9 / Equipment</b> (PT Mono). No guia V2, o selo vira ativo de herança e a marca diária passa a ser o mastermark preto ou branco, com o lockup <b>i9 STORE</b>. A troca espera o registro de marca. Até lá, use o selo e deixe a área do logo pronta para o lockup V2.</p>
+          <div class="sizes" aria-label="Tamanhos">
+            <figure><img src="../shared/i9-seal.webp" alt="" width="64" height="64"><figcaption class="meta-s">64 · avatar</figcaption></figure>
+            <figure><img src="../shared/i9-seal.webp" alt="" width="32" height="32"><figcaption class="meta-s">32 · header</figcaption></figure>
+            <figure><img src="../shared/i9-seal.webp" alt="" width="20" height="20"><figcaption class="meta-s">20 · mínimo</figcaption></figure>
+            <figure><img src="../shared/i9-seal.webp" alt="" width="16" height="16"><figcaption class="meta-s">16 · só favicon</figcaption></figure>
+          </div>
+          <p class="note">Área de proteção = 1X em volta, X = haste do “i”. No header: 12 px entre o selo e a palavra, 20 px até o seletor Store | Pro. Abaixo de 700 px o selo aparece sozinho, com aria-label “i9Store home”.</p>
+        </div>
+        <div class="lkrow">
+          <figure class="lockup" style="margin:0">
+            <span class="lk"><span class="x t">1X</span><span class="x l">1X</span><img src="../shared/i9-seal.webp" alt="" width="48" height="48"><span><b>i9Store</b><small>i9 / Equipment</small></span></span>
+            <figcaption class="meta-s"><span>Store · chão branco</span><span>tinta #0a0a0a</span></figcaption>
+          </figure>
+          <figure class="lockup dk" style="margin:0">
+            <span class="lk"><span class="x t">1X</span><span class="x l">1X</span><img src="../shared/i9-seal.webp" alt="" width="48" height="48"><span><b>i9Store</b><small>i9 / Equipment</small></span></span>
+            <figcaption class="meta-s"><span>Pro · chão preto</span><span>warm white #f7f6f2</span></figcaption>
+          </figure>
+        </div>
+      </div>
+      <div class="donts" aria-label="Usos incorretos do logo">
+        <div class="dn"><div class="vis stretch"><img src="../shared/i9-seal.webp" alt=""></div><p><b>Não estique</b>Proporção fixa, sempre.</p></div>
+        <div class="dn"><div class="vis glow"><img src="../shared/i9-seal.webp" alt=""></div><p><b>Sem sombra, brilho ou contorno</b>O logo não faz efeito.</p></div>
+        <div class="dn"><div class="vis orange"><span>i9Store</span></div><p><b>Logo não é laranja</b>O laranja é do sistema, não da marca; e branco no laranja reprova.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================================================== 02 VOZ ===================================================== -->
+  <section class="sec alt" id="voz" aria-labelledby="voz-h">
+    <div class="wrap">
+      <div class="head">
+        <div><p class="n-tag meta"><span class="tally"></span>02 · Voz e tom</p><h2 class="h2" id="voz-h">Um especialista que não precisa vender. <span class="dim">Fato no lugar de adjetivo.</span></h2></div>
+        <p>Simples, específico, sem hype. Nunca invente clientes, números, prazos, SLAs, estoque, avaliações ou status de parceiro. Quando o dado não existe, diga que não existe.</p>
+      </div>
+      <div class="langs">
+        <div class="lang" lang="en"><p class="meta"><span class="tally"></span>EN · /usa/</p><q>Video, light and sound. Shipped from Miami.</q><p>Inglês dos EUA (color, catalog), frases curtas. A /usa/ é só inglês: nenhum H1 ou descrição em português.</p></div>
+        <div class="lang" lang="pt-BR"><p class="meta"><span class="tally"></span>PT · /br/</p><q>A câmera certa é a que enquadra o pregador de onde ela vai ficar.</q><p>Português do Brasil, “você”, direto. Sem “prezado cliente”, sem “soluções inovadoras”.</p></div>
+        <div class="lang" lang="es"><p class="meta"><span class="tally off"></span>ES · LATAM [A DEFINIR]</p><q>Precio en USD. Envío calculado al finalizar la compra.</q><p>Texto da estratégia de SEO; o F ainda não tem páginas em espanhol. “Tú” ou “usted” e revisão nativa a decidir.</p></div>
+      </div>
+
+      <div class="sub"><h3 class="h3">Diga assim. <span class="dim">Não assim.</span></h3><span class="meta">microcopy do F</span></div>
+      <div class="say" lang="en">
+        <div><p class="meta"><span class="tally"></span>Diga</p><p>A 600-series key for a stage or a location.</p></div>
+        <div class="bad"><p class="meta"><span class="tally off"></span>Não diga</p><p>Professional high-performance lighting solution.</p></div>
+        <div><p class="meta"><span class="tally"></span>Diga</p><p>Not stated on the listing. Ask a specialist.</p></div>
+        <div class="bad"><p class="meta"><span class="tally off"></span>Não diga</p><p>Full DMX control (inventado para completar a ficha)</p></div>
+        <div><p class="meta"><span class="tally"></span>Diga</p><p>Picked by i9 · a starting shelf chosen by our team, not a sales ranking.</p></div>
+        <div class="bad"><p class="meta"><span class="tally off"></span>Não diga</p><p>Best sellers ★★★★★ — only 2 left!</p></div>
+        <div><p class="meta"><span class="tally"></span>Diga</p><p>Price in USD. Sales tax and shipping are calculated at checkout.</p></div>
+        <div class="bad"><p class="meta"><span class="tally off"></span>Não diga</p><p>Shipping and sales tax included. (errado para o preço em USD)</p></div>
+      </div>
+
+      <div class="sub"><h3 class="h3">Verbos de ação.</h3><span class="meta">verbo + objeto · sem “!” · a mesma palavra em todo lugar</span></div>
+      <div class="verbs" lang="en">
+        <div><b>Add to bag</b><span>PDP Store, card (+)</span></div>
+        <div><b>Add to my plan</b><span>PDP Pro</span></div>
+        <div><b>Quote for volume</b><span>PDP Pro, contorno</span></div>
+        <div><b>Request a quote</b><span>links e rodapé</span></div>
+        <div><b>Send to the i9 team</b><span>formulário de lead</span></div>
+        <div><b>Talk to a specialist</b><span>header, Help, PDP</span></div>
+        <div><b>Search</b><span>busca do hero</span></div>
+        <div><b>All departments →</b><span>link de seção</span></div>
+      </div>
+      <p class="note">Fora: “Buy now”, “Shop now”, “Learn more”, “Get a quote”, “Saiba mais”, “Compre já!”. Erro: diga o que aconteceu e o que fazer (“Fill in the marked fields to send this to the i9 team.”). Vazio: diga por quê e ofereça a saída (“Nothing on this shelf at that price. Show any price”).</p>
+    </div>
+  </section>
+
+  <!-- ===================================================== 03 COR ===================================================== -->
+  <section class="sec" id="cor" aria-labelledby="cor-h">
+    <div class="wrap">
+      <div class="head">
+        <div><p class="n-tag meta"><span class="tally"></span>03 · Cor</p><h2 class="h2" id="cor-h">Dois chãos, um tally. <span class="dim">O laranja só aparece para agir.</span></h2></div>
+        <p>Branco puro e warm white no Store; i9 Black e #111 no Pro. Os cinzas são tinta com alfa, não novos tons. Laranja em cerca de 5 % da tela: o botão da vez, o estado ao vivo, o foco.</p>
+      </div>
+      <div class="sw">
+        <div class="swc wide"><div class="swatch" style="background:#f53c00"><span style="color:#000">Aa · #000 5.5:1</span></div><div><b>Signal Orange</b><code>--i9-signal · #f53c00</code><small>O tally: botão principal, ao vivo, selecionado, foco. Texto sobre ele sempre preto.</small></div></div>
+        <div class="swc"><div class="swatch" style="background:#0a0a0a"><span style="color:#f7f6f2">Aa</span></div><div><b>i9 Black</b><code>#0a0a0a</code><small>Tinta no claro, chrome Pro, slates, total.</small></div></div>
+        <div class="swc"><div class="swatch" style="background:#f7f6f2"><span style="color:#0a0a0a">Aa</span></div><div><b>Warm White</b><code>#f7f6f2</code><small>Superfície de decisão no Store; tinta no Pro.</small></div></div>
+        <div class="swc"><div class="swatch" style="background:#fff"><span style="color:#0a0a0a">Aa</span></div><div><b>Stage</b><code>#ffffff</code><small>Fundo de toda foto de produto. Chão do Store.</small></div></div>
+        <div class="swc"><div class="swatch" style="background:#111"><span style="color:#f7f6f2">Aa</span></div><div><b>Panel</b><code>#111111</code><small>Superfície de decisão no Pro. (#0d0d0d: janela.)</small></div></div>
+        <div class="swc"><div class="swatch" style="background:#ff5522"><span style="color:#000">Aa · 6.6:1</span></div><div><b>Signal hover</b><code>#ff5522</code><small>Hover do botão laranja. Laranja como texto no preto (6.2:1).</small></div></div>
+        <div class="swc"><div class="swatch" style="background:#b42c00"><span style="color:#fff">Aa</span></div><div><b>Signal text</b><code>#b42c00</code><small>Laranja como texto no claro (6.4:1). Erro no Store.</small></div></div>
+        <div class="swc"><div class="swatch" style="background:#f4f4f2"><span style="color:#0a0a0a">Aa</span></div><div><b>Deep</b><code>#f4f4f2</code><small>Nota ou fórmula dentro de um palco branco.</small></div></div>
+        <div class="swc"><div class="swatch" style="background:#1a7f37"><span style="color:#fff">Aa</span></div><div><b>In stock</b><code>#1a7f37</code><small>Só o quadrado “In stock” em palco branco.</small></div></div>
+        <div class="swc wide"><div class="swatch" style="background:linear-gradient(90deg,#0a0a0a 0 25%,rgba(10,10,10,.72) 25% 50%,rgba(10,10,10,.58) 50% 75%,rgba(10,10,10,.12) 75%)"><span style="color:#f7f6f2">ink → line</span></div><div><b>Tinta com alfa</b><code>1 · .72 · .58 · .12 / .30</code><small>Texto, apoio, meta (mínimo .58 para texto) e hairlines. No Pro, a mesma régua em warm white (.72 · .56 · .14 / .30).</small></div></div>
+      </div>
+
+      <div class="sub"><h3 class="h3">Papéis por modo.</h3><span class="meta">tokens.css · [data-mode]</span></div>
+      <div class="modes2">
+        <div class="mpanel lt">
+          <div class="mh"><b>Store</b><span class="meta">data-mode="store"</span></div>
+          <ul class="roles">
+            <li><i style="background:#fff"></i><span><b>Chão</b> · paper</span><code>--i9-bg #ffffff</code></li>
+            <li><i style="background:#f7f6f2"></i><span><b>Superfície</b> · hero, compra, rodapé</span><code>--i9-surface #f7f6f2</code></li>
+            <li><i style="background:#0a0a0a"></i><span><b>Tinta</b> · 19.8:1</span><code>--i9-ink #0a0a0a</code></li>
+            <li><i style="background:rgba(10,10,10,.58)"></i><span><b>Mute</b> · 4.9:1</span><code>--i9-ink-3 .58</code></li>
+            <li><i style="background:rgba(10,10,10,.12)"></i><span><b>Linha</b> · hairline</span><code>--i9-line .12</code></li>
+            <li><i style="background:rgba(10,10,10,.5)"></i><span><b>Borda de campo</b> · 3.7:1</span><code>--i9-line-field .5</code></li>
+            <li><i style="background:#b42c00"></i><span><b>Laranja texto / erro</b></span><code>--i9-signal-ink #b42c00</code></li>
+            <li><i style="background:#0a0a0a"></i><span><b>Dinheiro</b> · painel do total</span><code>--i9-money-bg #0a0a0a</code></li>
+          </ul>
+        </div>
+        <div class="mpanel dk">
+          <div class="mh"><b>Pro</b><span class="meta">data-mode="pro"</span></div>
+          <ul class="roles">
+            <li><i style="background:#0a0a0a"></i><span><b>Chão</b> · paper</span><code>--i9-bg #0a0a0a</code></li>
+            <li><i style="background:#111"></i><span><b>Superfície</b> · painéis</span><code>--i9-surface #111111</code></li>
+            <li><i style="background:#f7f6f2"></i><span><b>Tinta</b> · 18.3:1</span><code>--i9-ink #f7f6f2</code></li>
+            <li><i style="background:rgba(247,246,242,.56)"></i><span><b>Mute</b> · 6.0:1</span><code>--i9-ink-3 .56</code></li>
+            <li><i style="background:rgba(247,246,242,.14)"></i><span><b>Linha</b> · hairline</span><code>--i9-line .14</code></li>
+            <li><i style="background:rgba(247,246,242,.45)"></i><span><b>Borda de campo</b> · 4.2:1</span><code>--i9-line-field .45</code></li>
+            <li><i style="background:#ff5522"></i><span><b>Laranja texto / erro</b></span><code>--i9-signal-ink #ff5522</code></li>
+            <li><i style="background:#fff"></i><span><b>Palco</b> · produto continua no branco</span><code>--i9-stage #ffffff</code></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="sub"><h3 class="h3">Contraste, medido.</h3><span class="meta">WCAG 2.x · alfa composto no fundo real</span></div>
+      <div class="cpairs">
+        <div class="cp"><div class="s" style="background:#f53c00;color:#000">Add to bag<em>#000 / #f53c00</em></div><div class="cr"><span class="r">5.5:1</span><span class="vd"><i></i>AA</span></div><small>Texto do botão laranja.</small></div>
+        <div class="cp"><div class="s" style="background:#f53c00;color:#fff">Add to bag<em>#fff / #f53c00</em></div><div class="cr"><span class="r">3.8:1</span><span class="vd bad"><i></i>reprova</span></div><small>Nunca branco no laranja.</small></div>
+        <div class="cp"><div class="s" style="background:#fff;color:#b42c00">Out of stock<em>#b42c00 / #fff</em></div><div class="cr"><span class="r">6.4:1</span><span class="vd"><i></i>AA</span></div><small>Laranja como texto no claro.</small></div>
+        <div class="cp"><div class="s" style="background:#fff;color:#f53c00">Out of stock<em>#f53c00 / #fff</em></div><div class="cr"><span class="r">3.8:1</span><span class="vd mid"><i></i>só grande</span></div><small>Só texto ≥ 24 px ou indicador.</small></div>
+        <div class="cp"><div class="s" style="background:#fff;color:rgba(10,10,10,.58)">SKU APD0126A2C<em>ink-3 / #fff</em></div><div class="cr"><span class="r">4.9:1</span><span class="vd"><i></i>AA</span></div><small>Mute mínimo. Não clareie mais.</small></div>
+        <div class="cp"><div class="s" style="background:#0a0a0a;color:rgba(247,246,242,.56)">SKU APD0126A2C<em>ink-3 Pro / #0a0a0a</em></div><div class="cr"><span class="r">6.0:1</span><span class="vd"><i></i>AA</span></div><small>Mute no Pro.</small></div>
+        <div class="cp"><div class="s" style="background:#0a0a0a;color:#ff5522">Fill in the field<em>#ff5522 / #0a0a0a</em></div><div class="cr"><span class="r">6.2:1</span><span class="vd"><i></i>AA</span></div><small>Erro e laranja texto no Pro.</small></div>
+        <div class="cp"><div class="s" style="background:#b42c00;color:#000">Add to bag<em>#000 / #b42c00</em></div><div class="cr"><span class="r">3.3:1</span><span class="vd bad"><i></i>reprova</span></div><small>O hover Store do F. AJUSTE: hover = #ff5522.</small></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================================================== 04 TIPO ===================================================== -->
+  <section class="sec alt" id="tipo" aria-labelledby="tipo-h">
+    <div class="wrap">
+      <div class="head">
+        <div><p class="n-tag meta"><span class="tally"></span>04 · Tipografia</p><h2 class="h2" id="tipo-h">Inter fala. <span class="dim">PT Mono anota.</span></h2></div>
+        <p>Inter 400–700 para títulos, texto, botões e preços; tracking negativo nos títulos. PT Mono 400 só para metadados: rótulos, SKU, specs, contagens, slates. Sem 900, sem itálico, sem Poppins.</p>
+      </div>
+      <div class="fams">
+        <div class="fam"><span class="meta">Inter · 400 500 600 700</span><div class="big">Aa</div><div class="weights"><span style="font-weight:400">Regular</span><span style="font-weight:500">Medium</span><span style="font-weight:600">Semibold</span><span style="font-weight:700">Bold</span></div><p>Títulos, texto, botões, preços. Números com <code>tabular-nums</code>.</p></div>
+        <div class="fam mono"><span class="meta">PT Mono · 400</span><div class="big">Aa</div><div class="weights" style="font-family:var(--mono);font-size:15px;letter-spacing:.14em;text-transform:uppercase">SKU · Model · 6 kg</div><p>Só metadado: o que um instrumento ou uma ficha técnica rotularia. Nunca título nem frase de venda.</p></div>
+      </div>
+      <div class="ts" lang="en">
+        <div class="tr"><div class="k"><b>display-xl</b><span>48–96 · 700 · .94 · −0.045em</span></div><div class="v t-dxl">Church livestream.</div></div>
+        <div class="tr"><div class="k"><b>display</b><span>42–80 · 700 · .94 · −0.045em</span></div><div class="v t-d">Video, light and sound. <span class="dim">Shipped from Miami.</span></div></div>
+        <div class="tr"><div class="k"><b>h2</b><span>30–50 · 700 · 1.02 · −0.035em</span></div><div class="v t-h2">Shop by department.</div></div>
+        <div class="tr"><div class="k"><b>h3</b><span>22–28 · 700 · 1.1 · −0.03em</span></div><div class="v t-h3">Made for this head.</div></div>
+        <div class="tr"><div class="k"><b>title</b><span>19 · 600 · 1.2 · −0.02em</span></div><div class="v t-ti">LS 600d Pro</div></div>
+        <div class="tr"><div class="k"><b>lede</b><span>17–21 · 400 · 1.55</span></div><div class="v t-le">For churches, studios, stations, schools and integrators. Pro shows solutions by kind of room, complete setups and quotes for a PO.</div></div>
+        <div class="tr"><div class="k"><b>body</b><span>16 (15 &lt;700) · 400 · 1.6</span></div><div class="v t-bo">The LS 600d Pro is Aputure’s 600-series high-output daylight LED with V-Mount power, for a strong key or fill on stage and on location.</div></div>
+        <div class="tr"><div class="k"><b>price-xl</b><span>52 (40 &lt;700) · 700 · −0.035em</span></div><div class="v t-pr num">$1,417.00</div></div>
+        <div class="tr"><div class="k"><b>meta</b><span>PT Mono 11 · CAIXA ALTA · .14em</span></div><div class="v meta">Ships from · Miami, Florida</div></div>
+        <div class="tr"><div class="k"><b>meta-s</b><span>PT Mono 12 · .02em</span></div><div class="v meta-s">SKU APD0126A2C · Model APALS600DPV · 6 kg</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================================================== 05 LAYOUT ===================================================== -->
+  <section class="sec" id="layout" aria-labelledby="layout-h">
+    <div class="wrap">
+      <div class="head">
+        <div><p class="n-tag meta"><span class="tally"></span>05 · Layout</p><h2 class="h2" id="layout-h">1440 de largura, 16 de margem. <span class="dim">Proporções, não colunas.</span></h2></div>
+        <p>Conteúdo até 90rem; margem lateral <code>clamp(1rem, 4vw, 3.5rem)</code>. Três faixas de layout no CSS do F. Teste sempre em 375, 382 (iPhone Duo aberto), 768, 1180 e 1440: sem rolagem horizontal, header em uma linha.</p>
+      </div>
+      <div class="ruler" aria-label="Breakpoints">
+        <div class="band b1">phone · &lt; 700</div>
+        <div class="band b2">tablet · 700–1099</div>
+        <div class="band b3">desktop · ≥ 1100</div>
+        <div class="mk lo" style="left:26%"><b>375</b>teste</div>
+        <div class="mk" style="left:26.5%"><b>382</b>Duo</div>
+        <div class="mk on lo" style="left:48.6%"><b>700</b>quebra</div>
+        <div class="mk" style="left:53.3%"><b>768</b>iPad</div>
+        <div class="mk on lo" style="left:76.4%"><b>1100</b>quebra</div>
+        <div class="mk" style="left:81.9%"><b>1180</b>iPad ↔</div>
+        <div class="mk on end"><b>1440</b>busca no header</div>
+      </div>
+      <div class="grid2" style="margin-top:48px">
+        <div>
+          <div class="sub" style="margin-top:0"><h3 class="h3">Espaço.</h3><span class="meta">--i9-space-*</span></div>
+          <ul class="space">
+            <li><code>4 · 8</code><i style="width:8px"></i><span>ícone, gap mínimo</span></li>
+            <li><code>12 · 16</code><i style="width:16px"></i><span>padding de célula</span></li>
+            <li><code>24</code><i style="width:24px"></i><span>padding de painel</span></li>
+            <li><code>32 · 40</code><i style="width:40px"></i><span>título → lista</span></li>
+            <li><code>44 · 48</code><i style="width:48px"></i><span>título → conteúdo</span></li>
+            <li><code>56 · 64</code><i style="width:64px"></i><span>gap de split 7 : 5</span></li>
+            <li class="sec-y"><code>72 · 80</code><i style="width:80px"></i><span>seção Store</span></li>
+            <li class="sec-y"><code>88 · 96</code><i style="width:96px"></i><span>seção padrão (64 tab · 56 cel)</span></li>
+          </ul>
+        </div>
+        <div>
+          <div class="sub" style="margin-top:0"><h3 class="h3">Proporções.</h3><span class="meta">splits do F</span></div>
+          <div class="ratio">
+            <div class="r75"><span>7 · título, galeria, form</span><span>5 · texto, compra, pedido</span></div>
+            <div class="r65"><span>6 · hero Pro</span><span>5 · monitor PGM</span></div>
+            <div class="r48"><span>4 · rótulo</span><span>8 · conteúdo</span></div>
+            <div class="hl" aria-label="Grade em hairline"><span>célula</span><span>célula</span><span>célula</span><span>célula</span></div>
+          </div>
+          <p class="note">Grade de produto: zero gap, células separadas por hairline (borda direita + inferior; contêiner com borda superior + esquerda). Uma superfície, não um monte de cards.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================================================== 06 COMPONENTES ===================================================== -->
+  <section class="sec alt" id="componentes" aria-labelledby="comp-h">
+    <div class="wrap">
+      <div class="head">
+        <div><p class="n-tag meta"><span class="tally"></span>06 · Componentes</p><h2 class="h2" id="comp-h">As peças da loja. <span class="dim">Com os estados.</span></h2></div>
+        <p>Cada peça tem uma classe de referência em <code>direction-h/*.css</code>. Foco: contorno laranja de 2 px. Alvo: 44 px (40 em barras densas). Desabilitado: opacidade .45.</p>
+      </div>
+
+      <div class="sub"><h3 class="h3">Header.</h3><span class="meta">.gnav · uma linha · sticky · 72 px</span></div>
+      <figure class="hdemo" style="margin:0" lang="en">
+        <div class="hd lt">
+          <span class="logo"><img src="../shared/i9-seal.webp" alt="" width="32" height="32"><span><b>i9Store</b><small>i9 / Equipment</small></span></span>
+          <span class="modesw"><span class="on"><i></i>Store</span><span><i></i>Pro</span></span>
+          <span class="tabs"><span class="open">Departments <svg class="ic" aria-hidden="true"><use href="#ic-caret-down"/></svg></span><span>Brands <svg class="ic" aria-hidden="true"><use href="#ic-caret-down"/></svg></span><span>Gifts &amp; Everyday <svg class="ic" aria-hidden="true"><use href="#ic-caret-down"/></svg></span><span>Help <svg class="ic" aria-hidden="true"><use href="#ic-caret-down"/></svg></span></span>
+          <span class="r"><span class="srch">Search cameras, mics, lights, brands</span><span class="ib"><svg class="ic" aria-hidden="true"><use href="#ic-globe"/></svg></span><span class="ib"><svg class="ic" aria-hidden="true"><use href="#ic-bag"/></svg><span class="ct on">2</span></span></span>
+        </div>
+        <figcaption class="meta-s"><span>Store · branco, fio de tinta cheia</span><span>aba aberta: aria-expanded + sublinhado laranja 2 px</span></figcaption>
+      </figure>
+      <figure class="hdemo" style="margin:0" lang="en">
+        <div class="hd dk">
+          <span class="logo"><img src="../shared/i9-seal.webp" alt="" width="32" height="32"><span><b>i9Store</b><small>i9 / Equipment</small></span></span>
+          <span class="modesw"><span><i></i>Store</span><span class="on"><i></i>Pro</span></span>
+          <span class="tabs"><span>Solutions <svg class="ic" aria-hidden="true"><use href="#ic-caret-down"/></svg></span><span>Categories <svg class="ic" aria-hidden="true"><use href="#ic-caret-down"/></svg></span><span>Brands <svg class="ic" aria-hidden="true"><use href="#ic-caret-down"/></svg></span><span>Setups <svg class="ic" aria-hidden="true"><use href="#ic-caret-down"/></svg></span><span>Plan your room <svg class="ic" aria-hidden="true"><use href="#ic-caret-down"/></svg></span></span>
+          <span class="r"><span class="srch">Model, SKU or part number</span><span class="ib"><svg class="ic" aria-hidden="true"><use href="#ic-clipboard-text"/></svg><span class="ct">0</span></span><span class="ib"><svg class="ic" aria-hidden="true"><use href="#ic-bag"/></svg><span class="ct">0</span></span></span>
+        </div>
+        <figcaption class="meta-s"><span>Pro · preto 94 % + blur, o segmento Pro acende o tally</span><span>busca em PT Mono · “My plan” só no Pro</span></figcaption>
+      </figure>
+
+      <div class="sub"><h3 class="h3">Botões.</h3><span class="meta">.btn · canto 0 · um laranja por vista</span></div>
+      <div class="states" lang="en">
+        <div class="state"><span class="meta">Primário</span><button class="btn sig" type="button">Add to bag</button></div>
+        <div class="state"><span class="meta">Hover</span><button class="btn sig is-hover" type="button" tabindex="-1">Add to bag</button></div>
+        <div class="state"><span class="meta">Foco</span><button class="btn sig is-focus" type="button" tabindex="-1">Add to bag</button></div>
+        <div class="state"><span class="meta">Feito</span><button class="btn done" type="button" tabindex="-1">Added</button></div>
+        <div class="state"><span class="meta">Desabilitado</span><button class="btn sig" type="button" disabled>Pay</button></div>
+        <div class="state"><span class="meta">Secundário</span><button class="btn" type="button">Quote for volume</button></div>
+      </div>
+      <div class="brow" lang="en">
+        <button class="btn solid sm" type="button">Shop the setup</button>
+        <button class="btn sm" type="button"><svg class="ic" aria-hidden="true"><use href="#ic-whatsapp-logo"/></svg>Ask on WhatsApp</button>
+        <a class="textlink" href="#componentes">All departments <svg class="ic" aria-hidden="true"><use href="#ic-arrow-right"/></svg></a>
+        <button class="add" type="button" aria-label="Add LiveTrak L-12 to bag"><svg class="ic" aria-hidden="true"><use href="#ic-plus"/></svg></button>
+        <button class="add done" type="button" aria-label="LiveTrak L-12 is in your bag" tabindex="-1"><svg class="ic" aria-hidden="true"><use href="#ic-check"/></svg></button>
+        <span class="meta-s dim">texto sempre preto no laranja · hover #ff5522</span>
+      </div>
+
+      <div class="sub"><h3 class="h3">Chips, segmentos e amostras.</h3><span class="meta">quadrados · borda 1 px · selecionado = invertido</span></div>
+      <div class="cgrid" lang="en">
+        <div class="cbox"><span class="meta">Chip de busca · link</span><div class="try"><a href="#componentes">Camp Snap</a><a href="#componentes">SM7B</a><a href="#componentes">ATEM Mini</a><a href="#componentes">Tripods</a></div><p>36 px, fundo branco, borda --line. Nunca pílula.</p></div>
+        <div class="cbox"><span class="meta">Segmento · aria-pressed</span><div class="seg" data-seg><button type="button" aria-pressed="true">Meters</button><button type="button" aria-pressed="false">Feet</button></div><p>Selecionado: tinta cheia + barra laranja interna de 3 px.</p></div>
+        <div class="cbox"><span class="meta">Amostra de cor · um link por cor</span><div class="chips"><a class="chip" href="#componentes" aria-current="page" aria-label="Color: Mango" style="--c:#e1a33b"><span></span></a><a class="chip" href="#componentes" aria-label="Color: Blue Rush" style="--c:#3e6fb0"><span></span></a><a class="chip" href="#componentes" aria-label="Color: Forest Green" style="--c:#2f5d3a"><span></span></a><a class="chip" href="#componentes" aria-label="Color: Black" style="--c:#1b1b1b"><span></span></a></div><p>Cada cor tem a sua página (como a B&amp;H). Atual: aria-current, borda de tinta, barra laranja. Cores ilustrativas.</p></div>
+      </div>
+      <fieldset class="occ" style="margin-top:10px" lang="en"><legend class="sr">What is it for?</legend>
+        <label><input type="radio" name="occ" checked><span class="n">01<i></i></span><b>Church</b></label>
+        <label><input type="radio" name="occ"><span class="n">02<i></i></span><b>Podcast</b></label>
+        <label><input type="radio" name="occ"><span class="n">03<i></i></span><b>Live events</b></label>
+      </fieldset>
+
+      <div class="sub"><h3 class="h3">Card de produto.</h3><span class="meta">.pc · palco branco · grade em hairline</span></div>
+      <div class="shelf stage" lang="en">
+        <article class="pc"><span class="pk"><img src="https://storage.centrali9tv.com.br/prod/2022/05/images/original/33315_a1.jpg" alt="Zoom LiveTrak L-12 digital mixer" width="400" height="300"></span><p class="br">Zoom</p><h3><a href="#componentes">LiveTrak L-12</a></h3><p class="b">12-channel digital mixer and multitrack recorder</p><div class="row"><span class="price">$649.99</span><button class="add" type="button" aria-label="Add LiveTrak L-12 to bag"><svg class="ic" aria-hidden="true"><use href="#ic-plus"/></svg></button></div></article>
+        <article class="pc"><span class="pk"><img src="https://storage.centrali9tv.com.br/prod/2024/10/images/original/68079_1652873755_1639.jpg" alt="Sennheiser EW-D 835-S SET wireless handheld microphone" width="400" height="300"></span><p class="br">Sennheiser</p><h3><a href="#componentes">EW-D 835-S SET</a></h3><p class="b">Digital wireless handheld, MMD 835 capsule</p><div class="row"><span class="price">$749.00</span><button class="add" type="button" aria-label="Add EW-D 835-S SET to bag"><svg class="ic" aria-hidden="true"><use href="#ic-plus"/></svg></button></div></article>
+        <article class="pc"><span class="pk"><img src="https://storage.centrali9tv.com.br/prod/2023/08/images/original/53796_8077.png" alt="Panasonic AW-UE20KP 4K PTZ camera" width="400" height="300"></span><p class="br">Panasonic</p><h3><a href="#componentes">AW-UE20KP</a></h3><p class="b">4K PTZ camera, 12x zoom, black</p><div class="row"><span class="price">$1,695.00</span><button class="add" type="button" aria-label="Add AW-UE20KP to bag"><svg class="ic" aria-hidden="true"><use href="#ic-plus"/></svg></button></div></article>
+        <article class="pc"><span class="pk"><img src="https://storage.centrali9tv.com.br/prod/2020/09/images/original/13118_22857.jpg" alt="Sony MDR-7506 studio headphones" width="400" height="300"></span><p class="br">Sony</p><h3><a href="#componentes">MDR-7506</a></h3><p class="b">Studio headphones</p><div class="row"><span class="price">$113.00</span><button class="add" type="button" aria-label="Add MDR-7506 to bag"><svg class="ic" aria-hidden="true"><use href="#ic-plus"/></svg></button></div></article>
+      </div>
+      <p class="cap meta-s">Nomes, fotos e preços de <code>shared/catalog.js</code> (lidos em i9store.com/usa em 23 nov 2026). Sem estrela, “best seller”, desconto ou contagem de estoque.</p>
+
+      <div class="sub"><h3 class="h3">Bloco de preço e disponibilidade.</h3><span class="meta">.buy .pr (ênfase Store) · .av · sempre com data</span></div>
+      <div class="pgrid" lang="en">
+        <div class="buy">
+          <p class="brl meta">Aputure · Lighting · LED lights</p>
+          <h3>LS 600d Pro</h3>
+          <p class="subt">Daylight LED, V-Mount. A 600-series key for a stage or a location.</p>
+          <div class="pr"><span class="price">$1,417.00</span><small class="meta-s">Price in USD. Sales tax and shipping are calculated at checkout.</small></div>
+          <details class="brr" lang="pt-BR" data-nosnippet><summary><span class="meta">BR</span><b>R$ —</b>Comprando do Brasil? Ver preço em R$</summary><p>Estimativa em R$ com frete estimado e sales tax, convertida pela Parcelow. Pode mudar com o dólar. Sem câmbio, nunca um número inventado.</p></details>
+          <p class="inst"><b>Installment available.</b> Plans through our support team. <a href="#componentes">Ask on WhatsApp</a></p>
+          <div class="acts"><div class="qty"><button type="button" aria-label="One less"><svg class="ic" aria-hidden="true"><use href="#ic-minus"/></svg></button><input aria-label="Quantity" value="1" inputmode="numeric"><button type="button" aria-label="One more"><svg class="ic" aria-hidden="true"><use href="#ic-plus"/></svg></button></div><button class="btn sig" type="button">Add to bag</button></div>
+          <div class="logrows">
+            <div><span class="meta">Delivery</span><span>Ships from Miami, Florida. Free pickup at the showroom.</span></div>
+            <div><span class="meta">Availability</span><span>Listed in stock. Our team confirms before you pay.</span></div>
+            <div><span class="meta">Datasheet</span><span>None attached to this listing. A specialist can send the maker’s sheet.</span></div>
+          </div>
+        </div>
+        <div class="side">
+          <div class="avbox stage">
+            <span class="meta">Disponibilidade · .av</span>
+            <ul class="avl">
+              <li><span class="av in"><i></i>In stock · 26 Nov 2026</span><span>InStock</span></li>
+              <li><span class="av bo"><i></i>Backorder · 26 Nov 2026</span><span>Ships in about X business days</span></li>
+              <li><span class="av out"><i></i>Out of stock · 25 Nov 2026</span><span>OutOfStock</span></li>
+              <li><span class="av"><i></i>Availability on the listing</span><span>sem dado</span></li>
+              <li><span class="av"><i></i>Built to order</span><span>LED, cotado pela i9</span></li>
+            </ul>
+          </div>
+          <div class="totals" aria-label="Exemplo de painel do total">
+            <p class="sl meta"><span><span class="tally"></span>Order total</span><span>USD</span></p>
+            <div class="sums">
+              <div><span>Subtotal (before tax and shipping)</span><span class="num">$1,417.00</span></div>
+              <div><span>Shipping</span><span>Enter ZIP to see options</span></div>
+              <div><span>Sales tax</span><span>Enter ZIP to calculate</span></div>
+              <div class="g"><span>Total</span><span>$1,417.00 +</span></div>
+              <small>Plus shipping and sales tax. Tax-exempt organizations: exempt, pending certificate review.</small>
+            </div>
+          </div>
+          <div class="rcpt" aria-label="Exemplo de recibo">
+            <p class="meta"><span class="tally"></span>Recibo · .rcpt</p>
+            <div><span>LS 600d Pro × 1</span><b>$1,417.00</b></div>
+            <div><span>Shipping</span><b>Calculated live</b></div>
+            <div class="ex"><span>Sales tax</span><b>Exempt · pending review</b></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="sub"><h3 class="h3">Formulários.</h3><span class="meta">.f · rótulo acima · 16 px · erro = borda + barra 3 px + mensagem</span></div>
+      <div class="fgrid" lang="en">
+        <div class="f"><label for="f1">E-mail</label><input id="f1" type="email" autocomplete="email" placeholder="you@church.org"><span class="h">Your receipt and order link go here.</span></div>
+        <div class="f"><label for="f2">ZIP code</label><input id="f2" class="is-focus" inputmode="numeric" autocomplete="postal-code" value="33179"><span class="h">Sales tax and shipping are calculated from it.</span></div>
+        <div class="f"><label for="f3">Full name</label><input id="f3" autocomplete="name" aria-invalid="true" aria-describedby="f3e"><span class="err" id="f3e">Enter the name for the receipt.</span></div>
+      </div>
+      <div class="lead" lang="en">
+        <div>
+          <h3 class="h3">Formulário de lead. <span class="dim">Um componente, toda página.</span></h3>
+          <ol class="steps"><li>Tell us the room and what you have.</li><li>A specialist checks the list and the lead time.</li><li>You get a quote by e-mail, ready for a PO.</li></ol>
+          <p class="note">Peça e-mail só no passo que gera trabalho para a i9 (a cotação). Nada que responde à busca fica atrás de login.</p>
+        </div>
+        <form class="lbox" onsubmit="return false" novalidate>
+          <p class="to meta"><span class="tally"></span>Goes to the i9 team · quotes</p>
+          <div class="two">
+            <div class="f"><label for="l1">Your name</label><input id="l1" autocomplete="name"></div>
+            <div class="f"><label for="l2">E-mail</label><input id="l2" type="email" autocomplete="email" aria-invalid="true"></div>
+            <div class="f"><label for="l3">Organization <span>(optional)</span></label><input id="l3" autocomplete="organization"></div>
+            <div class="f"><label for="l4">ZIP or country</label><input id="l4" autocomplete="postal-code"></div>
+          </div>
+          <p class="alert meta-s" role="alert">Fill in the marked fields to send this to the i9 team.</p>
+          <button class="btn sig" type="submit">Send to the i9 team</button>
+          <p class="fine meta-s">Exemplo estático: este formulário não envia nada.</p>
+        </form>
+      </div>
+
+      <div class="sub"><h3 class="h3">Tabela, FAQ, breadcrumbs e funil.</h3><span class="meta">.tbl · .faq · .crumbs · .fstrip</span></div>
+      <nav class="crumbs" aria-label="Breadcrumb" lang="en"><a href="#componentes">Home</a><span aria-hidden="true">/</span><a href="#componentes">Lighting</a><span aria-hidden="true">/</span><a href="#componentes">LED lights</a><span aria-hidden="true">/</span><span aria-current="page">LS 600d Pro</span></nav>
+      <ol class="fstrip" aria-label="Choosing a camera, step 2 of 4" lang="en">
+        <li><span class="meta">Step 1 · Learn</span><a href="#componentes">Best cameras under $3,000</a></li>
+        <li aria-current="step"><span class="meta">Step 2 · Research</span><span class="t">Canon EOS R6 V, explained</span></li>
+        <li><span class="meta">Step 3 · Compare</span><a href="#componentes">Canon EOS R6 V vs Nikon ZR</a></li>
+        <li><span class="meta">Step 4 · Buy and kit out</span><a href="#componentes">The R6 V and what it needs</a></li>
+      </ol>
+      <div class="ovl" style="margin-top:28px" lang="en">
+        <div class="tbl-w">
+          <table class="tbl">
+            <caption>From the LS 600d Pro listing · AJUSTE: medidas com unidade</caption>
+            <thead><tr><th scope="col">Spec</th><th scope="col">LS 600d Pro</th><th scope="col">Note</th></tr></thead>
+            <tbody>
+              <tr><th scope="row">Color temperature</th><td data-k="LS 600d Pro">Daylight, fixed</td><td data-k="Note">600x Pro is bi-color</td></tr>
+              <tr class="diff"><th scope="row">Power</th><td class="hl" data-k="LS 600d Pro">V-Mount · AC</td><td data-k="Note">Neutrik AC cable included</td></tr>
+              <tr><th scope="row">Dimensions</th><td data-k="LS 600d Pro">61 × 41 × 38</td><td data-k="Note">unit not on the listing: print it</td></tr>
+              <tr><th scope="row">DMX / network</th><td data-k="LS 600d Pro">Not stated on the listing</td><td data-k="Note">Ask a specialist</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="faq">
+          <details open><summary>What does Backorder mean?</summary><div class="a">The item isn’t in Miami right now and is ordered from the supplier, so it ships on its own lead time. The product page says “Ships in about … business days”, and our team confirms the date before you pay.</div></details>
+          <details><summary>Can a church buy without sales tax?</summary><div class="a">Yes. Religious institutions and resellers with an approved exemption certificate do not pay sales tax. Attach the certificate at checkout or send it with a quote.</div></details>
+          <details><summary>Who installs it?</summary><div class="a">i9TV, i9’s integration company, installs, configures and trains your team. A support plan is quoted with the project.</div></details>
+        </div>
+      </div>
+
+      <div class="sub"><h3 class="h3">Cadeia de sinal.</h3><span class="meta">.path / .node · palco branco · slate · o nó ao vivo acende</span></div>
+      <div class="chainbox stage" lang="en">
+        <div class="slate-tab" aria-hidden="true"><i></i><span>Cam 1</span><b>Church · start here</b></div>
+        <div class="chain">
+          <div class="node"><span class="pk"><img src="https://storage.centrali9tv.com.br/prod/2026/01/images/original/95831_aputurels600xpr.jpeg" alt="" width="300" height="220"></span><i class="sq"></i><span class="job meta">Light the platform</span><b>Aputure LS 600d Pro</b><span class="price">$1,417.00</span></div>
+          <div class="node"><span class="pk"><img src="https://storage.centrali9tv.com.br/prod/2023/08/images/original/53796_8077.png" alt="" width="300" height="220"></span><i class="sq"></i><span class="job meta">Capture</span><b>Panasonic AW-UE20KP</b><span class="price">$1,695.00</span></div>
+          <div class="node"><span class="pk"><img src="https://storage.centrali9tv.com.br/prod/2024/10/images/original/68079_1652873755_1639.jpg" alt="" width="300" height="220"></span><i class="sq"></i><span class="job meta">Mic the pulpit</span><b>Sennheiser EW-D 835-S SET</b><span class="price">$749.00</span></div>
+          <div class="node"><span class="pk"><img src="https://storage.centrali9tv.com.br/prod/2022/05/images/original/33315_a1.jpg" alt="" width="300" height="220"></span><i class="sq"></i><span class="job meta">Mix</span><b>Zoom LiveTrak L-12</b><span class="price">$649.99</span></div>
+          <div class="node live"><span class="pk"><img src="https://storage.centrali9tv.com.br/prod/2025/02/images/original/76641_1712932237_1823.jpg" alt="" width="300" height="220"></span><i class="sq"></i><span class="job meta">Switch and stream</span><b>Blackmagic ATEM Micro Live Stream</b><span class="price">$785.00</span></div>
+        </div>
+        <div class="ctot"><span class="meta">Subtotal (before tax and shipping) · listed prices</span><b>$5,295.99</b></div>
+      </div>
+      <p class="cap meta-s">A cadeia é um ponto de partida montado com anúncios reais, não um pacote confirmado pela equipe de vendas.</p>
+
+      <div class="sub"><h3 class="h3">Toast, modal e rodapé.</h3><span class="meta">.bx-toast · &lt;dialog&gt; · .foot-g</span></div>
+      <div class="ovl" lang="en">
+        <div class="toastdemo"><div class="toast"><span class="tally"></span><b>Added to bag</b><span class="meta-s">$649.99</span><a href="#componentes">Bag <svg class="ic" aria-hidden="true"><use href="#ic-arrow-right"/></svg></a></div></div>
+        <div class="dlg" role="group" aria-label="Exemplo de modal (estático)">
+          <div class="top"><b>Your plan, as text</b><button type="button" aria-label="Close"><svg class="ic" aria-hidden="true"><use href="#ic-x"/></svg></button></div>
+          <pre>1× Aputure LS 600d Pro ........ $1,417.00
+1× Panasonic AW-UE20KP ........ $1,695.00
+Subtotal (before tax and shipping)</pre>
+          <div class="acts2"><button class="btn sig sm" type="button">Copy the list</button><button class="btn sm" type="button">Close</button></div>
+        </div>
+      </div>
+      <p class="cap meta-s">Toast: aria-hidden; a mesma frase vai para uma região aria-live="polite". Some em 3,2 s. Modal: &lt;dialog&gt; nativo com showModal(), canto 0, sem sombra, backdrop rgba(0,0,0,.72).</p>
+      <figure class="fdemo" lang="en">
+        <div class="foot">
+          <div class="top">
+            <div><p class="line">We supply the equipment.<br>i9 Studios and i9TV do the rest.</p><p>I9Store USA LLC · 20815 NE 16th Ave, STE B33, Miami, FL 33179<br>+1 (305) 333-4374</p></div>
+            <div><h4 class="meta">Shop</h4><ul><li><a href="#componentes">Cameras</a></li><li><a href="#componentes">Lighting</a></li><li><a href="#componentes">Audio</a></li></ul></div>
+            <div><h4 class="meta">Help</h4><ul><li><a href="#componentes">WhatsApp</a></li><li><a href="#componentes">Shipping &amp; pickup</a></li><li><a href="#componentes">Returns &amp; refunds</a></li></ul></div>
+            <div><h4 class="meta">i9</h4><ul><li><a href="#componentes">i9Store Pro</a></li><li><a href="#componentes">i9 Studios</a></li><li><a href="#componentes">i9TV</a></li><li><a href="#componentes" lang="pt-BR">Loja Brasil</a></li></ul></div>
+          </div>
+          <div class="bot meta-s"><span>i9Store is the equipment division of i9.</span><span>Prices are the listed USD prices.</span></div>
+        </div>
+        <figcaption class="meta-s"><span>Rodapé · warm white no Store, preto no Pro</span><span>NAP igual ao Business Profile</span></figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- ===================================================== 07 IMAGEM ===================================================== -->
+  <section class="sec" id="imagem" aria-labelledby="img-h">
+    <div class="wrap">
+      <div class="head">
+        <div><p class="n-tag meta"><span class="tally"></span>07 · Imagem, ícones, movimento</p><h2 class="h2" id="img-h">O produto no branco. <span class="dim">O projeto com legenda honesta.</span></h2></div>
+        <p>Packshot sempre em fundo branco puro, inteira, sem corte nem sombra artificial. Foto de projeto só da i9, com o que é, onde e qual foi o papel da i9. Nada de banco de imagens.</p>
+      </div>
+      <div class="img2">
+        <figure class="ifig"><div class="pkv white"><img src="https://storage.centrali9tv.com.br/prod/2020/09/images/original/19027_30123.jpg" alt="Blackmagic Video Assist 7-inch 12G HDR monitor on white" width="500" height="320"></div><figcaption><span class="mark ok" aria-hidden="true">✓</span><span><b>Palco branco #FFFFFF.</b> Inteira, de frente, contain, com respiro.</span></figcaption></figure>
+        <figure class="ifig"><div class="pkv beige"><img src="https://storage.centrali9tv.com.br/prod/2020/09/images/original/19027_30123.jpg" alt="" width="500" height="320"></div><figcaption><span class="mark no" aria-hidden="true">×</span><span><b>Fundo bege, caixa com sombra.</b> 9 de 25 fotos do Camp Snap tinham fundo bege ou cinza.</span></figcaption></figure>
+      </div>
+      <div class="img2" style="margin-top:10px">
+        <figure class="photo"><img src="../shared/sol-broadcast-record-manaus-control.webp" alt="Record Manaus control room with the monitor wall and operators at the desk" loading="lazy" width="800" height="500"><span class="osd">Broadcast · i9TV</span><figcaption><span class="meta">Legenda honesta</span>Record Manaus control room · i9TV engineering. Foto da própria i9 (site da i9tv); a legenda diz o que é, onde e qual foi o papel da i9.</figcaption></figure>
+        <figure class="photo"><img src="../shared/sol-production-canta-comigo-rack.webp" alt="Equipment rack inside the i9 Studios 4K OB truck during Canta Comigo" loading="lazy" width="800" height="500"><span class="osd">Production · i9 Studios</span><figcaption><span class="meta">Crédito bate com o papel</span>Canta Comigo · i9 Studios 4K OB truck. Tratamento: saturate(.92) contrast(1.04), véu preto só embaixo da legenda, OSD em PT Mono.</figcaption></figure>
+      </div>
+      <div class="sub"><h3 class="h3">Ícones.</h3><span class="meta">Phosphor regular · mesmo sprite da i9tv · 20 px · aria-hidden</span></div>
+      <div class="icons">
+        <div><svg class="ic" aria-hidden="true"><use href="#ic-magnifying-glass"/></svg><span>magnifying-glass</span></div>
+        <div><svg class="ic" aria-hidden="true"><use href="#ic-bag"/></svg><span>bag</span></div>
+        <div><svg class="ic" aria-hidden="true"><use href="#ic-whatsapp-logo"/></svg><span>whatsapp-logo</span></div>
+        <div><svg class="ic" aria-hidden="true"><use href="#ic-truck"/></svg><span>truck</span></div>
+        <div><svg class="ic" aria-hidden="true"><use href="#ic-shield-check"/></svg><span>shield-check</span></div>
+        <div><svg class="ic" aria-hidden="true"><use href="#ic-globe"/></svg><span>globe</span></div>
+        <div><svg class="ic" aria-hidden="true"><use href="#ic-clipboard-text"/></svg><span>clipboard-text</span></div>
+        <div><svg class="ic" aria-hidden="true"><use href="#ic-video-camera"/></svg><span>video-camera</span></div>
+        <div><svg class="ic" aria-hidden="true"><use href="#ic-map-pin"/></svg><span>map-pin</span></div>
+        <div><svg class="ic" aria-hidden="true"><use href="#ic-arrow-right"/></svg><span>arrow-right</span></div>
+      </div>
+      <p class="note">Movimento: cubic-bezier(.16,1,.3,1). 200 ms para cor e borda, 300 ms para a seta (translateX 3 px) e a barra fixa, 600 ms para a foto respirar (scale 1.035, dentro de overflow:hidden). Com prefers-reduced-motion, tudo para.</p>
+    </div>
+  </section>
+
+  <!-- ===================================================== 08 NÃO FAZER ===================================================== -->
+  <section class="sec alt" id="nao" aria-labelledby="nao-h">
+    <div class="wrap">
+      <div class="head">
+        <div><p class="n-tag meta"><span class="tally"></span>08 · Não é o nosso estilo</p><h2 class="h2" id="nao-h">Nada de “AI slop”. <span class="dim">A régua é i9tv.com.br e heywill.co.</span></h2></div>
+        <p>Os padrões genéricos que o dono rejeita, ao lado do que o F faz no lugar. Lista completa no §11 do guia.</p>
+      </div>
+      <div class="dd">
+        <div class="ddc"><div><p class="meta"><span class="mark no" aria-hidden="true">×</span>Não</p><div class="vis"><span class="slop-pill">Cameras</span><span class="slop-pill">Audio</span><span class="slop-pill">Deals ✨</span></div><p>Pílulas em fundo bege, por toda parte.</p></div><div><p class="meta"><span class="mark ok" aria-hidden="true">✓</span>Faça</p><div class="vis"><span class="ok-chip">Cameras</span><span class="ok-chip">Audio</span><span class="ok-chip">Tripods</span></div><p>Chip quadrado, borda de 1 px, só onde há escolha.</p></div></div>
+        <div class="ddc"><div><p class="meta"><span class="mark no" aria-hidden="true">×</span>Não</p><div class="vis"><span class="slop-btn">Buy now!</span></div><p>Gradiente, canto redondo, branco no laranja, glow.</p></div><div><p class="meta"><span class="mark ok" aria-hidden="true">✓</span>Faça</p><div class="vis"><button class="btn sig sm" type="button" tabindex="-1">Add to bag</button></div><p>Laranja chapado, texto preto, canto 0, verbo + objeto.</p></div></div>
+        <div class="ddc"><div><p class="meta"><span class="mark no" aria-hidden="true">×</span>Não</p><div class="vis"><span class="slop-card"><b>Innovative solutions</b>Quality and excellence for your business.</span></div><p>Card arredondado, hairline, sombra, copy genérica.</p></div><div><p class="meta"><span class="mark ok" aria-hidden="true">✓</span>Faça</p><div class="vis"><span class="ok-cell"><span><b>Ships from</b>Miami, Florida</span><span><b>A person</b>WhatsApp a specialist</span></span></div><p>Grade em hairline com um fato por célula.</p></div></div>
+        <div class="ddc"><div><p class="meta"><span class="mark no" aria-hidden="true">×</span>Não</p><div class="vis" style="background:#0a0a0a"><span class="slop-hero">The future of video ⚡</span></div><p>Caixa escura no hero com brilho laranja.</p></div><div><p class="meta"><span class="mark ok" aria-hidden="true">✓</span>Faça</p><div class="vis"><span class="ok-hero"><b>Video, light and sound. <span>Shipped from Miami.</span></b><i></i></span></div><p>Hero claro com a busca primeiro (Store) ou o monitor PGM com foto real (Pro).</p></div></div>
+        <div class="ddc"><div><p class="meta"><span class="mark no" aria-hidden="true">×</span>Não</p><div class="vis"><span class="slop-chat">💬 Chat with us</span></div><p>Pílula de chat flutuando sobre o conteúdo.</p></div><div><p class="meta"><span class="mark ok" aria-hidden="true">✓</span>Faça</p><div class="vis"><span class="ok-talk"><svg class="ic" aria-hidden="true"><use href="#ic-whatsapp-logo"/></svg>Talk to a specialist</span></div><p>O caminho humano no header, no Help, na gaveta e em toda PDP.</p></div></div>
+        <div class="ddc"><div><p class="meta"><span class="mark no" aria-hidden="true">×</span>Não</p><div class="vis"><span style="font-size:13px;color:#7a7a7a">★★★★★ Best seller · only 2 left · −20%</span></div><p>Selos e números sem dado real.</p></div><div><p class="meta"><span class="mark ok" aria-hidden="true">✓</span>Faça</p><div class="vis"><span class="av in" style="color:var(--ink)"><i></i>In stock · 26 Nov 2026</span></div><p>O dado da loja, com a data da leitura, ou nada.</p></div></div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="pfoot"><div class="wrap">
+  <div class="top">
+    <div><p class="line">Construa com a mesma linguagem.<br><span class="dim">Na dúvida, abra o F.</span></p><p>Design F ao vivo: <a href="../f/index.html">Store</a> · <a href="../f/pro.html">Pro</a> · <a href="../f/product.html">PDP</a> · <a href="../f/checkout.html">checkout</a></p></div>
+    <div><ul class="meta-s">
+      <li><code>brand-guide/I9-DESIGN-GUIDE.md</code> · o guia completo</li>
+      <li><code>brand-guide/tokens.css</code> · variáveis dos dois modos</li>
+      <li><code>brand-guide/tokens.json</code> · W3C design tokens</li>
+      <li><code>brand-guide/tailwind-theme.css</code> · Tailwind v4 (@theme)</li>
+    </ul></div>
+  </div>
+  <div class="bot meta-s"><span>i9Store é a divisão de equipamentos da i9. Página interna, fora do índice.</span><span>Guia de marca · v1 · 26 nov 2026</span></div>
+</div></footer>
+
+<script>
+(function(){
+  var root=document.documentElement, live=document.getElementById('live');
+  var sw=[].slice.call(document.querySelectorAll('.modesw a[data-to]'));
+  function apply(m){
+    root.setAttribute('data-mode',m);
+    sw.forEach(function(a){a.setAttribute('aria-current',a.getAttribute('data-to')===m?'true':'false');});
+  }
+  apply(root.getAttribute('data-mode')==='pro'?'pro':'store');
+  sw.forEach(function(a){a.addEventListener('click',function(e){
+    e.preventDefault(); var m=a.getAttribute('data-to'); apply(m);
+    try{localStorage.setItem('i9-brand-mode',m);}catch(err){}
+    if(live) live.textContent=m==='pro'?'Modo Pro: chão escuro.':'Modo Store: chão claro.';
+  });});
+  /* segmentos de exemplo: aria-pressed */
+  [].slice.call(document.querySelectorAll('[data-seg]')).forEach(function(g){
+    g.addEventListener('click',function(e){var b=e.target.closest('button'); if(!b) return;
+      [].slice.call(g.querySelectorAll('button')).forEach(function(x){x.setAttribute('aria-pressed',x===b?'true':'false');});});
+  });
+  /* botão + de exemplo: alterna o estado "feito" e avisa a região viva */
+  [].slice.call(document.querySelectorAll('.pc .add')).forEach(function(b){
+    b.addEventListener('click',function(){var on=b.classList.toggle('done');
+      b.innerHTML='<svg class="ic" aria-hidden="true"><use href="#ic-'+(on?'check':'plus')+'"/></svg>';
+      if(live) live.textContent=on?'Added to bag (exemplo)':'Removed (exemplo)';});
+  });
+  /* índice: marca a seção atual no header */
+  var links=[].slice.call(document.querySelectorAll('.gnav nav a'));
+  if('IntersectionObserver' in window){
+    var io=new IntersectionObserver(function(es){es.forEach(function(en){ if(en.isIntersecting){
+      links.forEach(function(l){l.setAttribute('aria-current', l.getAttribute('href')==='#'+en.target.id?'true':'false');}); }});},{rootMargin:'-45% 0px -50% 0px'});
+    ['top','marca','voz','cor','tipo','layout','componentes','imagem','nao'].forEach(function(id){var s=document.getElementById(id); if(s) io.observe(s);});
+  }
+})();
+</script>
+</body>
+</html>
