@@ -138,12 +138,13 @@
     const S = PL.state, L = PL.lightCalc();
     const cams = S.cams.map((c, i) => { const v = PL.view(c), ln = c.k === 'lens' ? (P[c.lens] ? P[c.lens].name : c.lens) + (c.crop ? ' · S35' : '') : PL.zoomX(c).toFixed(1) + '×';
       return `<tr><td>${esc(PL.camLab(i))}</td><td>${esc(PL.modelName(c))}</td><td>${n1(c.x)} × ${n1(c.y)} m</td><td>${esc(PL.t('m_' + c.mnt))}</td><td>${Math.round(c.a)}°</td><td>${esc(ln)}</td><td>${n1(v.h)}°</td><td>${esc(PL.runCable(c))} · ${esc(PL.lenTxt(PL.runOf(c)))}</td></tr>`; }).join('');
-    const lights = L ? L.fx.map(f => `<tr><td>${esc(f.r)}</td><td>${esc(P[f.id] ? P[f.id].name : f.id)}</td><td>${esc(f.role)}</td><td>${n1(f.x)} × ${n1(f.y)} m · ${n1(f.h)} m high</td></tr>`).join('') : '';
+    /* the dimmer the plan sets for each fixture (auto-dim to the look), or "set on site" without published data */
+    const lights = L ? L.fx.map(f => `<tr><td>${esc(f.r)}</td><td>${esc(P[f.id] ? P[f.id].name : f.id)}</td><td>${esc(f.role)}</td><td>${n1(f.x)} × ${n1(f.y)} m · ${n1(f.h)} m high</td><td>${f.dim == null ? 'set on site' : Math.round(f.dim * 100) + ' %'}</td></tr>`).join('') : '';
     return `<div class="pz-det">
       <h3 class="meta"><span class="tally"></span>Camera positions and cable plan</h3>
       <div class="pz-sc"><table><thead><tr><th>Cam</th><th>Model</th><th>Position (x × y)</th><th>Mount</th><th>Pan</th><th>Lens / zoom</th><th>Angle</th><th>Cable to control</th></tr></thead><tbody>${cams}</tbody></table></div>
       <h3 class="meta"><span class="tally"></span>Signal chain</h3>${WZ() && WZ().chain ? WZ().chain() : ''}
-      ${lights ? `<h3 class="meta"><span class="tally"></span>Light plan</h3><div class="pz-sc"><table><thead><tr><th></th><th>Fixture</th><th>Role</th><th>Position</th></tr></thead><tbody>${lights}</tbody></table></div>` : ''}
+      ${lights ? `<h3 class="meta"><span class="tally"></span>Light plan</h3><div class="pz-sc"><table><thead><tr><th></th><th>Fixture</th><th>Role</th><th>Position</th><th>Dimmer · ${esc(L ? ({ soft:'Soft', std:'Standard', tv:'Bright (TV)' })[L.look] : '')} look</th></tr></thead><tbody>${lights}</tbody></table></div>` : ''}
     </div>`;
   }
   function render() {
@@ -179,7 +180,7 @@
         <p>${esc(roomName())} · ${S.cams.length} cameras · ${esc(new Date().toISOString().slice(0, 10))}</p>
         ${ACC ? `<p>${esc(ACC.name)} · ${esc(ACC.emailMasked)}</p>` : ''}<p class="pzp-tot">${usd(tt.total)} <span>priced lines, before sales tax and shipping · ${tt.quote.length} lines to quote</span></p></div>
       <div class="pzp-pg"><h2>The plan</h2><div class="pzp-plan">${plan}</div>${snap ? `<h2>3D view</h2><img class="pzp-3d" src="${snap}" alt="3D view of the plan">` : ''}</div>
-      <div class="pzp-pg"><h2>Signal chain</h2>${w && w.chain ? w.chain() : ''}${PL.lightCalc() ? `<h2>Light plan</h2>${w && w.readouts ? w.readouts() : ''}` : ''}</div>
+      <div class="pzp-pg"><h2>Signal chain</h2>${w && w.chain ? w.chain() : ''}${PL.lightCalc() ? `<h2>Light plan</h2>${w && w.readouts ? w.readouts(true) : ''}` : ''}</div>
       <div class="pzp-pg"><h2>Parts list</h2>${roll ? `<p class="pzp-roll">${Object.keys(roll).map(k => `${({ cam:'Cameras', prod:'Production', lit:'Lighting & control', cab:'Cables & mounts', svc:'Services · i9TV' })[k]} ${usd(roll[k].tot)}${roll[k].q ? ' + ' + roll[k].q + ' to quote' : ''}`).join(' · ')}</p>` : ''}${groups}
         <p class="pzp-note">Prices are live i9store.com/usa listings, before sales tax and shipping. Lines to quote, services included, are priced by an i9 specialist.</p></div>`;
     return pres;

@@ -23,7 +23,10 @@
   const page = (location.pathname.split('/').pop() || 'index.html').toLowerCase();
   const qs = new URLSearchParams(location.search);
   const PRO_ONLY = ['pro.html', 'planner.html', 'setups.html', 'led.html',   /* led.html: the LED wall configurator (25 Nov) */
-    'tools.html', 'led-wall-calculator.html', 'led-wall-church.html', 'guide-podcast-studio.html'];   /* SEO intent pages: tools hub, calculator, church LED, podcast guide (25 Nov) */
+    'tools.html', 'led-wall-calculator.html', 'led-wall-church.html', 'guide-podcast-studio.html',   /* SEO intent pages: tools hub, calculator, church LED, podcast guide (25 Nov) */
+    /* the ten exemplar intent pages (26 Nov, tmp-seo3/build.cjs): On Air (Pro) ground on every one */
+    'showroom-miami.html', 'solutions-churches.html', 'setup-small-church-livestream.html', 'guide-best-ptz-camera-church.html', 'compare-atem-mini-pro-vs-iso.html',
+    'ptz-camera-distance-calculator.html', 'services-installation.html', 'tax-exempt-purchasing.html', 'brand-visual-productions.html', 'br-camera-ptz-igreja.html'];
   const read = () => { try { const v = localStorage.getItem(KEY); return MODES.includes(v) ? v : null; } catch (e) { return null; } };
   const save = m => { try { localStorage.setItem(KEY, m); } catch (e) {} };
 

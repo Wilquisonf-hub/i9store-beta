@@ -5,8 +5,8 @@
    Heights are typical values (I9PLAN.HEIGHTS, "approx. — verify"), not measured. Plan coordinates: x across the room,
    y into it (metres); here x → X, y → Z, height → Y, origin at the room centre. Camera pan a: 0° faces the front wall.
    Round 4 (version F): when the plan has a Nanlite light plan, each fixture is a physically-correct SpotLight (intensity in
-   candela = Nanlite's published lux at 1 m, inverse-square decay, beam from the data), ACES Filmic tone mapping auto-exposed
-   to the key light at the presenter, soft shadows on desktop (off on phones / "low"). A viewfinder inset and a multiview
+   candela = Nanlite's published lux at 1 m × the plan's dimmer, inverse-square decay, beam from the data), ACES Filmic tone
+   mapping exposed to the look's target (26 Nov 2026 auto-dim), soft shadows on desktop (off on phones / "low"). A viewfinder inset and a multiview
    render each camera at its real horizontal angle of view; frusta can be shown per camera. Rendering is on demand. */
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
@@ -25,19 +25,23 @@ export function mount(host, data, opt = {}) {
   canvas.setAttribute('role', 'img');
   canvas.setAttribute('aria-label', '3D view of the room plan');
   host.appendChild(canvas);
-  const LIT = !!(data.fx && data.fx.length);
+  const lit1 = f => f.lux1 > 0 && f.dim > 0, LIT = !!(data.fx && data.fx.some(lit1));
   const LOW = opt.quality === 'low' || (opt.quality !== 'high' && (Math.min(window.innerWidth, window.innerHeight) < 700 || (navigator.hardwareConcurrency || 8) <= 4));
   const renderer = new THREE.WebGLRenderer({ canvas, antialias:!LOW, preserveDrawingBuffer:true });
   renderer.setPixelRatio(Math.min(LOW ? 1.25 : 2, window.devicePixelRatio || 1));
   renderer.outputColorSpace = THREE.SRGBColorSpace;
   const scene = new THREE.Scene();
   scene.background = new THREE.Color(COL.bg);
-  const keyLux = Math.max(50, data.keyLux || 500);
+  /* auto-dim (26 Nov 2026): the fixtures arrive dimmed to the look's target (key ≈ 700 / 1,200 / 2,000 lx). Exposure follows
+     the target like a camera's auto-iris, but only partly (power 0.6), so Bright reads a little brighter and Soft a little
+     softer; the room / bounce light is a share of the target so walls read as a lit room, and the pools under the lights
+     stay below clipping on ACES. A look, not a measurement. */
+  const T = Math.max(50, data.target || data.keyLux || 1200);
   if (LIT) {
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 3.4 / keyLux;   /* a 60 % grey at the key reads about mid-high on ACES */
+    renderer.toneMappingExposure = 2.7 / (1200 * Math.pow(T / 1200, 0.6));
     renderer.shadowMap.enabled = !LOW; renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-    scene.add(new THREE.HemisphereLight(0xffffff, 0x8f8c84, keyLux * 0.14));   /* bounce / room light (a look, not a measurement) */
+    scene.add(new THREE.HemisphereLight(0xffffff, 0x8f8c84, T * 0.4));   /* house / bounce light (a look, not a measurement) */
   } else {
     scene.add(new THREE.HemisphereLight(0xffffff, 0xcac7bf, 1.55));
     const sun = new THREE.DirectionalLight(0xffffff, 1.1); sun.position.set(W * 0.35, WALL * 4, Dp * 0.6); scene.add(sun);
@@ -124,9 +128,10 @@ export function mount(host, data, opt = {}) {
   let shadowsLeft = LOW ? 0 : 4;
   (data.fx || []).forEach(f => {
     const pos = new THREE.Vector3(X(f.x), f.h, Zc(f.y)), tg = new THREE.Vector3(X(f.tx), f.th, Zc(f.ty));
-    const sp = new THREE.SpotLight(kelvin(f.cct || data.cct || 5600), f.lux1, 0, Math.min(1.45, f.beam * Math.PI / 360), 0.45, 2);
-    sp.position.copy(pos); sp.target.position.copy(tg); scene.add(sp, sp.target);
-    if (shadowsLeft > 0 && (f.role === 'key' || f.role === 'wash')) { shadowsLeft--; sp.castShadow = true; sp.shadow.mapSize.set(1024, 1024); sp.shadow.bias = -0.0004; sp.shadow.radius = 4; sp.shadow.camera.near = 0.3; }
+    /* candela = the published lux at 1 m × the plan's dimmer; no published data = drawn, not lit */
+    const sp = lit1(f) ? new THREE.SpotLight(kelvin(f.cct || data.cct || 5600), f.lux1 * f.dim, 0, Math.min(1.45, f.beam * Math.PI / 360), 0.45, 2) : null;
+    if (sp) { sp.position.copy(pos); sp.target.position.copy(tg); scene.add(sp, sp.target); }
+    if (sp && shadowsLeft > 0 && (f.role === 'key' || f.role === 'wash')) { shadowsLeft--; sp.castShadow = true; sp.shadow.mapSize.set(1024, 1024); sp.shadow.bias = -0.0004; sp.shadow.radius = 4; sp.shadow.camera.near = 0.3; }
     /* the fixture: a head on a yoke, on a stand (or hung for a wash) */
     const head = new THREE.Group(); head.position.copy(pos); scene.add(head); head.lookAt(tg);
     const big = /pavo/.test(f.id) ? [0.6, 0.12, 0.05] : [0.22, 0.22, 0.3];

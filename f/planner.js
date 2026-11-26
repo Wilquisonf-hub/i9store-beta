@@ -234,6 +234,12 @@
     g_noderun:['Cat6 run from the control desk to the DMX node','Cabo Cat6 da mesa de controle até o nó DMX'], g_dmxshort:['Short DMX runs from the node to the fixtures','Cabos DMX curtos do nó até as luzes'],
     c_node:['The lights are {0} from the control desk: past about 30 m (rule of thumb) the plan runs Ethernet to a DMX node by the stage instead of one long DMX line.','As luzes estão a {0} da mesa: acima de ~30 m (regra prática) o plano leva Ethernet até um nó DMX junto ao palco em vez de um cabo DMX longo.'],
     g_ldes:['Lighting design · i9TV suggests','Projeto de luz · sugestão da i9TV'], s_ldes:['to quote','a cotar'],
+    /* auto-dim (owner, 26 Nov 2026: "adjust the brightness … look good and simple for the user") */
+    r_key:['Key','Principal'], r_fill:['Fill','Preenchimento'], r_back:['Back','Contraluz'], r_bg:['Background','Fundo'], r_wash:['Stage wash','Luz de palco'],
+    w_dimAt:['{0} dimmer {1}','Dimmer {0} {1}'], w_dimSite:['{0}: level set on site','{0}: nível ajustado no local'],
+    c_dimShort:['{0} light: {1} at 100 % can’t reach the look from there. It needs a brighter light or move it closer.{2}','Luz {0}: {1} a 100 % não chega ao look daí. Precisa de uma luz mais forte ou mais perto.{2}'],
+    c_dimAlt:[' The {0} would reach it.',' A {0} chegaria lá.'],
+    c_dimTiny:['{0} light: {1} would need {2}; a smaller light would do.','Luz {0}: {1} precisaria de {2}; uma luz menor resolve.'],
     camLabel:['CAM {0}','CAM {0}'], ctrlLabel:['CTRL · switcher','CTRL · switcher'], facing:['facing','virada para'],
   };
   let LANG = 'en';
@@ -347,7 +353,7 @@
     return info;
   }
   /* edits = any difference from the untouched template / setup plan (units are a display choice, not an edit) */
-  const planKey = () => { const o = packPlan(); o.u = null; return JSON.stringify(o); };
+  const planKey = () => { const o = packPlan(); o.u = null; if (o.lt && o.lt.look) o.lt = { ...o.lt, look:undefined }; return JSON.stringify(o); };   /* the look only moves dimmers: not a plan change */
   function pristine(tpl, setupId) { const keep = S; if (setupId) fromSetup(setupId); else fromTemplate(tpl); const k = planKey(); S = keep; return k; }
   const fromThisSetup = () => SETUP && SETUP.tpl === S.tpl;
   function newCam(k, m, s, o = {}) {
@@ -762,9 +768,13 @@
     const plan = D.lightPlan(lt, nP);
     const C = D.LIGHTCTL, F = D.FIXT, dmxOn = lt.ctl === 'dmx' || lt.ctl === 'crmx', specTxt = sp => [sp.bi ? 'bi-colour' : sp.rgb ? 'colour' : '', '≥ ' + Math.round(sp.min / 9).toLocaleString('en-US') + ' lx at 3 m', sp.quiet ? 'quiet' : '', dmxOn ? 'DMX' : ''].filter(Boolean).join(', ');
     let rx = 0; const apps = new Set();
+    const LV = lightLevels();   /* the dimmer % per role, for installers (the parts list shows it next to each light) */
     plan.forEach(r => { const id = r.id, q = r.buy;
       if (!id) { add('lit', { name:t('w_l_' + r.role), spec:specTxt(r.spec), qty:r.q, why:t('c_noFix', t('w_l_' + r.role), specTxt(r.spec)), code:'LIT', role:'lit' }); return; }
-      add('lit', { id, qty:q, why:t('w_l_' + r.role) + ' · ' + specTxt(r.spec), role:'lit' });
+      const lv = LV && LV.roles[r.role], rn = t('r_' + r.role);
+      add('lit', { id, qty:q, why:t('w_l_' + r.role) + ' · ' + specTxt(r.spec), role:'lit', who: lv ? [lv.data ? t('w_dimAt', rn, lv.pct) : t('w_dimSite', rn)] : undefined });
+      if (lv && lv.st === 'short') warn(t('c_dimShort', rn.toLowerCase(), P[id].name, lv.alt && P[lv.alt] ? t('c_dimAlt', P[lv.alt].name) : ''), 'info');
+      if (lv && lv.st === 'tiny') warn(t('c_dimTiny', rn.toLowerCase(), P[id].name, lv.rawPct), 'info');
       const f = F[id] || {}; if (f.app) apps.add(f.app);
       if (!r.ok && !r.auto && f.dmx !== false) warn(t('c_spec', t('w_l_' + r.role), P[id].name, f.lux1 ? specTxt(r.spec) : 'no published data'), 'info');
       if (dmxOn && !f.dmx) warn(t('c_noDmx', P[id].name), 'info');
@@ -804,8 +814,11 @@
     const dirTo = p => (deg(Math.atan2(cx - p.x, -(cy - p.y))) + 360) % 360;
     const at = (p, ang, dist) => ({ x:clamp(p.x + Math.sin(rad(ang)) * dist, 0.2, S.w - 0.2), y:clamp(p.y - Math.cos(rad(ang)) * dist, 0.2, S.d - 0.2) });
     const push = (id, role, r, pos, h, tgt, th) => out.push({ id, role, r, x:pos.x, y:pos.y, h:stageAt(pos.x, pos.y) + h, tx:tgt.x, ty:tgt.y, th });
-    (by.key || []).forEach((id, i) => { const p = i < n ? S.ppl[i] : mid; push(id, 'key', 'K', at(p, dirTo(p) - 40, 2.2), 2.3, p, i < n ? faceH(p) : 1.6 + stageAt(p.x, p.y)); });
-    (by.fill || []).forEach((id, i) => { const p = S.ppl[i % n]; push(id, 'fill', 'F', at(p, dirTo(p) + 45, 2.4), 2.0, p, faceH(p)); });
+    /* 26 Nov 2026 (auto-dim): with several people side by side each key comes from the outside, so it doesn't cross the
+       neighbour's face (the spill made the levels uneven); one person, or the person in the middle, keeps camera left */
+    const side = p => n > 1 && Math.abs(p.x - px) > 0.3 && Math.abs(at(p, dirTo(p) + 40, 2.2).x - px) > Math.abs(at(p, dirTo(p) - 40, 2.2).x - px) ? 1 : -1;
+    (by.key || []).forEach((id, i) => { const p = i < n ? S.ppl[i] : mid; push(id, 'key', 'K', at(p, dirTo(p) + 40 * (i < n ? side(p) : -1), 2.2), 2.3, p, i < n ? faceH(p) : 1.6 + stageAt(p.x, p.y)); });
+    (by.fill || []).forEach((id, i) => { const p = S.ppl[i % n]; push(id, 'fill', 'F', at(p, dirTo(p) - 45 * side(p), 2.4), 2.0, p, faceH(p)); });
     (by.back || []).forEach((id, i) => { const p = S.ppl[i % n]; push(id, 'back', 'B', at(p, dirTo(p) + 180 + (i % 2 ? -25 : 25), 1.4), 2.6, p, faceH(p)); });
     (by.wash || []).forEach((id, i, a) => { const x = S.w * (i + 1) / (a.length + 1), y = clamp(py + (cy - py) * 0.35, 0.3, S.d - 0.3); push(id, 'wash', 'W', { x, y }, 3.4, { x:px + (x - S.w / 2) * 0.3, y:py }, 1.6 + stageAt(px, py)); });
     (by.bg || []).forEach((id, i, a) => { const x = S.w * (i + 1) / (a.length + 1); push(id, 'bg', 'C', { x, y:0.25 }, 0.3, { x, y:0 }, 1.6); });
@@ -821,19 +834,90 @@
     const fall = th <= half ? 1 : Math.max(0, 1 - (th - half) / (F.beam * 0.25));
     return F.lux1 * fall / (d * d);
   }
-  /* readouts: at the presenter, power, and an exposure check per camera (E = C × N² ÷ (t × ISO)) */
-  function lightCalc() {
+  /* auto-dim (owner, 26 Nov 2026: "adjust the brightness, we need it to look good and simple for the user").
+     Most LED fixtures dim 0–100 %. Each fixture with published photometrics gets the dimmer % that puts its subject on the
+     look's target, from the real throw (position, height, aim): key = the target (accepted from −17 % to +25 %, i.e. about
+     1,000–1,500 lx on Standard); fill and stage wash together at half the key (2:1); back / rim a bit under the key (0.8×);
+     background colour about 1.5 stops under the key on the wall it lights (⅓). Fixtures aimed at the same person share one
+     level; a few passes absorb the spill between neighbours. A fixture that can't reach its target at 100 % stays at 100 %
+     and says so; one that would need under 5 % says a smaller light would do. Fixtures without published data are left out
+     of the maths ("level set on site"). Planning rule of thumb, not a lighting design. */
+  const LOOKS = { soft:700, std:1200, tv:2000 };
+  const lookOf = () => (S.lt && LOOKS[S.lt.look] ? S.lt.look : 'std');
+  const LCLASS = { key:'key', fill:'fill', wash:'fill', back:'back', bg:'bg' };
+  const LSHARE = { key:1, fill:0.5, back:0.8, bg:1 / 3 }, LREACH = { key:1000 / 1200, fill:0.7, back:0.5, bg:0.5 }, DIM_MIN = 0.05;
+  const BAND = [1000 / 1200, 1500 / 1200];   /* accepted around the target: 1,000–1,500 lx on Standard */
+  function lightLevels() {
     const fx = lightSpots(); if (!fx.length) return null;
-    const X = D.EXPO || { C:250, t:1 / 50, iso:800 }, iso = (S.lt && S.lt.iso) || X.iso, cct = (S.lt && S.lt.cct) || 5600;
-    const pt = p => ({ x:p.x, y:p.y, h:faceH(p) }), front = f => f.role !== 'back' && f.role !== 'bg';
-    const p0 = pt(S.ppl[0]), sum = (P, ok) => fx.filter(ok).reduce((a, f) => a + luxAt(f, P), 0);
-    const key = sum(p0, f => f.role === 'key' || f.role === 'wash'), fill = sum(p0, f => f.role === 'fill');
-    const plan = D.lightPlan(S.lt, S.ppl.length);
-    const W = plan.reduce((a, r) => a + (((D.FIXT || {})[r.id] || {}).W || 0) * r.q, 0), noData = plan.filter(r => r.id && !((D.FIXT || {})[r.id] || {}).W).length;
+    const look = lookOf(), T = LOOKS[look], F = D.FIXT || {};
+    const pts = S.ppl.map(p => ({ x:p.x, y:p.y, h:faceH(p) }));
+    const near = (x, y) => { let b = -1, bd = 0.6; S.ppl.forEach((p, i) => { const d = Math.hypot(p.x - x, p.y - y); if (d < bd) { bd = d; b = i; } }); return b; };
+    fx.forEach(f => { f.data = !!(F[f.id] && F[f.id].lux1); f.cls = LCLASS[f.role] || 'key';
+      f.sub = f.cls === 'bg' ? null : f.role === 'wash' ? 'all' : (k => k < 0 ? 'all' : k)(near(f.tx, f.ty));
+      f.u = pts.map(P => luxAt(f, P));                                  /* lux at each face at 100 % */
+      f.u0 = f.cls === 'bg' ? luxAt(f, { x:f.tx, y:f.ty, h:f.th }) : 0;  /* background: lux on the wall it lights */
+      f.dim = f.data ? 1 : null; });
+    const sc = fx.filter(f => f.data), groups = {};
+    sc.forEach((f, k) => { const g = f.cls === 'bg' ? 'bg|' + k : f.role + '|' + f.sub; (groups[g] = groups[g] || { cls:f.cls, role:f.role, sub:f.sub, fx:[] }).fx.push(f); });
+    const G = Object.values(groups);
+    const subsOf = g => g.sub === 'all' ? pts.map((_, i) => i) : [g.sub];
+    const at = (cls, i) => sc.reduce((a, f) => a + (f.cls === cls ? f.u[i] * f.dim : 0), 0);
+    const have = g => g.cls === 'bg' ? g.fx.reduce((a, f) => a + f.u0 * f.dim, 0) : (ii => ii.reduce((a, i) => a + at(g.cls, i), 0) / ii.length)(subsOf(g));
+    G.forEach(g => { g.tgt = T * LSHARE[g.cls]; g.raw = 1; });
+    /* least squares per class over the people that class is aimed at (box 1–100 %, coordinate descent): a key that also hits
+       the next person shares the job with that person's own key instead of pushing it to the floor */
+    G.forEach(g => { g.w = pts.map((_, i) => g.fx.reduce((a, f) => a + f.u[i], 0)); });
+    const rows = {}; G.forEach(g => { if (g.cls !== 'bg') (rows[g.cls] = rows[g.cls] || new Set()); subsOf(g).forEach(i => g.cls !== 'bg' && rows[g.cls].add(i)); });
+    for (let it = 0; it < 60; it++) G.forEach(g => { const d0 = g.fx[0].dim;
+      let want;
+      if (g.cls === 'bg') { const h = have(g); want = h > 1e-6 ? d0 * g.tgt / h : Infinity; }
+      else { let num = 0, den = 0; rows[g.cls].forEach(i => { const w = g.w[i]; if (w > 0) { num += w * (g.tgt - (at(g.cls, i) - w * d0)); den += w * w; } }); want = den > 1e-9 ? num / den : Infinity; }
+      if (!isFinite(want)) { g.raw = Infinity; g.fx.forEach(f => { f.dim = 1; }); return; }
+      /* raw = what this light alone would need for its own subject (for "can't reach" / "a smaller light would do") */
+      g.raw = g.cls === 'bg' ? want : (h => h > 1e-6 ? d0 * g.tgt / h : Infinity)(have(g));
+      g.fx.forEach(f => { f.dim = clamp(want, 0.01, 1); }); });
+    sc.forEach(f => { f.dim = Math.max(1, Math.round(f.dim * 100)) / 100; });   /* what the installer dials: whole per cent */
+    /* per role (the light list): dimmer range, can't reach / too strong, a stronger store light from the same role spec */
+    const plan = D.lightPlan(S.lt, S.ppl.length), dmx = S.lt.ctl === 'dmx' || S.lt.ctl === 'crmx', roles = {};
+    const pc = v => Math.round(v * 100) + ' %';
+    fx.forEach(f => { const r = roles[f.role] = roles[f.role] || { role:f.role, id:f.id, n:0, data:f.data, dims:[], st:f.data ? 'ok' : 'nodata', need:0, raw:1 };
+      r.n++; if (f.data) r.dims.push(f.dim); });
+    G.forEach(g => { const r = roles[g.role], h = have(g), share = h / g.tgt;
+      if (g.raw > 1 && share < LREACH[g.cls]) { r.st = 'short'; r.need = Math.max(r.need, isFinite(share) && share > 0 ? 1 / share : Infinity); }
+      else if (r.st === 'ok' && g.cls !== 'bg') { /* too strong on its own (not just lit by a neighbour's spill) */
+        const ii = subsOf(g), own = ii.reduce((a, i) => a + g.w[i], 0) / ii.length, need = own > 0 ? g.tgt / own : 1;
+        if (need < DIM_MIN) { r.st = 'tiny'; r.raw = Math.min(r.raw, need); } }
+      else if (r.st === 'ok' && g.raw < DIM_MIN) { r.st = 'tiny'; r.raw = Math.min(r.raw, g.raw); } });
+    Object.values(roles).forEach(r => {
+      if (r.dims.length) { const lo = Math.min(...r.dims), hi = Math.max(...r.dims); r.lo = lo; r.hi = hi; r.pct = lo === hi ? pc(lo) : Math.round(lo * 100) + '–' + pc(hi); }
+      if (r.st === 'tiny') r.rawPct = Math.max(1, Math.round(r.raw * 100)) + ' %';
+      if (r.st === 'short' && D.meets && F[r.id] && F[r.id].lux1 && isFinite(r.need)) {
+        const spec = (plan.find(x => x.role === r.role) || {}).spec || { min:0 }, need = F[r.id].lux1 * r.need;
+        r.alt = Object.keys(F).filter(id => P[id] && id !== r.id && F[id].lux1 >= need && D.meets(id, { ...spec, min:0 }, dmx))
+          .sort((a, b) => P[a].usd / (F[a].per || 1) - P[b].usd / (F[b].per || 1))[0] || null; } });
+    /* per person: one plain status */
+    const subjects = pts.map((P0, i) => { const key = at('key', i), fill = at('fill', i), back = at('back', i);
+      const mine = fx.filter(f => f.cls === 'key' && (f.sub === i || f.sub === 'all'));
+      const md = mine.filter(f => f.data);   /* off target with dimmers still free = overlapping lights, not a weak / strong light */
+      const st = mine.length && !md.length ? 'nodata' : key < T * BAND[0] ? (!md.length ? 'nokey' : md.some(f => f.dim >= 1) ? 'low' : 'even') : key > T * BAND[1] ? (md.length && md.every(f => f.dim <= DIM_MIN) ? 'high' : 'even') : 'ok';
+      return { i, n:S.ppl[i].n, key, fill, back, front:key + fill, st }; });
+    return { fx, look, target:T, band:[T * BAND[0], T * BAND[1]], subjects, roles };
+  }
+  /* readouts: per person, the dimmers, power at the set level, and an exposure check per camera (E = C × N² ÷ (t × ISO)) */
+  function lightCalc() {
+    const LV = lightLevels(); if (!LV) return null;
+    const fx = LV.fx, X = D.EXPO || { C:250, t:1 / 50, iso:800 }, iso = (S.lt && S.lt.iso) || X.iso, cct = (S.lt && S.lt.cct) || 5600;
+    const s0 = LV.subjects[0], FX = D.FIXT || {};
+    /* power: maximum draw from each maker's page; at the set level it scales with the dimmer (approx.: LED drivers are close to linear) */
+    const W = fx.reduce((a, f) => a + ((FX[f.id] || {}).W || 0), 0), Wset = fx.reduce((a, f) => a + ((FX[f.id] || {}).W || 0) * (f.dim == null ? 1 : f.dim), 0);
+    const noData = fx.filter(f => !(FX[f.id] || {}).W).length;
     const cams = S.cams.map((c, i) => { const v = view(c); if (!v.tg) return { i, lux:null };
-      const lux = sum(pt(S.ppl[v.tg.i]), front), N = c.k === 'lens' ? apAt(c) : null, need = N ? X.C * N * N / (X.t * iso) : null;
-      return { i, lux, N, need, ok: need == null ? null : lux >= need / Math.SQRT2, who:v.tg.p.n }; });
-    return { fx, key, fill, ratio: fill > 0.5 ? key / fill : null, cct, W, A: W / 120, noData, iso, t:X.t, cams };
+      const sj = LV.subjects[v.tg.i], lux = sj ? sj.front : 0, N = c.k === 'lens' ? apAt(c) : null, need = N ? X.C * N * N / (X.t * iso) : null;
+      return { i, lux, N, need, ok: need == null ? null : lux >= need / Math.SQRT2, who:v.tg.p.n, sub:v.tg.i }; });
+    cams.forEach(c => { if (c.ok === false) { const sj = LV.subjects[c.sub]; if (sj) { sj.cams = (sj.cams || []).concat(c.i); if (sj.st === 'ok' || sj.st === 'high') sj.st = 'cam'; } } });
+    const ev = v => v > 0 ? Math.log2(v * 100 / X.C) : null;   /* EV at ISO 100 from incident light */
+    return { fx, key:s0.key, fill:s0.fill, back:s0.back, front:s0.front, ev:ev(s0.front), ratio: s0.fill > 0.5 ? s0.key / s0.fill : null, cct,
+      W, A: W / 120, Wset, Aset: Wset / 120, noData, iso, t:X.t, cams, look:LV.look, target:LV.target, band:LV.band, looks:LOOKS, subjects:LV.subjects, roles:LV.roles };
   }
   function setLt(o) { if (!S.lt) return; Object.assign(S.lt, o); update(); }
   const GROUPS = ['cam', 'sw', 'cab', 'net', 'mnt', 'aud', 'lit', 'mon', 'svc'];
@@ -1479,7 +1563,7 @@
       build();
       const tt = tally(BOM);
       return { ...tt, bom:BOM, checks:CHECKS, tr:S.tr, fmt:S.fmt, n:S.cams.length, maxRun:S.cams.length ? Math.max(...S.cams.map(runOf)) : 0,
-        cams:S.cams.map(c => ({ k:c.k, m:c.m, own:!!c.own, lens:c.lens, man:c.man, ext:extOf(c) ? c.ext : null, crop:!!c.crop, mob:!!c.mob })), packed:packPlan() };
+        cams:S.cams.map(c => ({ k:c.k, m:c.m, own:!!c.own, lens:c.lens, man:c.man, ext:extOf(c) ? c.ext : null, crop:!!c.crop, mob:!!c.mob })), packed:packPlan(), light:lightCalc() };
     } finally { S = keep.S; SETUP = keep.SETUP; BOM = keep.BOM; CHECKS = keep.CHECKS; Z = keep.Z; }
   }
   function compose(spec) { const keep = S; try { fromSpec(spec, spec.tpl); return packPlan(); } finally { S = keep; } }
@@ -1502,7 +1586,7 @@
     get setup() { return fromThisSetup() ? SETUP : null; }, get edited() { return planKey() !== BASE; },
     /* wizard + 3D */
     evaluate, compose, loadPlan, loadSetup, tally: () => tally(BOM), TPL, ROLES, t, lenTxt, modelName, camLab, runCable, pname, defaultLens, fNum,
-    lightSpots, luxAt, lightCalc, setLt, apAt, zoomX, faceH,
+    lightSpots, luxAt, lightCalc, lightLevels, LOOKS, setLt, apAt, zoomX, faceH,
     get lang() { return LANG; }, get z() { return Z; }, set zGet(f) { zGet = f; }, save: () => { clearTimeout(hashT); saveHash(); }, planKey,
     get sel() { return sel; }, get queryTemplate() { return queryTemplate(); }, get bootHash() { return BOOT_HASH; }, get hashKind() { return /^#p=/.test(BOOT_HASH) ? 'p' : /^#adv|^#(tpl|for)=[\w-]+&v=a/.test(BOOT_HASH) ? 'adv' : /^#(tpl|for)/.test(BOOT_HASH) ? 'tpl' : ''; },
     setUnit(u) { S.unit = u === 'ft' ? 'ft' : 'm'; update({ stat:true, force:true }); }, renderPlanNow() { renderStatic(); renderPlan(); } };

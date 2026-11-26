@@ -74,7 +74,26 @@
     rdExp:['Exposure check · 1/50 s · ISO {0}','Checagem de exposição · 1/50 s · ISO {0}'], rdNeeds:['needs ≈{0} lx, has {1} lx','precisa ≈{0} lx, tem {1} lx'],
     rdOk:['✓ enough light','✓ luz suficiente'], rdLow:['add light or open up','mais luz ou abra o diafragma'], rdAuto:['auto gain · no aperture data','ganho automático · sem dado de abertura'], rdNoT:['no subject in frame','ninguém no quadro'],
     rdPow:['Power','Energia'], rdPowV:['{0} W · {1} A at 120 V','{0} W · {1} A em 120 V'], rdPowN:['Fixture maximum draw from each maker’s page. Plan circuits with your electrician.','Consumo máximo das luzes na página de cada fabricante. Planeje os circuitos com seu eletricista.'],
-    rdNote:['Rule of thumb: lux from each maker’s published 1 m figure (standard reflector, no diffusion), inverse-square to each face; beam spread approx. — verify; exposure E = 250 × N² ÷ (t × ISO). Softboxes cost 1–2 stops.','Regra prática: lux pelo valor publicado de cada fabricante a 1 m (refletor padrão, sem difusão), inverso do quadrado até cada rosto; abertura do facho aprox. — verificar; exposição E = 250 × N² ÷ (t × ISO). Softboxes custam 1–2 stops.'],
+    rdNote:['Rule of thumb: lux from each maker’s published 1 m figure (standard reflector, no diffusion), inverse-square to each face, times the dimmer; beam spread approx. — verify. Dimmers aim the key at the look (Soft 700 · Standard 1,200 · Bright 2,000 lx), fill at half the key (2:1), back a bit under the key. Exposure E = 250 × N² ÷ (t × ISO). Softboxes cost 1–2 stops: raise the dimmers to match.','Regra prática: lux pelo valor publicado de cada fabricante a 1 m (refletor padrão, sem difusão), inverso do quadrado até cada rosto, vezes o dimmer; abertura do facho aprox. — verificar. Os dimmers levam a principal ao look (Suave 700 · Padrão 1.200 · Forte 2.000 lx), o preenchimento à metade (2:1), o contraluz um pouco abaixo. Exposição E = 250 × N² ÷ (t × ISO). Softboxes custam 1–2 stops: suba os dimmers.'],
+    /* auto-dim + Look (owner, 26 Nov 2026: "adjust the brightness … look good and simple for the user") */
+    lookK:['Look','Look'], look_soft:['Soft','Suave'], look_std:['Standard','Padrão'], look_tv:['Bright (TV)','Forte (TV)'],
+    lookFor:['{0} look','look {0}'], lookHint:['Sets how bright people look on camera; the dimmers follow.','Define o brilho das pessoas na câmera; os dimmers acompanham.'],
+    onCam:['Light on camera','Luz na câmera'], lightOn:['Light on {0}:','Luz em {0}:'], the:['the ',''],
+    st_ok:['good for camera','boa para a câmera'], st_low:['a bit dark. Needs a brighter light or move it closer.','um pouco escura. Precisa de uma luz mais forte ou mais perto.'],
+    st_nokey:['a bit dark. No key light is aimed at them yet.','um pouco escura. Nenhuma luz principal mirada nela ainda.'],
+    st_high:['too bright even at the lowest setting. A smaller light would do.','forte demais mesmo no mínimo. Uma luz menor resolve.'],
+    st_even:['a little uneven: neighbouring lights overlap. Fine-tune the aim on site.','um pouco desigual: luzes vizinhas se sobrepõem. Ajuste a mira no local.'],
+    st_nodata:['no published data, level set on site','sem dado publicado, nível ajustado no local'],
+    st_cam:['{0} needs more light at this zoom: raise its ISO or open up.','{0} precisa de mais luz neste zoom: suba o ISO ou abra o diafragma.'],
+    dimK:['Dimmer','Dimmer'], dimsK:['Dimmers','Dimmers'], dimsSub:['Set by the plan for the {0} look','Definidos pelo plano para o look {0}'],
+    dimShort:['At 100 % it can’t reach the look: needs a brighter light or move it closer.','A 100 % não chega ao look: precisa de uma luz mais forte ou mais perto.'],
+    dimAlt:['The {0} would reach it.','A {0} chegaria lá.'], dimTiny:['Would need {0}: a smaller light would do.','Precisaria de {0}: uma luz menor resolve.'],
+    dimFull:['100 % · can’t reach','100 % · não chega'],
+    noDataSite:['no published data, level set on site','sem dado publicado, nível no local'],
+    rdPowSet:['At the set level (approx.) · max {0} W. Fixture draw from each maker’s page; plan circuits with your electrician.','No nível definido (aprox.) · máx. {0} W. Consumo pela página de cada fabricante; planeje os circuitos com seu eletricista.'],
+    rdPowNo:['{0} light(s) without published data not counted.','{0} luz(es) sem dado publicado fora da conta.'],
+    detK:['Details · lux, ratio, colour, exposure','Detalhes · lux, proporção, cor, exposição'],
+    rdFill:['Fill','Preenchimento'], rdBack:['Back','Contraluz'], rdEv:['Exposure value','Valor de exposição'], rdTgt:['Look target (key)','Alvo do look (principal)'],
     rdNone:['No light plan in this room: add one in step 4 to see the lit view and the light readouts.','Sem plano de luz nesta sala: inclua no passo 4 para ver a vista iluminada e as leituras de luz.'],
     /* round 3: production + lighting step */
     q_rec:['Record?','Gravar?'], rec_none:['No','Não'], rec_pgm:['The program','O programa'], rec_iso:['Every camera (ISO)','Cada câmera (ISO)'],
@@ -250,7 +269,7 @@
   const PRDEF = k => ({ church:{ rec:'pgm', st:1, scr:'led', feed:'same', gfx:'lyrics', how:'hw', lvl:'m' }, podcast:{ rec:'iso', st:1, scr:'none', feed:'same', gfx:'lower', how:'hw', lvl:'m' },
     studio:{ rec:'pgm', st:1, scr:'none', feed:'same', gfx:'lower', how:'hw', lvl:'m' }, event:{ rec:'pgm', st:1, scr:'led', feed:'aux', gfx:'lower', how:'hw', lvl:'m' },
     school:{ rec:'pgm', st:1, scr:'proj', feed:'same', gfx:'none', how:'hw', lvl:'s' }, corp:{ rec:'pgm', st:1, scr:'none', feed:'same', gfx:'lower', how:'hw', lvl:'m' } }[k] || { rec:'pgm', st:1, scr:'none', feed:'same', gfx:'none', how:'hw', lvl:'m' });
-  const LTDEF = k => ({ on:1, ctl:'app', panel:0, relay:0 });
+  const LTDEF = k => ({ on:1, ctl:'app', panel:0, relay:0, look:'std' });
   const prOf = z => z.pr || PRDEF(z.k), ltOf = z => z.lt || LTDEF(z.k);
   /* the family each kind's own recipes already use (those recipes stay the starting picks for that family) */
   const FAMDEF = { church:'ptz', podcast:'mix', studio:'mix', event:'mix', school:'ptz', corp:'ptz' };
@@ -444,7 +463,7 @@
     const n = cams.length;
     cams.forEach((c, i) => { if (c.k === 'lens' && !c.lens) c.lens = autoLens(c.m, L, i, n); if (c.man == null) c.man = manFor(z, c.k); });
     const lt = ltOf(z);
-    return { pr:prOf(z), lt:{ on:lt.on, ctl:lt.ctl, ctrl:lt.ctrl || 'vp', panel:lt.panel, relay:lt.relay, ptype:lt.ptype || 'kiosc', pick:{ ...(lt.pick || {}) }, k:z.k, big: z.k === 'church' && z.w * z.d > 450 ? 1 : 0 },
+    return { pr:prOf(z), lt:{ on:lt.on, ctl:lt.ctl, ctrl:lt.ctrl || 'vp', panel:lt.panel, relay:lt.relay, ptype:lt.ptype || 'kiosc', pick:{ ...(lt.pick || {}) }, look:lt.look || 'std', k:z.k, big: z.k === 'church' && z.w * z.d > 450 ? 1 : 0 },
       tpl:L.tpl, w:L.w, d:L.d, tr:trOverride || rec.tr, fmt:'hd', ext: z.k === 'podcast' || z.k === 'studio' ? 0 : 1, xr:L.xr, own:z.ow.slice(),
       furn:L.furn, ppl:L.ppl, ctrl:L.ctrl,
       cams:cams.map((c, i) => { const s = n === 1 ? { ...L.slots[0], aim:'all', shot:'wide' } : L.slots[i];
@@ -910,13 +929,19 @@
   }
   /* round 4: lighting by role; each role shows its pick (any brand) and a picker of the store's lights */
   const LUI = { role:null, b:'' };
-  function lightRoles(lt) {
+  function lightRoles(lt, LC) {
+    const RL = (LC && LC.roles) || {}, look = t('look_' + ((LC && LC.look) || 'std'));
+    /* the dimmer the plan sets for this role (installers dial it), or why it can't */
+    const dimLine = role => { const r = RL[role]; if (!r || !r.data) return '';
+      if (r.st === 'short') return `<span class="lr-no lr-dim meta-s">${esc(t('dimShort'))}${r.alt && P[r.alt] ? ' ' + esc(t('dimAlt', P[r.alt].name)) : ''}</span>`;
+      if (r.st === 'tiny') return `<span class="lr-dim meta-s">${esc(t('dimTiny', r.rawPct))}</span>`;
+      return `<span class="lr-dim meta-s"><b>${esc(t('dimK'))} ${esc(r.pct)}</b> · ${esc(t('lookFor', look))}</span>`; };
     const plan = D.lightPlan({ ...lt, k:Z.k, big: Z.k === 'church' && Z.w * Z.d > 450 ? 1 : 0 }, Z.n), dmx = lt.ctl === 'dmx' || lt.ctl === 'crmx';
     const spec = sp => [sp.bi ? 'bi-colour' : sp.rgb ? 'colour' : '', '≥ ' + Math.round(sp.min / 9).toLocaleString('en-US') + ' lx at 3 m', sp.quiet ? 'quiet' : '', dmx ? 'DMX' : ''].filter(Boolean).join(' · ');
     const fact = id => { const f = D.FIXT[id]; return f && f.lux1 ? `${Math.round(f.lux1 / 9).toLocaleString('en-US')} lx at 3 m · ${f.W} W${f.dmx ? ' · DMX' : ' · no DMX'}${f.quiet ? ' · quiet' : ''}` : 'no published data'; };
     const rows = plan.map(r => { const p = r.id && P[r.id];
       return `<li class="lr${LUI.role === r.role ? ' on' : ''}"><span class="lr-r"><b>${esc(PL.t('w_l_' + r.role))}</b><span class="meta-s">${r.q} × · ${esc(spec(r.spec))}</span></span>
-        ${p ? `<span class="pk"><img src="${p.src}" alt=""></span><span class="lr-m"><span class="cc-b">${esc(p.brand)}</span><b>${esc(p.name)}</b><span class="meta-s">${esc(fact(r.id))} · ${usd(p.usd)}</span>${r.ok ? `<span class="lr-ok meta-s">${esc(r.auto ? 'meets the spec · cheapest store listing' : 'meets the spec')}</span>` : `<span class="lr-no meta-s">${esc(D.FIXT[r.id] && D.FIXT[r.id].lux1 ? 'below the spec' : 'no published data · verify')}</span>`}</span>`
+        ${p ? `<span class="pk"><img src="${p.src}" alt=""></span><span class="lr-m"><span class="cc-b">${esc(p.brand)}</span><b>${esc(p.name)}</b><span class="meta-s">${esc(fact(r.id))} · ${usd(p.usd)}</span>${r.ok ? `<span class="lr-ok meta-s">${esc(r.auto ? 'meets the spec · cheapest store listing' : 'meets the spec')}</span>` : `<span class="lr-no meta-s">${esc(D.FIXT[r.id] && D.FIXT[r.id].lux1 ? 'below the spec' : t('noDataSite'))}</span>`}${dimLine(r.role)}</span>`
           : `<span class="lr-m"><b>${esc('No store listing meets the spec · to quote')}</b></span>`}
         <button type="button" class="tbtn lr-sw" data-lrole="${r.role}" aria-expanded="${LUI.role === r.role}">${esc(LUI.role === r.role ? 'Close' : 'Swap')}</button></li>`; }).join('');
     let pick = '';
@@ -950,7 +975,7 @@
         ${q('q_lvl', 'lvl', ['s', 'm', 'p'], pr.lvl)}
         <h2 class="meta lh4"><span class="tally"></span>${esc(t('lightK'))}</h2>
         ${lq('q_lights', 'on', [1, 0, 2], lt.on)}
-        ${lt.on === 1 ? lightRoles(lt) : ''}
+        ${lt.on === 1 ? lightRoles(lt, ev.light) : ''}
         ${lt.on === 1 ? lq('q_ctl', 'ctl', ['app', 'dmx', 'crmx'], lt.ctl) : ''}
         ${lt.on === 1 && lt.ctl !== 'app' ? lq('q_ctrl', 'ctrl', ['vp', 'splay'], lt.ctrl || 'vp') : ''}
         ${lt.on === 1 && lt.ctl !== 'app' ? `<div class="fq pq"><span class="ql">${esc(t(Z.k === 'podcast' ? 'q_relay' : 'q_panel'))}<span class="meta-s">${esc(t(Z.k === 'podcast' ? 'panelNoteP' : 'panelNote'))}</span></span>
@@ -1038,7 +1063,7 @@
   }
 
   /* ----- step 6: 3D ----- */
-  const G3UI = { vf: !matchMedia('(max-width:699px)').matches, mv:false, fr:false, q:'auto' };
+  const G3UI = { vf: !matchMedia('(max-width:699px)').matches, mv:false, fr:false, q:'auto', det:false };
   function step6() {
     const S = PL.state, lt = S.lt;
     const tb = (id, on, label) => `<button type="button" class="tbtn pv3-t" data-g3="${id}" aria-pressed="${!!on}">${esc(label)}</button>`;
@@ -1048,25 +1073,42 @@
         <span class="seg sm pv3-q" role="group" aria-label="${esc(t('qB'))}"><button type="button" data-g3q="auto" aria-pressed="${G3UI.q === 'auto'}">${esc(t('qB'))} · ${esc(t('qAuto'))}</button><button type="button" data-g3q="low" aria-pressed="${G3UI.q === 'low'}">${esc(t('qLow'))}</button></span>
         <button type="button" class="tbtn" id="g3-reset">${esc(t('reset'))}</button><span class="meta-s g3h">${esc(t('g3dHint'))}</span></div>
       <div class="g3box" id="g3box"><div class="g3msg" id="g3msg"><span class="meta"><span class="tally"></span>${esc(t('loading3d'))}</span></div><p class="g3pov meta" id="g3pov" hidden></p></div>
-      ${lt && lt.on ? `<div class="pv3-sc"><span class="seg sm" role="group" aria-label="${esc(t('isoK'))}"><span class="meta-s">${esc(t('isoK'))}</span>${[400, 800, 1600, 3200].map(v => `<button type="button" data-iso="${v}" aria-pressed="${(lt.iso || 800) === v}">${v}</button>`).join('')}</span>
-        <span class="seg sm" role="group" aria-label="${esc(t('cctK'))}"><span class="meta-s">${esc(t('cctK'))}</span>${[3200, 4300, 5600].map(v => `<button type="button" data-cct="${v}" aria-pressed="${(lt.cct || 5600) === v}">${v}K</button>`).join('')}</span></div>` : ''}
       <div class="pv3-read" id="pv3-read">${readouts()}</div>
       <p class="meta-s g3note">${esc(t('g3dNote'))}</p>
     </div>`;
   }
-  /* the readouts work without WebGL: they come from planner.js's light model, not from the render */
-  function readouts() {
+  /* the readouts work without WebGL: they come from planner.js's light model, not from the render.
+     Default view (customers): the Look, one plain line per person, the dimmer per light (installers), power at the set level.
+     Exact lux, ratio, colour, EV and the per-camera exposure check sit under "Details". print = the PDF (details open). */
+  function readouts(print) {
     const L = PL.lightCalc(); if (!L) return `<p class="meta-s pv3-none">${esc(t('rdNone'))}</p>`;
-    const n0 = v => Math.round(v).toLocaleString('en-US'), S = PL.state;
+    const n0 = v => Math.round(v).toLocaleString('en-US'), S = PL.state, lt = S.lt || {};
+    const who = i => { const n = S.ppl[i].n, nm = PL.pname(n); return PL.lang !== 'pt' && /^p_(?!person)/.test(n) ? t('the') + nm.toLowerCase() : nm; };
+    const stTxt = sj => sj.st === 'cam' ? t('st_cam', (sj.cams || []).map(i => PL.camLab(i)).join(', ')) : t('st_' + sj.st);
+    const subj = sj => `<li class="${sj.st === 'ok' ? 'ok' : sj.st === 'nodata' ? 'nd' : 'bad'}" data-subj="${sj.i}"><i aria-hidden="true"></i><span><b>${esc(t('lightOn', who(sj.i)))}</b> ${esc(stTxt(sj))}${sj.st === 'ok' ? ' <span class="ck" aria-hidden="true">✓</span>' : ''}</span></li>`;
+    const order = ['key', 'fill', 'wash', 'back', 'bg'], R = Object.values(L.roles).sort((a, b) => order.indexOf(a.role) - order.indexOf(b.role));
+    const dim = r => `<li data-dim="${r.role}" class="${r.st === 'short' ? 'bad' : r.data ? '' : 'nd'}"><b>${esc(PL.t('r_' + r.role))}</b><span class="meta-s">${r.n} × ${esc(P[r.id] ? P[r.id].name : r.id)}</span>
+        <span class="xv">${esc(!r.data ? t('noDataSite') : r.st === 'short' ? t('dimFull') : r.pct)}</span></li>`;
     const cam = r => { const c = S.cams[r.i], nm = PL.camLab(r.i) + ' · ' + (P[c.m] ? P[c.m].name : c.m);
       if (r.lux == null) return `<li><b>${esc(nm)}</b><span class="meta-s">${esc(t('rdNoT'))}</span></li>`;
       if (r.need == null) return `<li><b>${esc(nm)}</b><span class="meta-s">${esc(n0(r.lux))} lx · ${esc(t('rdAuto'))}</span></li>`;
       return `<li class="${r.ok ? 'ok' : 'bad'}" data-exp="${r.i}"><b>${esc(nm)} · ${esc(PL.fNum(r.N))}</b><span class="meta-s">${esc(t('rdNeeds', n0(r.need), n0(r.lux)))}</span><span class="xv">${esc(r.ok ? t('rdOk') : t('rdLow'))}</span></li>`; };
-    return `<div class="pv3-r"><p class="meta"><span class="tally"></span>${esc(t('rdPres', PL.pname(S.ppl[0].n)))}</p>
-        <dl><div><dt>${esc(t('rdKey'))}</dt><dd><b>${esc(n0(L.key))} lx</b></dd></div><div><dt>${esc(t('rdRatio'))}</dt><dd><b>${L.ratio ? esc(L.ratio.toFixed(1)) + ' : 1' : esc(t('noFill'))}</b></dd></div><div><dt>${esc(t('rdCct'))}</dt><dd><b>${esc(L.cct)}K</b></dd></div></dl></div>
-      <div class="pv3-r pv3-rx"><p class="meta">${esc(t('rdExp', L.iso))}</p><ul>${L.cams.map(cam).join('')}</ul></div>
-      <div class="pv3-r"><p class="meta">${esc(t('rdPow'))}</p><p class="pv3-pw"><b id="pv3-pw">${esc(t('rdPowV', n0(L.W), (Math.round(L.A * 10) / 10).toFixed(1)))}</b></p><p class="meta-s">${esc(t('rdPowN'))}</p></div>
-      <p class="meta-s pv3-rn">${esc(t('rdNote'))}</p>`;
+    const looks = ['soft', 'std', 'tv'], lk = t('look_' + L.look);
+    return `<div class="pv3-r pv3-subj"><div class="pv3-lh"><p class="meta"><span class="tally"></span>${esc(t('onCam'))}</p>
+        ${print ? `<p class="meta-s">${esc(t('lookK'))} · ${esc(lk)}</p>` : `<span class="seg sm pv3-look" role="group" aria-label="${esc(t('lookK'))}">${looks.map(v => `<button type="button" data-look="${v}" aria-pressed="${L.look === v}">${esc(t('look_' + v))}</button>`).join('')}</span>`}</div>
+        <ul class="pv3-sl">${L.subjects.map(subj).join('')}</ul>${print ? '' : `<p class="meta-s pv3-lhint">${esc(t('lookHint'))}</p>`}</div>
+      <div class="pv3-r pv3-dims"><p class="meta">${esc(t('dimsK'))}</p><p class="meta-s pv3-ds">${esc(t('dimsSub', lk.toLowerCase()))}</p><ul>${R.map(dim).join('')}</ul></div>
+      <div class="pv3-r"><p class="meta">${esc(t('rdPow'))}</p><p class="pv3-pw"><b id="pv3-pw">${esc(t('rdPowV', n0(L.Wset), (Math.round(L.Aset * 10) / 10).toFixed(1)))}</b></p><p class="meta-s">${esc(t('rdPowSet', n0(L.W)))}${L.noData ? ' ' + esc(t('rdPowNo', L.noData)) : ''}</p></div>
+      <details class="pv3-det" id="pv3-det"${print || G3UI.det ? ' open' : ''}><summary class="meta"><span>${esc(t('detK'))}</span></summary>
+        ${print ? '' : `<div class="pv3-sc"><span class="seg sm" role="group" aria-label="${esc(t('isoK'))}"><span class="meta-s">${esc(t('isoK'))}</span>${[400, 800, 1600, 3200].map(v => `<button type="button" data-iso="${v}" aria-pressed="${(lt.iso || 800) === v}">${v}</button>`).join('')}</span>
+          <span class="seg sm" role="group" aria-label="${esc(t('cctK'))}"><span class="meta-s">${esc(t('cctK'))}</span>${[3200, 4300, 5600].map(v => `<button type="button" data-cct="${v}" aria-pressed="${(lt.cct || 5600) === v}">${v}K</button>`).join('')}</span></div>`}
+        <div class="pv3-dg"><div class="pv3-r"><p class="meta">${esc(t('rdPres', PL.pname(S.ppl[0].n)))}</p>
+          <dl><div><dt>${esc(t('rdKey'))}</dt><dd><b>${esc(n0(L.key))} lx</b></dd></div><div><dt>${esc(t('rdFill'))}</dt><dd><b>${L.fill > 0.5 ? esc(n0(L.fill)) + ' lx' : esc(t('noFill'))}</b></dd></div>
+            <div><dt>${esc(t('rdRatio'))}</dt><dd><b>${L.ratio ? esc(L.ratio.toFixed(1)) + ' : 1' : '—'}</b></dd></div><div><dt>${esc(t('rdBack'))}</dt><dd><b>${L.back > 0.5 ? esc(n0(L.back)) + ' lx' : '—'}</b></dd></div>
+            <div><dt>${esc(t('rdCct'))}</dt><dd><b>${esc(L.cct)}K</b></dd></div><div><dt>${esc(t('rdEv'))}</dt><dd><b>${L.ev != null ? 'EV ' + esc(L.ev.toFixed(1)) : '—'}</b> <span class="meta-s">ISO 100</span></dd></div>
+            <div><dt>${esc(t('rdTgt'))}</dt><dd><b>${esc(n0(L.target))} lx</b> <span class="meta-s">${esc(n0(Math.round(L.band[0] / 10) * 10))}–${esc(n0(Math.round(L.band[1] / 10) * 10))}</span></dd></div></dl></div>
+          <div class="pv3-r pv3-rx"><p class="meta">${esc(t('rdExp', L.iso))}</p><ul>${L.cams.map(cam).join('')}</ul></div></div>
+        <p class="meta-s pv3-rn">${esc(t('rdNote'))}</p></details>`;
   }
   /* "C50 · S35 crop · 400 mm" / "UE50KPJ · 20.0×": what the viewfinder is looking through */
   function vfLabel(c) {
@@ -1082,8 +1124,9 @@
         return { x:c.x, y:c.y, a:c.a, h:v.h, mnt:c.mnt, k:c.k, own:!!c.own, label:String(i + 1), tg, all: c.tgt < 0 && v.n > 1, vf:vfLabel(c) }; }),
       lights:Math.min(lights, 4), H:D.HEIGHTS, sel: PL.sel && PL.sel.kind === 'cam' ? PL.sel.i : 0,
       /* round 4: the plan's fixtures as lights (position, height, aim, photometrics) */
-      fx:(L ? L.fx : []).map(f => { const F = D.FIXT[f.id] || {}; return { ...f, lux1:F.lux1 || 0, beam:F.beam || 55, W:F.W || 0, cct:(S.lt && S.lt.cct) || 5600 }; }).filter(f => f.lux1 > 0),
-      keyLux: L ? L.key : 0, cct:(S.lt && S.lt.cct) || 5600 };
+      /* the 3D uses the dimmed level (candela = published lux at 1 m × dimmer); fixtures without data are drawn, unlit */
+      fx:(L ? L.fx : []).map(f => { const F = D.FIXT[f.id] || {}; return { id:f.id, role:f.role, x:f.x, y:f.y, h:f.h, tx:f.tx, ty:f.ty, th:f.th, lux1:F.lux1 || 0, dim:f.dim == null ? 0 : f.dim, beam:F.beam || 55, W:F.W || 0, cct:(S.lt && S.lt.cct) || 5600 }; }),
+      keyLux: L ? (L.front || L.target) : 0, target: L ? L.target : 0, cct:(S.lt && S.lt.cct) || 5600 };
   }
   function hasWebGL() { try { const c = document.createElement('canvas'); return !!(window.WebGLRenderingContext && (c.getContext('webgl2') || c.getContext('webgl'))); } catch (e) { return false; } }
   function mount3d() {
@@ -1213,9 +1256,11 @@
       if (G3) { if (k === 'vf') { if (matchMedia('(max-width:699px)').matches) G3.setView(G3UI.vf ? (PL.sel && PL.sel.kind === 'cam' ? PL.sel.i : 0) : null); else G3.setVf(G3UI.vf); }
         if (k === 'mv') G3.setMode(G3UI.mv ? 'multi' : 'scene'); if (k === 'fr') G3.setFrusta(G3UI.fr); } return; }
     if (b.dataset.g3q) { G3UI.q = b.dataset.g3q; render(); return; }
+    if (b.dataset.look) { const v = b.dataset.look; Z.lt = { ...ltOf(Z), look:v }; PL.setLt({ look:v }); save(); render(); $(`[data-look="${v}"]`)?.focus({ preventScroll:true }); return; }
     if (b.dataset.iso) { PL.setLt({ iso:+b.dataset.iso }); $$('[data-iso]').forEach(x => x.setAttribute('aria-pressed', String(x === b))); const r = $('#pv3-read'); if (r) r.innerHTML = readouts(); return; }
     if (b.dataset.cct) { PL.setLt({ cct:+b.dataset.cct }); render(); return; }
   });
+  panel.addEventListener('toggle', e => { if (e.target.id === 'pv3-det') G3UI.det = e.target.open; }, true);
   panel.addEventListener('change', e => {
     const i = e.target;
     if (i.dataset.ltc) { Z.lt = { ...ltOf(Z), [i.dataset.ltc]: i.checked ? 1 : 0 }; Z.dirty = 1; if (!Z.om) Z.o = null; render(); $(`[data-ltc="${i.dataset.ltc}"]`)?.focus(); save(); return; }
