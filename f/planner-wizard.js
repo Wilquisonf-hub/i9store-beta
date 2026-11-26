@@ -65,6 +65,10 @@
     sWarn:['{0} camera can’t frame its shot from there','{0} câmera não enquadra o plano daí'], sWarnN:['{0} cameras can’t frame their shot from there','{0} câmeras não enquadram o plano daí'],
     a_conv:['{0} × HDMI→SDI converter','{0} × conversor HDMI→SDI'], a_ctl:['PTZ joystick','Joystick PTZ'], a_cage:['{0} × cage','{0} × gaiola'], a_poe:['PoE switch','Switch PoE'], a_enc:['{0} × NDI encoder (to quote)','{0} × encoder NDI (a cotar)'], a_tri:['{0} × tripod','{0} × tripé'], a_brk:['{0} × bracket (to quote)','{0} × suporte (a cotar)'], a_pwr:['{0} × mains power','{0} × energia na tomada'],
     camsSub:['Cameras','Câmeras'], t_c:['Your cameras','Suas câmeras'],
+    lensStd:['Lens','Lente'], lensLong:['Long reach','Longo alcance'], extAdd:['+ {0}','+ {0}'], cropAdd:['{0} ×{1}','{0} ×{1}'],
+    effTxt:['{0} effective','{0} efetivo'], dimTip:['Rule of thumb: past about f/8 a dim room needs more light or a higher ISO.','Regra prática: acima de f/8 uma sala escura pede mais luz ou ISO mais alto.'],
+    adaptTip:['PL lens: needs the {0} (in the parts list) and the body’s Super 35 crop or the lens’s built-in 1.5× extender. {1} kg: heavy support to quote.','Lente PL: precisa do {0} (na lista) e do crop Super 35 do corpo ou do extensor 1,5× da lente. {1} kg: suporte reforçado a cotar.'],
+    fixIt:['Use {0}','Usar {0}'], fixReach:['reaches {0}','alcança {0}'], builtinExt:['built-in 1.5×','1,5× embutido'],
     h5:['Here’s your plan.','Este é o seu plano.'],
     l5:['Drag a camera to move it, drag its dot to aim. When it looks right, approve it.','Arraste uma câmera para mover, arraste o ponto para mirar. Quando estiver certo, aprove.'],
     h6:['See it in 3D.','Veja em 3D.'],
@@ -231,7 +235,7 @@
   /* the customer's own lineup: the transport of our "recommended" pick, moved off IP when a camera has no NDI */
   function lineupCustom(z) {
     const base = lineupTier(z, 'r');
-    const cams = z.cl.map(c => ({ k:kOf(c.m), m:c.m, lens:c.lens || null, own:!!c.own }));
+    const cams = z.cl.map(c => ({ k:kOf(c.m), m:c.m, lens:c.lens || null, own:!!c.own, ext:c.ext || null, crop:!!c.crop }));
     const tr = base.tr === 'ip' && cams.some(c => !specOf(c.m).ndi) ? 'sdi' : base.tr;
     return { tr, cams };
   }
@@ -259,19 +263,43 @@
     return { wide:false, h:2 * deg(Math.atan(R.frameFor[s.shot] / (2 * d))), d, p, shot:s.shot };
   }
   /* horizontal angle range [tightest, widest] of a camera (+ lens) */
-  function hRange(k, m, lens) {
+  /* a lens's focal range [min, max], with an extender (from the focal length Canon allows it) */
+  const extFor = (lens, ext) => { const e = ext && D.EXT && D.EXT[ext]; return e && e.lenses.includes(lens) ? e : null; };
+  function fRange(m, lens, ext) {
+    const b = D.BODIES[m], L0 = lens === 'kit' && b.kit ? b.kit : D.LENSES[lens];
+    const r = L0 ? [L0.min, L0.max] : (D.OTHER_LENS[b.mount] || [12, 120]), e = extFor(lens, ext); if (!e) return r;
+    const from = D.LENSES[lens].ext; return [(typeof from === 'number' ? Math.max(r[0], from) : r[0]) * e.x, r[1] * e.x];
+  }
+  /* effective max aperture [at the wide end of the usable range, at the tele end] */
+  function apRange(m, lens, ext) {
+    const b = D.BODIES[m], L0 = lens === 'kit' && b.kit ? b.kit : D.LENSES[lens]; if (!L0 || !L0.ap) return null;
+    const e = extFor(lens, ext), k = e ? (e.apx || Math.pow(2, e.stops / 2)) : 1, from = e && typeof D.LENSES[lens].ext === 'number' ? D.LENSES[lens].ext : L0.min;
+    const at = f => L0.max > L0.min ? L0.ap[0] + (L0.ap[1] - L0.ap[0]) * clamp((f - L0.min) / (L0.max - L0.min), 0, 1) : L0.ap[1];
+    return [at(Math.max(L0.min, from)) * k, L0.ap[1] * k];
+  }
+  const sensW = (b, crop) => crop && b.crop ? b.crop.w : b.w;
+  function hRange(k, m, lens, ext, crop) {
     const z = D.PTZ[m] || D.CAMCORDER[m]; if (z) return [z.hT, z.hW];
     const b = D.BODIES[m]; if (!b) return [5, 60];
-    const r = lens === 'kit' && b.kit ? [b.kit.min, b.kit.max] : D.LENSES[lens] ? [D.LENSES[lens].min, D.LENSES[lens].max] : (D.OTHER_LENS[b.mount] || [12, 120]);
-    const h = f => 2 * Math.atan(b.w / (2 * f)) * 180 / Math.PI;
+    const r = fRange(m, lens, ext), w = sensW(b, crop);
+    const h = f => 2 * Math.atan(w / (2 * f)) * 180 / Math.PI;
     return [h(r[1]), h(r[0])];
   }
+  const fmtF = a => PL.fNum ? PL.fNum(a) : 'f/' + a.toFixed(1);
+  const fmtFr = (r, cine) => { if (!r) return ''; if (cine) { const v = x => String(Math.round(x * 10) / 10); return v(r[0]) === v(r[1]) ? 'T' + v(r[0]) : 'T' + v(r[0]) + '–' + v(r[1]); }
+    return fmtF(r[0]) === fmtF(r[1]) ? fmtF(r[0]) : fmtF(r[0]) + '–' + fmtF(r[1]).slice(2); };
+  const mmTxt = r => Math.round(r[0]) === Math.round(r[1]) ? Math.round(r[0]) + ' mm' : Math.round(r[0]) + '–' + Math.round(r[1]) + ' mm';
   const REACH_FW = 1.6;
   /* the store lens presets that fit a body's mount (APS-C-only lenses are left off full-frame bodies) */
-  const lensesFor = b => ((D.PRESETS || {})[b.mount] || []).filter(l => D.LENSES[l] && P[l] && !(D.LENSES[l].apsc && b.fmt === 'ff'));
-  function reach(L, i, n, k, m, lens) {
+  const okLens = (b, l) => D.LENSES[l] && P[l] && !(D.LENSES[l].apsc && b.fmt === 'ff') && (D.LENSES[l].mount === b.mount || ((D.LENSES[l].fits || []).includes(b.mount) && b.crop));
+  const lensesFor = b => ((D.PRESETS || {})[b.mount] || []).filter(l => okLens(b, l));
+  /* long-reach lenses for this body: the store's telephotos for its mount (+ the PL CINE-SERVO on RF cinema bodies with a
+     Super 35 mode, through an adapter) */
+  const longFor = b => ((D.LONG || {})[b.mount] || []).filter(l => okLens(b, l));
+  const extsFor = lens => Object.keys(D.EXT || {}).filter(x => D.EXT[x].lenses.includes(lens) && (D.EXT[x].builtin || P[x]));
+  function reach(L, i, n, k, m, lens, ext, crop) {
     const s = slotOf(L, i, n), at = camAt(L, s, k), nd = need(L, s, at); if (!nd) return null;
-    const [lo, hi] = hRange(k, m, lens), rad = d => d * Math.PI / 180;
+    const [lo, hi] = hRange(k, m, lens, ext, crop), rad = d => d * Math.PI / 180;
     if (nd.wide) return nd.h > hi * 1.1 ? { bad:'narrow', hi, nd } : { nd, ok:true };   /* 10 %: shoulders at the edge are fine */
     const h = Math.max(lo, Math.min(hi, nd.h)), fw = 2 * nd.d * Math.tan(rad(h / 2));
     return fw > REACH_FW && nd.h < lo ? { bad:'far', fw, nd } : { nd, fw, ok:true };
@@ -279,11 +307,23 @@
   /* the store lens that best frames this position: in range first, then the cheapest (an included kit lens costs $0) */
   function autoLens(m, L, i, n) {
     const b = D.BODIES[m]; if (!b) return null;
-    const cands = (b.kit ? ['kit'] : []).concat(lensesFor(b));
+    /* the heavy PL cine zoom is offered, never put in automatically */
+    const cands = (b.kit ? ['kit'] : []).concat(lensesFor(b), longFor(b).filter(l => !D.LENSES[l].heavy));
     if (!cands.length) return PL.defaultLens ? PL.defaultLens(m) : 'other';
     const s = slotOf(L, i, n), nd = need(L, s, camAt(L, s, 'lens')); if (!nd) return cands[0];
     const score = l => { const [lo, hi] = hRange('lens', m, l); const miss = nd.h < lo ? Math.log(lo / nd.h) : nd.h > hi ? Math.log(nd.h / hi) * 2 : 0; return miss * 1e6 + (l === 'kit' ? 0 : P[l].usd); };
     return cands.slice().sort((a, b2) => score(a) - score(b2))[0];
+  }
+  /* when a body can't get its close-up: the cheapest store lens / extender / crop mode combination that can */
+  function suggest(m, L, i, n) {
+    const b = D.BODIES[m]; if (!b) return null;
+    const out = [];
+    (b.kit ? ['kit'] : []).concat(lensesFor(b), longFor(b)).forEach(l => [null].concat(extsFor(l)).forEach(x => [false].concat(b.crop ? [true] : []).forEach(cr => {
+      const lz = D.LENSES[l]; if (lz && lz.ic === 's35' && b.fmt === 'ff' && !cr && !(x && D.EXT[x].builtin)) return;
+      const r = reach(L, i, n, 'lens', m, l, x, cr); if (!r || r.bad) return;
+      out.push({ lens:l, ext:x, crop:cr, fw:r.fw, cost:(l === 'kit' ? 0 : P[l].usd) + (x && !D.EXT[x].builtin ? P[x].usd : 0) + (cr ? 1 : 0) + (lz && lz.adapter && P[lz.adapter] && lz.mount !== b.mount ? P[lz.adapter].usd : 0) });
+    })));
+    return out.sort((a, c) => a.cost - c.cost)[0] || null;
   }
   const posRole = (L, i, n) => { if (n === 1) return 'wide'; const s = L.slots[i]; return s.role || (s.shot === 'wide' ? 'wide' : 'close'); };
 
@@ -358,7 +398,7 @@
       furn:L.furn, ppl:L.ppl, ctrl:L.ctrl,
       cams:cams.map((c, i) => { const s = n === 1 ? { ...L.slots[0], aim:'all', shot:'wide' } : L.slots[i];
         const { x, y } = camAt(L, s, c.k);   /* manned cameras stand on tripods, off the wall / mid-aisle */
-        return { k:c.k, m:c.m, lens:c.lens || null, x, y, mnt: c.k === 'ptz' ? s.mnt : 'tripod', man: c.man ?? (c.k !== 'ptz'), aim:s.aim, shot:s.shot, own:!!c.own }; }) };
+        return { k:c.k, m:c.m, lens:c.lens || null, ext:c.ext || null, crop:!!c.crop, x, y, mnt: c.k === 'ptz' ? s.mnt : 'tripod', man: c.man ?? (c.k !== 'ptz'), aim:s.aim, shot:s.shot, own:!!c.own }; }) };
   }
   let OPT_CACHE = { key:'', opts:null };
   function options() {
@@ -432,8 +472,9 @@
     o.ow = Array.isArray(o.ow) ? o.ow.filter(r => OWN.includes(r)) : []; o.b = o.b ? clamp(+o.b, 500, 1e6) : null;
     o.fam = FAMS.includes(o.fam) ? o.fam : null; o.cn = o.cn ? clamp(Math.round(+o.cn), 1, 4) : null;
     /* the customer's camera picks: [model, lens, owned] per position, store models only */
-    o.cl = Array.isArray(o.cl) ? o.cl.slice(0, 4).map(c => Array.isArray(c) ? { m:c[0], lens:c[1] || null, own:!!c[2] } : c)
-      .filter(c => c && P[c.m] && (D.PTZ[c.m] || D.CAMCORDER[c.m] || D.BODIES[c.m])).map(c => ({ m:c.m, lens:D.BODIES[c.m] && (c.lens === 'kit' || c.lens === 'other' || D.LENSES[c.lens]) ? c.lens : null, own:!!c.own })) : null;
+    o.cl = Array.isArray(o.cl) ? o.cl.slice(0, 4).map(c => Array.isArray(c) ? { m:c[0], lens:c[1] || null, own:!!c[2], ext:c[3] || null, crop:!!c[4] } : c)
+      .filter(c => c && P[c.m] && (D.PTZ[c.m] || D.CAMCORDER[c.m] || D.BODIES[c.m])).map(c => ({ m:c.m, lens:D.BODIES[c.m] && (c.lens === 'kit' || c.lens === 'other' || D.LENSES[c.lens]) ? c.lens : null, own:!!c.own,
+        ext:D.EXT && D.EXT[c.ext] && D.EXT[c.ext].lenses.includes(c.lens) ? c.ext : null, crop:!!c.crop && !!(D.BODIES[c.m] && D.BODIES[c.m].crop) })) : null;
     if (o.cl && !o.cl.length) o.cl = null;
     o.same = o.same ? 1 : 0; o.pos = clamp(Math.round(+o.pos || 0), 0, 3);
     o.o = ['e', 'r', 'p', 's', 'c'].includes(o.o) ? o.o : null; o.st = o.st && window.I9S && window.I9S.SET && window.I9S.SET[o.st] ? o.st : null;
@@ -441,7 +482,7 @@
     if (o.o === 'c' && !o.cl) o.o = null;
     return o;
   }
-  PL.zGet = () => { const o = {}; Object.keys(Z).forEach(k => { let v = Z[k]; if (k === 'cl' && v) v = v.map(c => [c.m, c.lens || 0, c.own ? 1 : 0]); if (v !== null && v !== '' && !(Array.isArray(v) && !v.length)) o[k] = v; }); return o; };
+  PL.zGet = () => { const o = {}; Object.keys(Z).forEach(k => { let v = Z[k]; if (k === 'cl' && v) v = v.map(c => c.ext || c.crop ? [c.m, c.lens || 0, c.own ? 1 : 0, c.ext || 0, c.crop ? 1 : 0] : [c.m, c.lens || 0, c.own ? 1 : 0]); if (v !== null && v !== '' && !(Array.isArray(v) && !v.length)) o[k] = v; }); return o; };
   const save = () => PL.save();
   const hasPlan = () => Z.pl && !Z.dirty && Z.lo === Z.o;
   const hashOf = s => { let h = 5381; for (let i = 0; i < s.length; i++) h = ((h << 5) + h + s.charCodeAt(i)) | 0; return (h >>> 0).toString(36); };
@@ -598,17 +639,17 @@
   function shownId(opts) { if (Z.cl && (Z.o === 'c' || !Z.o)) return 'c'; return Z.o && opts[Z.o] ? Z.o : Z.st && opts.s ? 's' : 'r'; }
   function lineupShown() {
     const opts = options(), id = shownId(opts);
-    if (id === 'c') return Z.cl.map(c => ({ k:kOf(c.m), m:c.m, lens:D.BODIES[c.m] ? c.lens || opts.c.ev.cams[Z.cl.indexOf(c)]?.lens || null : null, own:!!c.own }));
-    return opts[id].ev.cams.slice(0, 4).map(c => ({ k:c.k, m:c.m, lens:c.k === 'lens' ? c.lens : null, own:!!c.own }));
+    if (id === 'c') return Z.cl.map(c => ({ k:kOf(c.m), m:c.m, lens:D.BODIES[c.m] ? c.lens || opts.c.ev.cams[Z.cl.indexOf(c)]?.lens || null : null, own:!!c.own, ext:c.ext || null, crop:!!c.crop }));
+    return opts[id].ev.cams.slice(0, 4).map(c => ({ k:c.k, m:c.m, lens:c.k === 'lens' ? c.lens : null, own:!!c.own, ext:c.ext || null, crop:!!c.crop }));
   }
   function editLineup(fn) {
-    const cl = lineupShown().map(c => ({ m:c.m, lens:c.lens, own:c.own }));
+    const cl = lineupShown().map(c => ({ m:c.m, lens:c.lens, own:c.own, ext:c.ext || null, crop:!!c.crop }));
     fn(cl, layout(Z));
     Z.cl = cl; Z.cn = cl.length; Z.o = 'c'; Z.om = 1; Z.dirty = 1;
   }
   function pickModel(m) {
     editLineup((cl, L) => { const n = cl.length, idx = Z.same ? cl.map((_, i) => i) : [clamp(Z.pos, 0, n - 1)];
-      idx.forEach(i => { cl[i].m = m; cl[i].lens = D.BODIES[m] ? autoLens(m, L, i, n) : null; }); });
+      idx.forEach(i => { cl[i].m = m; cl[i].lens = D.BODIES[m] ? autoLens(m, L, i, n) : null; cl[i].ext = null; cl[i].crop = false; }); });
   }
   function setCount(n) {
     n = clamp(n, 1, 4);
@@ -683,17 +724,31 @@
   }
   function lensChips(c, i) {
     const b = D.BODIES[c.m]; if (!b) return '';
-    const ls = (b.kit ? ['kit'] : []).concat(lensesFor(b));
-    if (!ls.length) ls.push('other');
-    const lab = l => l === 'kit' ? t('lensKit', b.kit.min, b.kit.max) : l === 'other' ? t('lensOther') : `${D.LENSES[l].min}–${D.LENSES[l].max} mm`;
+    const ls = (b.kit ? ['kit'] : []).concat(lensesFor(b)), lg = longFor(b);
+    if (!ls.length && !lg.length) ls.push('other');
+    const lab = l => l === 'kit' ? t('lensKit', b.kit.min, b.kit.max) : l === 'other' ? t('lensOther') : mmTxt([D.LENSES[l].min, D.LENSES[l].max]) + (D.LENSES[l].mount !== b.mount ? ' · ' + D.LENSES[l].mount : '');
     const nm = l => l === 'kit' ? b.kit.name : l === 'other' ? t('lensOther') : P[l].brand + ' ' + P[l].name + ' · ' + usd(P[l].usd);
-    return `<div class="lchips" role="group" aria-label="${esc(t('lensK') + ' · CAM ' + (i + 1))}"><span class="meta-s">${esc(t('lensK'))}</span>${ls.map(l => `<button type="button" class="lchip${l === c.lens ? ' on' : ''}" data-lens="${i}:${l}" aria-pressed="${l === c.lens}" title="${esc(nm(l))}" aria-label="${esc(nm(l))}">${esc(lab(l))}${l !== 'kit' && l !== 'other' ? `<small>${usd0(P[l].usd)}</small>` : ''}</button>`).join('')}</div>`;
+    const chip = l => `<button type="button" class="lchip${l === c.lens ? ' on' : ''}" data-lens="${i}:${l}" aria-pressed="${l === c.lens}" title="${esc(nm(l))}" aria-label="${esc(nm(l))}">${esc(lab(l))}${l !== 'kit' && l !== 'other' ? `<small>${usd0(P[l].usd)}</small>` : ''}</button>`;
+    const ex = extsFor(c.lens), lz = D.LENSES[c.lens];
+    const opt = ex.map(x => { const e = D.EXT[x], on = c.ext === x, nmx = e.builtin ? t('builtinExt') : P[x].name;
+      return `<button type="button" class="lchip x${on ? ' on' : ''}" data-ext="${i}:${x}" aria-pressed="${on}" aria-label="${esc((e.builtin ? e.name : P[x].brand + ' ' + P[x].name + ' · ' + usd(P[x].usd)))}">${esc(t('extAdd', nmx))}${e.builtin ? '' : `<small>${usd0(P[x].usd)}</small>`}</button>`; })
+      .concat(b.crop ? [`<button type="button" class="lchip x${c.crop ? ' on' : ''}" data-crop="${i}" aria-pressed="${!!c.crop}" title="${esc(b.crop.note || '')}">${esc(t('cropAdd', b.crop.label, (b.w / b.crop.w).toFixed(2)))}${b.crop.approx ? ` <span class="vf">${esc(t('verify'))}</span>` : ''}</button>`] : []);
+    const fr = fRange(c.m, c.lens, c.ext), ap = apRange(c.m, c.lens, c.ext), apHi = ap ? Math.max(ap[0], ap[1]) : 0;
+    const effS = mmTxt(fr) + (ap ? ' · ' + fmtFr(ap, lz && lz.cine) : '');
+    const eff = (c.ext || c.crop || ap) && c.lens !== 'other' ? `<p class="leff meta-s">${esc(c.ext || c.crop ? t('effTxt', effS) : effS)}${c.crop && b.crop ? ' · ' + esc(b.crop.label) : ''}${apHi > (D.DIM_AP || 8) + 0.3 ? `<span class="ldim"><i aria-hidden="true"></i>${esc(t('dimTip'))}</span>` : ''}${lz && lz.adapter && lz.mount !== b.mount && P[lz.adapter] ? `<span class="ldim"><i aria-hidden="true"></i>${esc(t('adaptTip', P[lz.adapter].brand + ' ' + P[lz.adapter].name, lz.heavy))}</span>` : ''}</p>` : '';
+    return `<div class="lchips" role="group" aria-label="${esc(t('lensK') + ' · CAM ' + (i + 1))}">
+      ${ls.length ? `<span class="lnrow"><span class="meta-s">${esc(t('lensStd'))}</span>${ls.map(chip).join('')}</span>` : ''}
+      ${lg.length ? `<span class="lnrow"><span class="meta-s">${esc(t('lensLong'))}</span>${lg.map(chip).join('')}</span>` : ''}
+      ${opt.length ? `<span class="lnrow"><span class="meta-s"></span>${opt.join('')}</span>` : ''}
+      ${eff}</div>`;
   }
   function posRow(c, i, n, L) {
     const p = P[c.m], role = posRole(L, i, n), s = slotOf(L, i, n);
     const tgt = typeof s.aim === 'number' && n > 1 ? L.ppl[s.aim] : null;
     const framing = !tgt ? PL.t('s_' + (s.shot === 'med' ? 'med' : 'wide')) + ' · ' + t('everyone') : PL.t('s_' + s.shot) + ' · ' + PL.pname(tgt.n);
-    const rc = reach(L, i, n, c.k, c.m, c.lens), act = !Z.same && i === Z.pos;
+    const rc = reach(L, i, n, c.k, c.m, c.lens, c.ext, c.crop), act = !Z.same && i === Z.pos;
+    const sg = rc && rc.bad === 'far' && c.k === 'lens' ? suggest(c.m, L, i, n) : null;
+    const sgName = sg ? [sg.lens === 'kit' ? D.BODIES[c.m].kit.name : P[sg.lens].name, sg.ext ? (D.EXT[sg.ext].builtin ? t('builtinExt') : P[sg.ext].name) : '', sg.crop ? D.BODIES[c.m].crop.label : ''].filter(Boolean).join(' + ') : '';
     const msg = rc && rc.bad === 'far' ? t('reachFar', PL.lenTxt(rc.fw), PL.pname(rc.nd.p.n)) : rc && rc.bad === 'narrow' ? t('reachNarrow', Math.round(rc.hi), Math.round(rc.nd.h)) : '';
     return `<li class="cpos-i${act || Z.same ? ' on' : ''}${c.own ? ' own' : ''}${msg ? ' bad' : ''}">
       <button type="button" class="cp-sel" data-pos="${i}" aria-pressed="${act}" aria-controls="cpick"><span class="cn">${i + 1}</span><span class="cp-r"><b>${esc(t('rl_' + role))}</b><span class="meta-s">${esc(framing)}</span></span></button>
@@ -701,7 +756,7 @@
       <span class="cp-m"><span class="cc-b">${esc(brandShort(p.brand))}</span><b>${esc(p.name)}</b><span class="meta-s">${c.own ? esc(t('youHaveS')) : usd(p.usd)}${specOf(c.m).approx ? ` <span class="vf">${esc(t('verify'))}</span>` : ''}</span></span>
       <label class="cp-own"><input type="checkbox" data-owncam="${i}"${c.own ? ' checked' : ''}><span class="box" aria-hidden="true"></span><span>${esc(t('haveCam'))}</span></label>
       ${lensChips(c, i)}
-      ${msg ? `<p class="cp-w"><i aria-hidden="true"></i><span>${esc(msg)}</span></p>` : rc && rc.ok && !rc.nd.wide ? `<p class="cp-ok meta-s">${esc(t('reachOk', PL.lenTxt(rc.fw), PL.lenTxt(rc.nd.d)))}</p>` : ''}
+      ${msg ? `<p class="cp-w"><i aria-hidden="true"></i><span>${esc(msg)}${sg ? `<button type="button" class="tbtn cp-fix" data-fix="${i}:${sg.lens}:${sg.ext || ''}:${sg.crop ? 1 : 0}">${esc(t('fixIt', sgName))} · ${esc(t('fixReach', PL.lenTxt(sg.fw)))}</button>` : ''}</span></p>` : rc && rc.ok && !rc.nd.wide ? `<p class="cp-ok meta-s">${esc(t('reachOk', PL.lenTxt(rc.fw), PL.lenTxt(rc.nd.d)))}</p>` : ''}
     </li>`;
   }
   function camSum() {
@@ -721,7 +776,7 @@
     const adds = [q('microconv') ? t('a_conv', q('microconv')) : '', ev.bom.some(l => ctlIds.includes(l.id) || l.code === 'CTRL') ? t('a_ctl') : '',
       ev.bom.some(l => l.g === 'net' && l.role === 'net') ? t('a_poe') : '', enc ? t('a_enc', enc) : '', cages ? t('a_cage', cages) : '', pwr ? t('a_pwr', pwr) : '',
       tri ? t('a_tri', tri) : '', brk ? t('a_brk', brk) : ''].filter(Boolean);
-    const bad = lu.filter((c, i) => { const r = reach(L, i, n, c.k, c.m, c.lens); return r && r.bad; }).length;
+    const bad = lu.filter((c, i) => { const r = reach(L, i, n, c.k, c.m, c.lens, c.ext, c.crop); return r && r.bad; }).length;
     const tr = ev.tr === 'ip' ? 'IP / NDI' : ev.tr.toUpperCase();
     return `<p class="meta"><span class="tally"></span>${esc(t('sumK'))} · ${n}</p>
       <h2>${esc(title(ev))}</h2>
@@ -952,7 +1007,11 @@
     if (b.dataset.pos != null) { Z.pos = +b.dataset.pos; Z.same = 0; UI.tab = null; render(); const h = $('#cpick-h'); if (h) { h.setAttribute('tabindex', '-1'); if (matchMedia('(max-width:1099px)').matches) h.scrollIntoView({ block:'start', behavior:'smooth' }); } $(`[data-pos="${b.dataset.pos}"]`, panel)?.focus({ preventScroll:true }); save(); return; }
     if (b.dataset.psw != null) { if (b.dataset.psw === 'all') { Z.same = 1; const lu = lineupShown(), m = lu[clamp(Z.pos, 0, lu.length - 1)].m; if (lu.some(c => c.m !== m)) pickModel(m); } else { Z.same = 0; Z.pos = +b.dataset.psw; } keep(`[data-psw="${b.dataset.psw}"]`); save(); return; }
     if (b.dataset.pick) { pickModel(b.dataset.pick); keep(`[data-pick="${b.dataset.pick}"]`); save(); return; }
-    if (b.dataset.lens) { const [i, l] = b.dataset.lens.split(':'); editLineup(cl => { cl[+i].lens = l; }); keep(`[data-lens="${b.dataset.lens}"]`); save(); return; }
+    if (b.dataset.lens) { const [i, l] = b.dataset.lens.split(':'); editLineup(cl => { const c = cl[+i], bd = D.BODIES[c.m], lz = D.LENSES[l]; c.lensWas = c.lens; c.lens = l; if (!extFor(l, c.ext)) c.ext = null;
+        const was = D.LENSES[c.lensWas]; if (lz && lz.ic === 's35' && bd.fmt === 'ff' && bd.crop) c.crop = true; else if (was && was.ic === 's35') c.crop = false; delete c.lensWas; }); keep(`[data-lens="${b.dataset.lens}"]`); save(); return; }
+    if (b.dataset.ext) { const [i, x] = b.dataset.ext.split(':'); editLineup(cl => { cl[+i].ext = cl[+i].ext === x ? null : x; }); keep(`[data-ext="${b.dataset.ext}"]`); save(); return; }
+    if (b.dataset.crop != null) { const i = +b.dataset.crop; editLineup(cl => { cl[i].crop = !cl[i].crop; }); keep(`[data-crop="${i}"]`); save(); return; }
+    if (b.dataset.fix) { const [i, l, x, cr] = b.dataset.fix.split(':'); editLineup(cl => { Object.assign(cl[+i], { lens:l, ext:x || null, crop:cr === '1' }); }); keep(`[data-lens="${i}:${l}"]`); save(); return; }
     if (b.dataset.tab) { UI.tab = b.dataset.tab; UI.b = ''; keep(`[data-tab="${b.dataset.tab}"]`); return; }
     if (b.dataset.fb != null) { UI.b = b.dataset.fb; keep(`[data-fb="${b.dataset.fb}"]`); return; }
     if (b.dataset.fo != null) { UI.o = b.dataset.fo; keep(`[data-fo="${b.dataset.fo}"]`); return; }

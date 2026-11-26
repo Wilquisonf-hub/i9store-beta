@@ -171,6 +171,13 @@
     w_ptzCtl:['One joystick for {0} {1} PTZ over IP','Um joystick para {0} PTZ {1} via IP'],
     c_poeAC:['{0}: draws more than a 60 W PoE++ port. Planned on its AC adaptor.','{0}: consome mais que uma porta PoE++ de 60 W. Planejada na fonte AC.'],
     c_reach:['{0} is at full zoom and still frames {1} across at {2}: wider than a close-up. Move it closer, or use a longer lens or zoom.','{0} está no zoom máximo e ainda enquadra {1} em {2}: mais aberto que um close. Aproxime a câmera ou use lente / zoom maior.'],
+    /* round 2: long reach */
+    extK:['Extender','Extensor'], extNone:['None','Nenhum'], cropK:['Super 35 crop mode','Modo crop Super 35'], effK:['effective','efetivo'],
+    w_ext:['Extender for {0}: ×{1}, {2} effective','Extensor para {0}: ×{1}, {2} efetivo'], w_adapt:['{0} lens on a {1} body','Lente {0} em corpo {1}'],
+    g_heavy:['Heavy-duty support for a {0} kg lens','Suporte reforçado para lente de {0} kg'], w_heavy:['Check the tripod and head payload with a specialist','Confira a carga do tripé e da cabeça com um especialista'],
+    c_dim:['{0}: {1} effective at this zoom. Rule of thumb: past about f/8 a dim room needs more light or a higher ISO.','{0}: {1} efetivo neste zoom. Regra prática: acima de f/8 uma sala escura pede mais luz ou ISO mais alto.'],
+    c_ic:['{0}: the {1} covers Super 35. Turn on the body’s Super 35 crop mode or the lens’s built-in 1.5× extender.','{0}: a {1} cobre Super 35. Ligue o modo crop Super 35 do corpo ou o extensor 1,5× da lente.'],
+    ctlOk:['confirmed','confirmado'],
     camLabel:['CAM {0}','CAM {0}'], ctrlLabel:['CTRL · switcher','CTRL · switcher'], facing:['facing','virada para'],
   };
   let LANG = 'en';
@@ -288,18 +295,34 @@
   const fromThisSetup = () => SETUP && SETUP.tpl === S.tpl;
   function newCam(k, m, s, o = {}) {
     const c = { id:nid(), k, m, x:o.x ?? s.w / 2, y:o.y ?? s.d * 0.85, a:o.a ?? 0, z:0, f:0, lens:o.lens || null, sf:null,
-      mnt:o.mnt || (k === 'ptz' ? 'wall' : 'tripod'), man:o.man ?? (k !== 'ptz'), tgt:-1 };
+      mnt:o.mnt || (k === 'ptz' ? 'wall' : 'tripod'), man:o.man ?? (k !== 'ptz'), tgt:-1, ext:o.ext || null, crop:!!o.crop };
     if (k === 'lens') { const b = D.BODIES[m]; c.sf = b.fmt; if (!c.lens) c.lens = defaultLens(m); c.f = lensRange(c)[0]; }
     return c;
   }
   function defaultLens(m) { const b = D.BODIES[m]; if (b.kit) return 'kit'; const pre = ((D.PRESETS || {})[b.mount] || []).find(k => D.LENSES[k] && P[k]); if (pre) return pre; const l = Object.keys(D.LENSES).find(k => D.LENSES[k].mount === b.mount && P[k]); return l || 'other'; }
-  function lensRange(c) {
+  /* version F round 2: an extender multiplies the focal range (from its allowed focal length up) and costs light */
+  const extOf = c => { const e = c && c.ext && D.EXT && D.EXT[c.ext]; return e && e.lenses.includes(c.lens) ? e : null; };
+  const extApx = e => e ? (e.apx || Math.pow(2, e.stops / 2)) : 1;
+  function baseRange(c) {
     const b = D.BODIES[c.m];
     if (c.lens === 'kit' && b.kit) return [b.kit.min, b.kit.max];
     if (D.LENSES[c.lens]) return [D.LENSES[c.lens].min, D.LENSES[c.lens].max];
     return D.OTHER_LENS[b.mount] || [12, 120];
   }
-  const sensorW = c => { const b = D.BODIES[c.m]; return c.sf === b.fmt ? b.w : D.FORMATS[c.sf].w; };
+  function lensRange(c) {
+    const r = baseRange(c), e = extOf(c); if (!e) return r;
+    const from = D.LENSES[c.lens].ext; const lo = typeof from === 'number' ? Math.max(r[0], from) : r[0];
+    return [lo * e.x, r[1] * e.x];
+  }
+  /* max aperture at the current focal length (linear between the lens's two marked apertures), extender included */
+  function apAt(c) {
+    const b = D.BODIES[c.m], L0 = c.lens === 'kit' ? b.kit : D.LENSES[c.lens]; if (!L0 || !L0.ap) return null;
+    const e = extOf(c), f0 = c.f / (e ? e.x : 1), t = L0.max > L0.min ? clamp((f0 - L0.min) / (L0.max - L0.min), 0, 1) : 1;
+    return (L0.ap[0] + (L0.ap[1] - L0.ap[0]) * t) * extApx(e);
+  }
+  const FSTOPS = [1.2, 1.4, 1.8, 2, 2.8, 2.9, 3.5, 4, 4.4, 4.5, 5, 5.6, 6.3, 7.1, 8, 9, 10, 11, 13, 14, 16, 18, 20, 22, 25, 32];
+  const fNum = a => 'f/' + FSTOPS.reduce((b, v) => Math.abs(Math.log(v / a)) < Math.abs(Math.log(b / a)) ? v : b, FSTOPS[0]);
+  const sensorW = c => { const b = D.BODIES[c.m]; if (c.crop && b.crop) return b.crop.w; return c.sf === b.fmt ? b.w : D.FORMATS[c.sf].w; };
   const zspec = c => c.k === 'ptz' ? D.PTZ[c.m] : c.k === 'cc' ? D.CAMCORDER[c.m] : null;
 
   /* ======================= optics ======================= */
@@ -372,7 +395,7 @@
   const buyLen = m => S.unit === 'ft' ? Math.ceil(m * FT / 5) * 5 + ' ft' : Math.ceil(m) + ' m';
   const camLab = i => t('camLabel', i + 1);
   const modelName = c => P[c.m] ? P[c.m].brand + ' ' + P[c.m].name : c.m;
-  const isApprox = c => { if (c.k === 'lens') { const b = D.BODIES[c.m]; return !!b.approx || (c.sf !== b.fmt && D.FORMATS[c.sf].approx); } const z = zspec(c); return !!(z && z.approx); };
+  const isApprox = c => { if (c.k === 'lens') { const b = D.BODIES[c.m]; return !!b.approx || (c.crop && b.crop && !!b.crop.approx) || (!c.crop && c.sf !== b.fmt && D.FORMATS[c.sf].approx); } const z = zspec(c); return !!(z && z.approx); };
 
   /* ======================= plan rendering ======================= */
   const svg = $('#plan'), box = $('#planbox');
@@ -565,8 +588,12 @@
         <div class="row"><label for="i-model">${t('model')}</label><select id="i-model">${models.map(m => opt(m, P[m].brand + ' ' + P[m].name + ' · ' + usd(P[m].usd), c.m)).join('')}</select></div>`;
       if (c.k === 'lens') {
         const b = D.BODIES[c.m];
-        const lenses = Object.keys(D.LENSES).filter(l => D.LENSES[l].mount === b.mount);
-        h += `<div class="row"><label for="i-lens">${t('lens')}</label><select id="i-lens">${b.kit ? opt('kit', b.kit.name, c.lens) : ''}${lenses.map(l => opt(l, P[l].brand + ' ' + P[l].name + ' · ' + usd(P[l].usd), c.lens)).join('')}${opt('other', t('otherLens') + ' · ' + b.mount, c.lens)}</select></div>
+        const lenses = Object.keys(D.LENSES).filter(l => P[l] && (D.LENSES[l].mount === b.mount || (D.LENSES[l].fits || []).includes(b.mount)) && !(D.LENSES[l].apsc && b.fmt === 'ff'));
+        const exts = Object.keys(D.EXT || {}).filter(x => D.EXT[x].lenses.includes(c.lens) && (D.EXT[x].builtin || P[x]));
+        h += `<div class="row"><label for="i-lens">${t('lens')}</label><select id="i-lens">${b.kit ? opt('kit', b.kit.name, c.lens) : ''}${lenses.map(l => opt(l, P[l].brand + ' ' + P[l].name + ' · ' + usd(P[l].usd), c.lens)).join('')}${opt('other', t('otherLens') + ' · ' + b.mount, c.lens)}</select></div>`;
+        if (exts.length) h += `<div class="row"><label for="i-ext">${t('extK')}</label><select id="i-ext">${opt('', t('extNone'), c.ext || '')}${exts.map(x => opt(x, D.EXT[x].builtin ? D.EXT[x].name : P[x].brand + ' ' + P[x].name + ' · ' + usd(P[x].usd), c.ext || '')).join('')}</select></div>`;
+        if (b.crop) h += `<label class="chk"><input type="checkbox" id="i-crop"${c.crop ? ' checked' : ''}><span>${t('cropK')} · ${esc(b.crop.label)}</span></label>`;
+        h += `
           <div class="row"><label for="i-sf">${t('sensor')}</label><select id="i-sf">${Object.keys(D.FORMATS).map(f => opt(f, f === b.fmt ? t('bodyNative', D.FORMATS[f].label, b.w) : D.FORMATS[f].label + ' · ' + D.FORMATS[f].w + ' mm', c.sf)).join('')}</select></div>`;
         const [lo, hi] = lensRange(c);
         h += lo === hi ? `<div class="row"><span class="lab">${t('focal')}</span><span class="val" data-ro="f"></span></div>`
@@ -616,7 +643,7 @@
     const zs = zspec(c), mid = zs && c.z > 0.002 && c.z < 0.998;
     put('h', (mid ? '≈ ' : '') + v.h.toFixed(1) + '°');
     put('z', zs ? zoomX(c).toFixed(1) + '× · ' + (mid ? '≈' : '') + v.h.toFixed(1) + '°' : '');
-    put('f', c.k === 'lens' ? c.f.toFixed(1) + ' mm · ' + v.h.toFixed(1) + '°' : '');
+    put('f', c.k === 'lens' ? c.f.toFixed(1) + ' mm' + (extOf(c) || c.crop ? ' ' + t('effK') : '') + (apAt(c) ? ' · ' + fNum(apAt(c)) : '') + ' · ' + v.h.toFixed(1) + '°' : '');
     put('d', v.tg ? lenTxt(v.tg.dist) + ' · ' + pname(v.tg.p.n) : '—');
     put('fw', v.fw ? lenTxt(v.fw) : '—');
     put('cls', v.cls ? t('s_' + v.cls) + (v.out ? ' · ⚠' : '') + (v.n > 1 && (v.cls === 'med' || v.cls === 'wide') ? ' · ' + t('twoShot', v.n) : '') : t('noTarget'));
@@ -654,6 +681,10 @@
         const b = D.BODIES[c.m];
         if (D.LENSES[c.lens]) add('cam', { id:c.lens, qty:1, why:t('w_lensFor'), who:[lab], own:!!c.own });
         else if (c.lens === 'other') { const [lo, hi] = lensRange(c); add('cam', { name:t('g_lens', b.mount), spec:t('g_lensSpec', lo, hi), qty:1, why:t('w_lensFor'), who:[lab], code:'LENS', own:!!c.own }); }
+        const lz = D.LENSES[c.lens], ex = extOf(c);
+        if (ex && !ex.builtin && P[c.ext]) add('cam', { id:c.ext, qty:1, why:t('w_ext', P[c.lens] ? P[c.lens].name : c.lens, ex.x, Math.round(lensRange(c)[0]) + '–' + Math.round(lensRange(c)[1]) + ' mm'), who:[lab], own:!!c.own });
+        if (lz && lz.mount !== b.mount && lz.adapter && P[lz.adapter]) add('cam', { id:lz.adapter, qty:1, why:t('w_adapt', lz.mount, b.mount), who:[lab], own:!!c.own });
+        if (lz && lz.heavy) add('mnt', { name:t('g_heavy', lz.heavy), spec:'', qty:1, why:t('w_heavy'), who:[lab], code:'BRKT' });
         /* version F: a cage made for this body, and mains power (a priced dummy battery, else a line to quote) */
         if (b.cage && P[b.cage]) add('mnt', { id:b.cage, qty:1, why:t('w_cage'), who:[lab], own:!!c.own });
         if (b.pwr) { if (P[b.pwr]) add('net', { id:b.pwr, qty:1, why:t('w_pwrDummy'), who:[lab], own:!!c.own }); else add('net', { name:t('g_pwrBody', modelName(c)), spec:b.pwr, qty:1, why:t('w_pwrBody'), who:[lab], code:'PWR', own:!!c.own }); }
@@ -675,7 +706,7 @@
     if (pan.length >= 2) add('cam', { id:'rp60', qty:1, why:t('w_rp60', pan.length), who:pan.map(([, i]) => labs[i]) });
     if (can.length >= 2) { if (ctl.Canon && P[ctl.Canon]) add('cam', { id:ctl.Canon, qty:1, why:t('w_ptzCtl', can.length, 'Canon'), who:can.map(([, i]) => labs[i]) });
       else add('cam', { name:t('g_canonCtl'), spec:'RC-IP100 / RC-IP300', qty:1, why:t('w_canonCtl'), who:can.map(([, i]) => labs[i]), code:'CTRL' }); }
-    if (sny.length >= 2 && ctl.Sony && P[ctl.Sony]) add('cam', { id:ctl.Sony, qty:1, why:t('w_ptzCtl', sny.length, 'Sony'), who:sny.map(([, i]) => labs[i]) });
+    if (sny.length >= 2 && ctl.Sony && P[ctl.Sony]) add('cam', { id:ctl.Sony, qty:1, why:t('w_ptzCtl', sny.length, 'Sony') + (D.PTZCTL_OK && D.PTZCTL_OK.Sony ? ' · ' + D.PTZCTL_OK.Sony : ''), who:sny.map(([, i]) => labs[i]) });
 
     /* --- switching & streaming --- */
     const nIn = nC + S.ext;
@@ -814,6 +845,10 @@
 
     /* --- framing checks --- */
     views.forEach((v, i) => { if (!v.tg) warn(t('c_noTgt', labs[i])); else if (v.out) warn(t('c_tgtOut', labs[i], pname(v.tg.p.n))); });
+    /* version F round 2: dim effective aperture (rule of thumb) and a Super 35 lens on a full-frame body */
+    cams.forEach((c, i) => { if (c.k !== 'lens') return; const a = apAt(c); if (a && a > (D.DIM_AP || 8) + 0.3) warn(t('c_dim', labs[i], fNum(a)), 'info');
+      const lz = D.LENSES[c.lens], b = D.BODIES[c.m], ex = extOf(c);
+      if (lz && lz.ic === 's35' && b.fmt === 'ff' && !c.crop && !(ex && ex.builtin)) warn(t('c_ic', labs[i], P[c.lens] ? P[c.lens].name : c.lens)); });
     /* version F: a camera aimed at one person, at the end of its zoom, still framing wider than a medium close-up */
     views.forEach((v, i) => { const c = cams[i]; if (c.tgt < 0 || !v.tg || v.out || !v.fw) return;
       const atLimit = zspec(c) ? c.z >= 0.995 : c.f >= lensRange(c)[1] - 0.01;
@@ -944,7 +979,8 @@
   function packPlan() {
     const o = { v:1, t:S.tpl, w:r2(S.w), d:r2(S.d), u:S.unit, tr:S.tr, fm:S.fmt, ct:S.ctl, e:S.ext, c:[r2(S.ctrl.x), r2(S.ctrl.y)],
       f:S.furn.map(f => [f.k, r2(f.x), r2(f.y), r2(f.w), r2(f.h)]), p:S.ppl.map(p => [p.n, r2(p.x), r2(p.y), Math.round(p.a)]),
-      k:S.cams.map(c => { const a = [c.k, c.m, r2(c.x), r2(c.y), Math.round(c.a * 10) / 10, Math.round(c.z * 1000) / 1000, r2(c.f), c.lens, c.sf, c.mnt, c.man ? 1 : 0, c.tgt]; if (c.own) a.push(1); return a; }) };
+      k:S.cams.map(c => { const a = [c.k, c.m, r2(c.x), r2(c.y), Math.round(c.a * 10) / 10, Math.round(c.z * 1000) / 1000, r2(c.f), c.lens, c.sf, c.mnt, c.man ? 1 : 0, c.tgt];
+        if (c.own || c.ext || c.crop) a.push(c.own ? 1 : 0); if (c.ext || c.crop) a.push(c.ext || 0, c.crop ? 1 : 0); return a; }) };
     /* only when used, so plans saved before the wizard keep the same link */
     if (S.xr) o.x = r2(S.xr);
     if (S.own && S.own.length) o.o = S.own.slice();
@@ -959,7 +995,7 @@
     Z = o.z && typeof o.z === 'object' ? o.z : null;
     (o.k || []).forEach(a => {
       const [kk, m] = a; const ok = kk === 'ptz' ? D.PTZ[m] : kk === 'cc' ? D.CAMCORDER[m] : kk === 'lens' ? D.BODIES[m] : null; if (!ok || !P[m]) return;
-      const c = newCam(kk, m, S, { x:+a[2], y:+a[3], a:+a[4], mnt:a[9], man:!!a[10], lens:a[7] });
+      const c = newCam(kk, m, S, { x:+a[2], y:+a[3], a:+a[4], mnt:a[9], man:!!a[10], lens:a[7], ext:D.EXT && D.EXT[a[13]] ? a[13] : null, crop:!!a[14] && !!(D.BODIES[m] && D.BODIES[m].crop) });
       c.z = clamp(+a[5] || 0, 0, 1); if (kk === 'lens') { c.sf = D.FORMATS[a[8]] ? a[8] : c.sf; const [lo, hi] = lensRange(c); c.f = clamp(+a[6] || lo, lo, hi); }
       c.tgt = Number.isInteger(a[11]) ? a[11] : -1; if (!R.rise[c.mnt]) c.mnt = 'tripod';
       if (a[12]) c.own = true;
@@ -1061,7 +1097,9 @@
   selPanel.addEventListener('change', e => {
     if (!sel || sel.kind !== 'cam') return; const c = S.cams[sel.i], id = e.target.id, v = e.target.value;
     if (id === 'i-model') { const h = hfov(c); c.m = v; if (c.k === 'lens') { c.sf = D.BODIES[v].fmt; c.lens = defaultLens(v); const [lo] = lensRange(c); c.f = lo; } setHfov(c, h); update({ force:true }); }
-    else if (id === 'i-lens') { const h = hfov(c); c.lens = v; setHfov(c, h); update({ force:true }); }
+    else if (id === 'i-lens') { const h = hfov(c); c.lens = v; if (!extOf(c)) c.ext = null; setHfov(c, h); update({ force:true }); }
+    else if (id === 'i-ext') { const h = hfov(c); c.ext = v || null; setHfov(c, h); update({ force:true }); }
+    else if (id === 'i-crop') { const h = hfov(c); c.crop = e.target.checked; setHfov(c, h); update({ force:true }); }
     else if (id === 'i-sf') { c.sf = v; update({ force:true }); }
     else if (id === 'i-mnt') { c.mnt = v; update(); }
     else if (id === 'i-tgt') { c.tgt = +v; update(); }
@@ -1172,7 +1210,7 @@
     const lines = BOM.filter(l => !l.info), { quote, owned, total } = tally(BOM);
     let s = t('q_title') + '\n' + '='.repeat(t('q_title').length) + '\n\n';
     s += `${t('q_room')}: ${t('t_' + S.tpl)} · ${lenTxt(S.w)} × ${lenTxt(S.d)}\n${t('q_sig')}: ${S.tr === 'ip' ? 'IP / NDI' : S.tr.toUpperCase()} · ${S.fmt === 'hd' ? '1080p' : '2160p'} · PTZ ${S.ctl === 'ip' ? 'IP' : 'RS-422'}\n\n${t('q_cams')}:\n`;
-    S.cams.forEach((c, i) => { const v = view(c); s += `  ${camLab(i)}  ${modelName(c)}${c.k === 'lens' ? ' + ' + (D.LENSES[c.lens] ? P[c.lens].name : c.lens === 'kit' ? D.BODIES[c.m].kit.name : t('otherLens')) + ' @ ' + c.f.toFixed(0) + ' mm' : ' @ ' + zoomX(c).toFixed(1) + '×'} · ${v.h.toFixed(1)}° · ${v.cls ? t('s_' + v.cls) + ' ' + lenTxt(v.fw) : t('noTarget')} · ${t('m_' + c.mnt)} · ${runCable(c)} ${lenTxt(runOf(c))}\n`; });
+    S.cams.forEach((c, i) => { const v = view(c); s += `  ${camLab(i)}  ${modelName(c)}${c.k === 'lens' ? ' + ' + (D.LENSES[c.lens] ? P[c.lens].name : c.lens === 'kit' ? D.BODIES[c.m].kit.name : t('otherLens')) + (extOf(c) ? ' + ' + (extOf(c).builtin ? extOf(c).name : P[c.ext].name) : '') + (c.crop ? ' · S35' : '') + ' @ ' + c.f.toFixed(0) + ' mm' : ' @ ' + zoomX(c).toFixed(1) + '×'} · ${v.h.toFixed(1)}° · ${v.cls ? t('s_' + v.cls) + ' ' + lenTxt(v.fw) : t('noTarget')} · ${t('m_' + c.mnt)} · ${runCable(c)} ${lenTxt(runOf(c))}\n`; });
     s += `\n${t('q_list')}:\n`;
     GROUPS.forEach(g => { const ls = lines.filter(l => l.g === g); if (!ls.length) return; s += `  [${t('g_' + g)}]\n`;
       ls.forEach(l => { const p = l.id && P[l.id]; s += `   ${String(l.qty).padStart(2)} × ${p ? p.brand + ' ' + p.name : l.name}${l.spec ? ' — ' + l.spec : ''}  ${l.own ? '(' + t('youHave') + ')' : p ? usd(p.usd * l.qty) : '(' + t('toQuote') + ')'}\n`; }); });
@@ -1212,7 +1250,7 @@
       build();
       const tt = tally(BOM);
       return { ...tt, bom:BOM, checks:CHECKS, tr:S.tr, fmt:S.fmt, n:S.cams.length, maxRun:S.cams.length ? Math.max(...S.cams.map(runOf)) : 0,
-        cams:S.cams.map(c => ({ k:c.k, m:c.m, own:!!c.own, lens:c.lens, man:c.man })), packed:packPlan() };
+        cams:S.cams.map(c => ({ k:c.k, m:c.m, own:!!c.own, lens:c.lens, man:c.man, ext:extOf(c) ? c.ext : null, crop:!!c.crop })), packed:packPlan() };
     } finally { S = keep.S; SETUP = keep.SETUP; BOM = keep.BOM; CHECKS = keep.CHECKS; Z = keep.Z; }
   }
   function compose(spec) { const keep = S; try { fromSpec(spec, spec.tpl); return packPlan(); } finally { S = keep; } }
@@ -1234,7 +1272,7 @@
   window.I9PLANNER = { get state() { return S; }, view, hfov, runOf, get bom() { return BOM; }, get checks() { return CHECKS; }, select, update,
     get setup() { return fromThisSetup() ? SETUP : null; }, get edited() { return planKey() !== BASE; },
     /* wizard + 3D */
-    evaluate, compose, loadPlan, loadSetup, tally: () => tally(BOM), TPL, ROLES, t, lenTxt, modelName, camLab, runCable, pname, defaultLens,
+    evaluate, compose, loadPlan, loadSetup, tally: () => tally(BOM), TPL, ROLES, t, lenTxt, modelName, camLab, runCable, pname, defaultLens, fNum,
     get lang() { return LANG; }, get z() { return Z; }, set zGet(f) { zGet = f; }, save: () => { clearTimeout(hashT); saveHash(); }, planKey,
     get sel() { return sel; }, get queryTemplate() { return queryTemplate(); }, get bootHash() { return BOOT_HASH; }, get hashKind() { return /^#p=/.test(BOOT_HASH) ? 'p' : /^#adv|^#(tpl|for)=[\w-]+&v=a/.test(BOOT_HASH) ? 'adv' : /^#(tpl|for)/.test(BOOT_HASH) ? 'tpl' : ''; },
     setUnit(u) { S.unit = u === 'ft' ? 'ft' : 'm'; update({ stat:true, force:true }); }, renderPlanNow() { renderStatic(); renderPlan(); } };

@@ -589,3 +589,14 @@
   .fam .fg{height:52px}
   .fam .fg svg{height:36px}
 }
+/* round 2: lens rows (standard / long reach / extender + crop) and the effective focal / aperture line */
+.lchips{flex-direction:column;flex-wrap:nowrap;align-items:stretch;gap:6px}
+.lnrow{display:flex;flex-wrap:wrap;align-items:center;gap:5px}
+.lnrow>.meta-s{flex:none;width:76px;color:var(--ink-3)}
+.lchip.x{border-style:dashed}
+.lchip.x.on{border-style:solid}
+.leff{display:flex;flex-direction:column;gap:4px;margin:2px 0 0 81px;color:var(--ink-2)}
+.ldim{display:flex;gap:8px;color:var(--ink-3)}
+.ldim i{flex:none;width:7px;height:7px;margin-top:5px;border:1px solid var(--signal)}
+.cp-fix{margin:8px 0 0;min-height:38px;font-size:13px;display:flex}
+@media (max-width:699px){ .lnrow>.meta-s{width:100%} .leff{margin-left:0} }

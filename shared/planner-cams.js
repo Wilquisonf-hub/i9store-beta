@@ -33,6 +33,17 @@
     'sony-fe70200':   ['Sony', 'FE 70-200mm f/4 G OSS', 'Telephoto zoom lens, Sony E', 1298, 'Lenses', 'E mount', '2021/05/images/original/23653_1392158857_1029.jpg', 'lentes/fe-mount/sony-lente-fe-70-200mm-f4-g-oss/'],
     'canon-cne1880':  ['Canon', 'CN-E 18-80mm T4.4 Compact-Servo', 'Cine zoom lens, Canon EF', 5020, 'Lenses', 'EF mount', '2024/06/images/original/63080_105445.jpg', 'lentes/ef-mount/canon-lente-zoom-de-cinema-cn-e-18-80mm-t44-compact-servo-ef-mount/'],
     'canon-cne70200': ['Canon', 'CN-E 70-200mm T4.4 Compact-Servo', 'Cine zoom lens, Canon EF', 5510, 'Lenses', 'EF mount', '2024/06/images/original/63089_10546.jpg', 'lentes/ef-mount/canon-lente-zoom-cine-servo-compacta-canon-cn-e-70-200mm-t44-ef-mount/'],
+    /* long reach (round 2, 25 Nov 2026; raw read tmp-planner2/long-lenses-20261125.tsv) */
+    'canon-rf100400': ['Canon', 'RF 100-400mm f/5.6-8 IS USM', 'Telephoto zoom lens, Canon RF', 749, 'Lenses', 'RF mount', '2022/01/images/original/30326_canonrf100400mm.jpg', 'lentes/rf-mount/canon-lente-rf-100-400mm-f56-8-is-usm/'],
+    'canon-rf100500': ['Canon', 'RF 100-500mm f/4.5-7.1L IS USM', 'Telephoto zoom lens, Canon RF', 3099, 'Lenses', 'RF mount', '2021/07/images/original/26259_canon_rf_100_50.jpg', 'lentes/rf-mount/canon-rf-100-500mm-f45-71l-is-usm-lens/'],
+    'canon-rf200800': ['Canon', 'RF 200-800mm f/6.3-9 IS USM', 'Super-telephoto zoom lens, Canon RF', 2249, 'Lenses', 'RF mount', '2023/11/images/original/55569_9047.jpg', 'lentes/rf-mount/canon-lente-rf-200-800mm-f63-9-is-usm-canon-rf/'],
+    'canon-rf600f11': ['Canon', 'RF 600mm f/11 IS STM', 'Super-telephoto prime lens, Canon RF', 879, 'Lenses', 'RF mount', '2024/04/images/original/60998_9963.jpg', 'lentes/rf-mount/canon-rf-600mm-f11-is-stm-lens/'],
+    'canon-rf14x':    ['Canon', 'Extender RF 1.4x', 'Teleconverter, Canon RF', 589, 'Lenses', 'Teleconverters', '2024/11/images/original/70477_962.jpg', 'lentes/teleconversores-e-extensores/canon-extensor-rf-14x/'],
+    'sony-fe100400gm':['Sony', 'FE 100-400mm f/4.5-5.6 GM OSS', 'Telephoto zoom lens, Sony E', 2498, 'Lenses', 'E mount', '2020/10/images/original/20297_31256.jpg', 'lentes/fe-mount/sony-lente-fe-100-400mm-f45-56-gm-oss/'],
+    'sony-fe200600':  ['Sony', 'FE 200-600mm f/5.6-6.3 G OSS', 'Super-telephoto zoom lens, Sony E', 1898, 'Lenses', 'E mount', '2020/10/images/original/20320_31279.jpg', 'lentes/fe-mount/sony-lente-fe-200-600mm-f56-63-g-oss/'],
+    'lumix-s100500':  ['Panasonic', 'Lumix S 100-500mm f/5-7.1 O.I.S.', 'Telephoto zoom lens, L-Mount', 2097.99, 'Lenses', 'L mount', '2025/10/images/original/91746_11a.jpg', 'lentes/l-mount/panasonic-lente-lumix-s-100-500mm-f5-71-ois-l-mount/'],
+    'canon-cs401200pl': ['Canon', 'CINE-SERVO 40-1200mm T5.0-10.8', 'Cinema servo zoom with built-in 1.5x extender, ARRI PL', 79999, 'Lenses', 'PL mount', '2026/04/images/original/99106_1.jpg', 'lentes/pl-mount/canon-lente-cine-servo-40-1200mm-t50-108-cinema-zoom-arri-pl/'],
+    'nisi-athena-plrf': ['NiSi', 'Athena PL to Canon RF adapter', 'Mount adapter for PL lenses on Canon RF cameras', 209, 'Lenses', 'Lens accessories', '2024/03/images/original/59513_1698069925_1787.jpg', 'lentes/acessorios-de-lentes/nisi-athena-pl-rf-adaptador-para-lentes-de-montagem-pl-para-cameras-canon-rf/'],
     /* cages, power, PTZ controllers */
     'sr-cage-c50':    ['SmallRig', 'Cage for Canon EOS C50', 'SKU 5656', 69.99, 'Accessories', 'Cages & rigs', '2026/09/images/original/106722_5656.jpg', 'acessorios/cages-e-acessorios/smallrig-cage-for-canon-eos-c50/'],
     'sr-cage-c80':    ['SmallRig', 'Cage for Canon EOS C80', 'SKU 5810', 99.99, 'Accessories', 'Cages & rigs', '2026/09/images/original/106724_5810.jpg', 'acessorios/cages-e-acessorios/smallrig-cage-for-canon-eos-c80/'],
@@ -115,6 +126,11 @@
     'bm-pocket6kpro': { mount:'EF', fmt:'s35', w:23.1, sdi:null, hdmi:true, res:'6K 50p · UHD 60p', pwr:'12 V DC supply',
       approx:true, read:READ, src:BMD + 'blackmagicpocketcinemacamera/techspecs', note:'Approx. — verify: 23.10 mm is the full sensor; the UHD area is not stated. HDMI out up to 1080p60, no SDI. Built-in NDs.' },
   });
+  /* Super 35 crop recording modes (extra reach): w = image width in that mode. */
+  D.BODIES['canon-c50'].crop = { w:24.4, label:'Super 35 crop', v:true, src:'https://www.usa.canon.com/shop/p/eos-c50', note:'24.4 × 13.7 mm in UHD; up to 60p.' };
+  D.BODIES.c400.crop = { w:21.9, label:'Super 35 crop', v:true, src:CEU + 'cameras/eos-c400/specifications/', note:'Canon: ×1.54 for UHD (33.8 ÷ 1.54 ≈ 21.9 mm); 4K DCI up to 120p.' };
+  D.BODIES['sony-fx3'].crop = { w:23.7, label:'Super 35 (Full HD only)', approx:true, src:'https://helpguide.sony.net/ilc/2210/v1/en/contents/TP1000882803.html', note:'Approx. — verify: Sony says ≈1.5× and that 4K cannot be recorded in Super 35, so this is Full HD only.' };
+  Object.assign(D.BODIES.c80, { crop:{ w:21.9, label:'Super 35 crop', v:true, src:'https://www.canon.co.uk/video-cameras/eos-c80/specifications/', note:'Canon: ×1.54 for UHD/FHD (≈21.9 mm); 4K DCI up to 120p.' } });
   Object.assign(D.BODIES.c80, { res:'6K RAW 30p · 4K 120p', cage:'sr-cage-c80', pwr:'24 V DC adaptor for the DC IN', read:READ, src:CEU + 'video-cameras/eos-c80/specifications/' });
   Object.assign(D.BODIES.bm4k, { res:'4K 60p', read:READ });
   Object.assign(D.BODIES.r50v, { res:'4K 60p (crop) · 4K 30p', cage:'sr-cage-r50v', pwr:'DR-E18 DC coupler', read:READ, src:CEU + 'cameras/eos-r50v/specifications/',
@@ -132,15 +148,45 @@
     'lumix-s-70300': { mount:'L', min:70, max:300 },
     'canon-cne1880': { mount:'EF', min:18, max:80, cine:true }, 'canon-cne70200': { mount:'EF', min:70, max:200, cine:true },
   });
+  /* round 2: long reach. ap = max aperture [wide, tele] from the model designation (T-stops for cine lenses).
+     ext = the extender may be fitted: 'all' at every focal length, or a number = only from that focal length up (Canon's
+     own wording on each lens page, read 25 Nov 2026). */
+  Object.assign(D.LENSES, {
+    'canon-rf100400': { mount:'RF', min:100, max:400, ap:[5.6, 8], ext:'all', src:'https://www.usa.canon.com/shop/p/rf100-400mm-f5-6-8-is-usm' },
+    'canon-rf100500': { mount:'RF', min:100, max:500, ap:[4.5, 7.1], ext:300, src:'https://www.usa.canon.com/shop/p/rf100-500mm-f4-5-7-1-l-is-usm' },
+    'canon-rf200800': { mount:'RF', min:200, max:800, ap:[6.3, 9], ext:'all', src:'https://www.usa.canon.com/shop/p/rf200-800mm-f6-3-9-is-usm' },
+    'canon-rf600f11': { mount:'RF', min:600, max:600, ap:[11, 11], ext:'all', src:'https://www.usa.canon.com/shop/p/extender-rf1-4x' },
+    'sony-fe100400gm': { mount:'E', min:100, max:400, ap:[4.5, 5.6] }, 'sony-fe200600': { mount:'E', min:200, max:600, ap:[5.6, 6.3] },
+    'lumix-s100500': { mount:'L', min:100, max:500, ap:[5, 7.1] },
+    /* Canon CINE-SERVO 40-1200: PL mount, Super 35 image circle Φ29.6 mm; the built-in 1.5× extender gives 60–1800 mm and a
+       Φ43.3 mm circle that covers full frame. T5.0 to 560 mm, T10.8 at 1200 mm (×1.5 with the extender). 6.7 kg. */
+    'canon-cs401200pl': { mount:'PL', min:40, max:1200, ap:[5, 10.8], cine:true, ic:'s35', bi:'cs-bi15', fits:['RF'], adapter:'nisi-athena-plrf', heavy:6.7,
+      src:'https://www.usa.canon.com/shop/p/cine-servo-40-1200mm-t5-0-10-8-rf' },
+  });
+  const AP = { 'canon-rf24105l':[4, 4], 'canon-rf2470':[2.8, 2.8], 'canon-rf70200':[4, 4], 'fuji-mkr50135':[2.9, 2.9], 'sony-fe24105':[4, 4], 'sony-pz28135':[4, 4], 'sony-fe70200':[4, 4],
+    'lumix-s-70300':[4.5, 5.6], 'canon-cne1880':[4.4, 4.4], 'canon-cne70200':[4.4, 4.4], pz18105:[4, 4], mk1855:[2.9, 2.9], mk50135:[2.9, 2.9], dg1260:[2.8, 4], s24105:[4, 4], s50:[1.8, 1.8], s85:[1.8, 1.8], rf45:[1.2, 1.2] };
+  for (const k in AP) if (D.LENSES[k]) D.LENSES[k].ap = AP[k];
+  D.BODIES.r50v.kit.ap = [4, 6.3];
+  /* extenders: x = focal multiplier, stops = light lost (Canon: RF 100-400 f/5.6-8 → f/8–11 with the 1.4×, f/11–16 with
+     the 2×). The RF 2× is not listed on the USA store, so only the 1.4× is offered. Compatible lenses per Canon USA's
+     extender page; the RF 70-200 f/4L and RF 24-105 f/4L are not on it. */
+  D.EXT = {
+    'canon-rf14x': { x:1.4, stops:1, lenses:['canon-rf100400', 'canon-rf100500', 'canon-rf200800', 'canon-rf600f11'], src:'https://www.usa.canon.com/shop/p/extender-rf1-4x', read:READ },
+    'cs-bi15': { x:1.5, apx:1.5, builtin:true, name:'Built-in 1.5× extender', lenses:['canon-cs401200pl'], src:'https://www.usa.canon.com/shop/p/cine-servo-40-1200mm-t5-0-10-8-rf', read:READ },
+  };
+  D.DIM_AP = 8;   /* rule of thumb, not a spec: past about f/8 a dim room needs more light or a higher ISO */
   D.LENSES.mk1855.cine = D.LENSES.mk50135.cine = true;
   D.LENSES.pz18105.apsc = true;   /* an APS-C (Sony "E", not "FE") lens: offered on Super 35 / APS-C bodies only */
   D.OTHER_LENS.EF = [18, 80];
   /* lens presets offered per mount in the picker: 2–4 common zooms, all store listings */
   D.PRESETS = { RF:['canon-rf24105l', 'canon-rf2470', 'canon-rf70200', 'fuji-mkr50135'], E:['sony-fe24105', 'pz18105', 'sony-pz28135', 'sony-fe70200'],
     L:['s24105', 'lumix-s-70300'], EF:['canon-cne1880', 'canon-cne70200'], MFT:['dg1260', 'mk1855'], B4:[] };
+  /* long-reach lenses per mount (big rooms); the PL CINE-SERVO 40-1200 is offered on RF cinema bodies through an adapter */
+  D.LONG = { RF:['canon-rf100400', 'canon-rf600f11', 'canon-rf200800', 'canon-rf100500', 'canon-cs401200pl'], E:['sony-fe200600', 'sony-fe100400gm'], L:['lumix-s100500'], EF:[], MFT:[], B4:[] };
 
   /* PTZ joysticks on the store, by brand (used from two PTZ of one brand) */
   D.PTZCTL = { Panasonic:'rp60', Canon:'canon-rcip100', Sony:'sony-rmip10' };
+  D.PTZCTL_OK = { Sony:'RM-IP10 with SRG-A12 and BRC-AM7 confirmed (owner, 25 Nov 2026)' };
 
   /* ---------- the curated picker: a bit from each brand, three families ---------- */
   /* fam: ptz | cc (camcorder) | lens (mirrorless / cine / studio, interchangeable lens). sub = the badge under the family. */
