@@ -123,6 +123,28 @@
     q_cctl:['Canon controller','Controlador Canon'], cctl_auto:['Auto','Auto'], cctl_300:['RC-IP300','RC-IP300'], cctl_1000:['RC-IP1000','RC-IP1000'],
     cctlNote:['Auto: the RC-IP300 (to quote, being added to the store) up to 4 cameras, the RC-IP1000 above.','Auto: RC-IP300 (a cotar, entrando na loja) até 4 câmeras, RC-IP1000 acima.'],
     q_pnl:['A hardware control panel','Um painel de controle físico'], pnl_none:['No','Não'], pnl_yes:['Yes','Sim'], pnlNote:['ATEM Micro Panel on the small ATEMs, an Advanced Panel on a Constellation. A control surface, never the switcher.','ATEM Micro Panel nos ATEM pequenos, um Advanced Panel no Constellation. Uma superfície de controle, nunca o switcher.'],
+    /* round 5: picture quality + the control panel as a choice */
+    q_qual:['Picture quality','Qualidade de imagem'], qualNote:['Cameras, converters, switcher, recorder and stream all follow it.','Câmeras, conversores, switcher, gravador e transmissão seguem esta escolha.'],
+    qual_hd:['1080p HD','1080p HD'], qual_uhd:['4K UHD','4K UHD'],
+    qd_hd:['Full HD from camera to stream. Every camera on the store does it.','Full HD da câmera à transmissão. Toda câmera da loja faz.'],
+    qd_uhd:['2160p end to end: 4K cameras, switcher, recorder and stream. HDMI-only cameras get a converter.','2160p de ponta a ponta: câmeras, switcher, gravador e transmissão 4K. Câmeras só HDMI ganham conversor.'],
+    q_fps:['Frame rate','Quadros por segundo'], fps_30:['30p','30p'], fps_60:['60p','60p'], q_sq:['Stream in','Transmitir em'], sq_same:['4K','4K'], sq_hd:['1080p','1080p'],
+    qlPgm:['Program {0}','Programa {0}'], qlSt:['stream {0}','transmissão {0}'], qlSd:['stream in 1080 saves upload bandwidth; recording and the screen stay 4K','transmitir em 1080 poupa banda de upload; gravação e telão ficam em 4K'],
+    q_pnl2:['Control panel','Painel de controle'], pnlNote2:['A control surface, never the switcher. We suggest one for your inputs and level; pick another and the price follows.','Uma superfície de controle, nunca o switcher. Sugerimos um para suas entradas e nível; escolha outro e o preço acompanha.'],
+    pnlSug:['Suggested','Sugerido'], pnlIn:['In the plan','No plano'], pnlReset:['Use the suggestion','Usar a sugestão'], pnlIncl:['Included','Incluído'], pnlFree:['$0 · free software','$0 · software gratuito'],
+    pn_none:['No hardware panel','Sem painel físico'], pnd_none:['ATEM Software Control (free) on the computer.','ATEM Software Control (gratuito) no computador.'],
+    pn_noneS:['The switcher’s own buttons','Os botões do próprio switcher'], pnd_noneS:['Cut on the switcher; software for the rest.','Corte no switcher; software para o resto.'],
+    pn_builtin:['Built into the TV Studio 4K8','Embutido no TV Studio 4K8'], pnd_builtin:['Its own panel, streaming and recording. Moves the plan to the ATEM Television Studio 4K8.','Painel, transmissão e gravação próprios. Leva o plano ao ATEM Television Studio 4K8.'],
+    pnd_builtinOn:['Its own panel, streaming and recording, built in.','Painel, transmissão e gravação próprios, embutidos.'],
+    pn_mini:['ATEM Micro Panel','ATEM Micro Panel'], pnd_mini:['10 sources, 20 with shift · USB-C or Bluetooth to ATEM Software Control.','10 fontes, 20 com shift · USB-C ou Bluetooth ao ATEM Software Control.'],
+    pn_me1:['1 M/E Advanced Panel 10','1 M/E Advanced Panel 10'], pnd_me1:['One M/E row, 10 source buttons, joystick.','Uma fileira M/E, 10 botões de fonte, joystick.'],
+    pn_me1_20:['1 M/E Advanced Panel 20','1 M/E Advanced Panel 20'], pnd_me1_20:['One M/E row, 20 source buttons, joystick.','Uma fileira M/E, 20 botões de fonte, joystick.'],
+    pn_me2:['2 M/E Advanced Panel 20','2 M/E Advanced Panel 20'], pnd_me2:['Two M/E rows, 20 sources each: for a second live cut.','Duas fileiras M/E, 20 fontes cada: para um segundo corte ao vivo.'],
+    pn_me2_30:['2 M/E Advanced Panel 30','2 M/E Advanced Panel 30'], pnd_me2_30:['Two M/E rows, 30 sources each.','Duas fileiras M/E, 30 fontes cada.'],
+    pnWith:['with the {0}','com o {0}'], pnStore:['Store listing: {0}','Na loja: {0}'],
+    whyFmt:['Why these parts','Por que estas peças'], swapTo:['Use {0}','Usar {0}'], swapOn:['cam {0}','câm. {0}'], chPanel:['Panel','Painel'], chUp:['1080 only','só 1080'],
+    why_uhdIp:['4K: these cameras send 4K over SDI or HDMI, not over the network, so this plan runs on 12G-SDI with a 4K switcher.','4K: estas câmeras enviam 4K por SDI ou HDMI, não pela rede, então este plano roda em 12G-SDI com switcher 4K.'],
+    why_uhdSdi:['4K: the ATEM Mini range is HD, so this plan runs on 12G-SDI with a 4K switcher and a converter at each HDMI-only camera.','4K: a linha ATEM Mini é HD, então este plano roda em 12G-SDI com switcher 4K e um conversor em cada câmera só HDMI.'],
     q_ctrl:['Scene controller','Controlador de cenas'], ctrl_vp:['CueCore3 (Visual Productions)','CueCore3 (Visual Productions)'], ctrl_splay:['S-PLAY MINI (ENTTEC), small rooms','S-PLAY MINI (ENTTEC), salas pequenas'],
     q_ptype:['Panel','Painel'], ptype_kiosc:['KioscTouch2 wall screen','Tela de parede KioscTouch2'], ptype_ipad:['Kiosc app on your iPad','App Kiosc no seu iPad'], ptype_bstation:['B-Station2 buttons','Botões B-Station2'],
     roll_svc:['Services · i9TV','Serviços · i9TV'],
@@ -266,9 +288,10 @@
   /* ----- cameras (step 3): families, the curated store models, recipes per family ----- */
   const FAMS = ['ptz', 'cc', 'lens', 'mix'];
   /* round 3: production + light defaults per kind (planning starting points; the customer changes them in step 4) */
-  const PRDEF = k => ({ church:{ rec:'pgm', st:1, scr:'led', feed:'same', gfx:'lyrics', how:'hw', lvl:'m' }, podcast:{ rec:'iso', st:1, scr:'none', feed:'same', gfx:'lower', how:'hw', lvl:'m' },
+  const PRQ = { q:'hd', fps:30, sq:'same', pnl:'auto' };   /* round 5: picture quality + the control panel (auto = the plan suggests one) */
+  const PRDEF = k => ({ ...PRQ, ...({ church:{ rec:'pgm', st:1, scr:'led', feed:'same', gfx:'lyrics', how:'hw', lvl:'m' }, podcast:{ rec:'iso', st:1, scr:'none', feed:'same', gfx:'lower', how:'hw', lvl:'m' },
     studio:{ rec:'pgm', st:1, scr:'none', feed:'same', gfx:'lower', how:'hw', lvl:'m' }, event:{ rec:'pgm', st:1, scr:'led', feed:'aux', gfx:'lower', how:'hw', lvl:'m' },
-    school:{ rec:'pgm', st:1, scr:'proj', feed:'same', gfx:'none', how:'hw', lvl:'s' }, corp:{ rec:'pgm', st:1, scr:'none', feed:'same', gfx:'lower', how:'hw', lvl:'m' } }[k] || { rec:'pgm', st:1, scr:'none', feed:'same', gfx:'none', how:'hw', lvl:'m' });
+    school:{ rec:'pgm', st:1, scr:'proj', feed:'same', gfx:'none', how:'hw', lvl:'s' }, corp:{ rec:'pgm', st:1, scr:'none', feed:'same', gfx:'lower', how:'hw', lvl:'m' } }[k] || { rec:'pgm', st:1, scr:'none', feed:'same', gfx:'none', how:'hw', lvl:'m' }) });
   const LTDEF = k => ({ on:1, ctl:'app', panel:0, relay:0, look:'std' });
   const prOf = z => z.pr || PRDEF(z.k), ltOf = z => z.lt || LTDEF(z.k);
   /* the family each kind's own recipes already use (those recipes stay the starting picks for that family) */
@@ -464,7 +487,7 @@
     cams.forEach((c, i) => { if (c.k === 'lens' && !c.lens) c.lens = autoLens(c.m, L, i, n); if (c.man == null) c.man = manFor(z, c.k); });
     const lt = ltOf(z);
     return { pr:prOf(z), lt:{ on:lt.on, ctl:lt.ctl, ctrl:lt.ctrl || 'vp', panel:lt.panel, relay:lt.relay, ptype:lt.ptype || 'kiosc', pick:{ ...(lt.pick || {}) }, look:lt.look || 'std', k:z.k, big: z.k === 'church' && z.w * z.d > 450 ? 1 : 0 },
-      tpl:L.tpl, w:L.w, d:L.d, tr:trOverride || rec.tr, fmt:'hd', ext: z.k === 'podcast' || z.k === 'studio' ? 0 : 1, xr:L.xr, own:z.ow.slice(),
+      tpl:L.tpl, w:L.w, d:L.d, tr:trOverride || rec.tr, fmt:prOf(z).q === 'uhd' ? 'uhd' : 'hd', ext: z.k === 'podcast' || z.k === 'studio' ? 0 : 1, xr:L.xr, own:z.ow.slice(),
       furn:L.furn, ppl:L.ppl, ctrl:L.ctrl,
       cams:cams.map((c, i) => { const s = n === 1 ? { ...L.slots[0], aim:'all', shot:'wide' } : L.slots[i];
         const { x, y } = camAt(L, s, c.k);   /* manned cameras stand on tripods, off the wall / mid-aisle */
@@ -478,7 +501,9 @@
     (Z.cl ? ['c'] : []).concat(TIERS).forEach(tier => {
       let spec = specFor(Z, tier), forced = false;
       let packed = PL.compose(spec), ev = PL.evaluate(packed);
-      if (spec.tr === 'hdmi' && ev.maxRun > R.hdmiActive) { spec = specFor(Z, tier, 'sdi'); packed = PL.compose(spec); ev = PL.evaluate(packed); forced = true; }
+      if (spec.tr === 'hdmi' && (ev.maxRun > R.hdmiActive || spec.fmt === 'uhd')) { forced = spec.fmt === 'uhd' && ev.maxRun <= R.hdmiActive ? 'uhd' : true; spec = specFor(Z, tier, 'sdi'); packed = PL.compose(spec); ev = PL.evaluate(packed); }
+      /* 4K on the network only where every camera's NDI carries it; otherwise the plan moves to 12G-SDI */
+      else if (spec.tr === 'ip' && spec.fmt === 'uhd' && ev.prod && ev.prod.cams.some(c => c && c.up)) { spec = specFor(Z, tier, 'sdi'); packed = PL.compose(spec); ev = PL.evaluate(packed); forced = 'uhdIp'; }
       opts[tier] = { id:tier, packed, ev, forced };
     });
     if (Z.st) { const ev = PL.evaluate({ setup:Z.st }); if (ev) opts.s = { id:'s', setup:Z.st, ev, forced:false }; }
@@ -509,7 +534,7 @@
     const run = PL.lenTxt(o.ev.maxRun);
     if (o.ev.tr === 'ip') return t('why_ip');
     if (o.ev.tr === 'hdmi') return t(o.ev.maxRun > R.hdmiPassive ? 'why_hdmiAoc' : 'why_hdmi', run);
-    return t(o.forced ? 'why_sdiForced' : 'why_sdi', run);
+    return o.forced === 'uhd' ? t('why_uhdSdi') : o.forced === 'uhdIp' ? t('why_uhdIp') : t(o.forced ? 'why_sdiForced' : 'why_sdi', run);
   }
   function whyCams(ev) {
     const ks = [...new Set(ev.cams.filter(c => !c.own).map(camKindOf))];
@@ -538,7 +563,10 @@
     o.v = o.v === 'a' ? 'a' : 'w';
     if (!z.sv && +o.s >= 4) { o.s = +o.s + 1; o.mx = +(o.mx || o.s) + 1; }   /* links saved before the production step (round 3) */
     o.sv = 2; o.s = clamp(Math.round(+o.s || 1), 1, 8); o.mx = clamp(Math.round(+o.mx || o.s), o.s, 8);
-    o.pr = o.pr && typeof o.pr === 'object' ? { ...PRDEF(o.k), ...o.pr } : null; o.lt = o.lt && typeof o.lt === 'object' ? { ...LTDEF(o.k), ...o.lt } : null;
+    /* links saved before round 5 had no quality (HD) and no panel unless they asked for one: keep their plan and price */
+    o.pr = o.pr && typeof o.pr === 'object' ? { ...PRDEF(o.k), ...(o.pr.pnl == null ? { pnl:'none' } : {}), ...o.pr } : null;
+    if (o.pr) { o.pr.q = o.pr.q === 'uhd' ? 'uhd' : 'hd'; o.pr.fps = +o.pr.fps === 60 ? 60 : 30; o.pr.sq = o.pr.sq === 'hd' ? 'hd' : 'same';
+      o.pr.pnl = ['auto', 'yes', 'none', 'builtin', 'mini', 'me1', 'me1_20', 'me2', 'me2_30'].includes(o.pr.pnl) ? o.pr.pnl : 'auto'; } o.lt = o.lt && typeof o.lt === 'object' ? { ...LTDEF(o.k), ...o.lt } : null;
     o.k = KINDS[o.k] ? o.k : null; o.w = clamp(+o.w || 16, 2, 80); o.d = clamp(+o.d || 24, 2, 80); o.n = clamp(Math.round(+o.n || 1), 1, 8);
     o.au = o.au ? 1 : 0; o.cd = ['near', 'back', 'booth'].includes(o.cd) ? o.cd : 'back'; o.fr = o.fr === 'l' ? 'l' : 's';
     o.oc = ['none', 'ptz', 'cc', 'lens'].includes(o.oc) ? o.oc : 'none'; o.on = clamp(Math.round(+o.on || 0), 0, 4);
@@ -910,22 +938,35 @@
   }
   const rollHTML = bom => { const r = rollup(bom); return `<div class="roll">${Object.keys(ROLL).map(k => `<div><span class="meta">${esc(t('roll_' + k))}</span><b class="price">${usd(r[k].tot)}</b><span class="meta-s">${r[k].q ? esc(t('rollQ', r[k].q)) : '&nbsp;'}</span></div>`).join('')}</div>`; };
   function chain(ev, pr) {
-    const sw = ev.bom.filter(l => l.g === 'sw' && (l.role === 'sw')).map(l => l.id && P[l.id] ? P[l.id].name : l.name)[0] || '—';
-    const ids = ev.bom.map(l => l.id), nm = id => P[id] ? P[id].name : id, X = D.PROD;
-    const swId = (ev.bom.find(l => l.g === 'sw' && l.role === 'sw' && l.id) || {}).id;
+    const swL = ev.bom.find(l => l.g === 'sw' && l.role === 'sw' && (l.id ? !/^(microconv|sdi2hdmi|hd-|hyperdeck|bmenc|bmdec|decklink)/.test(l.id) : /SW|NDI/.test(l.code || '')));
+    const sw = swL ? (swL.id && P[swL.id] ? P[swL.id].name : swL.name) : '—';
+    const ids = ev.bom.map(l => l.id), nm = id => P[id] ? P[id].name : id, X = D.PROD, pd = ev.prod || {}, Q = pd.q || { q:'hd', pgm:'1080p30', st:'1080p30', sq:'hd' };
+    const has = list => list.find(id => id && ids.includes(id));
+    const encId = has([X.enc4, X.encHd, X.enc]), recId = has([X.recBy && X.recBy.uhd60, X.recBy && X.recBy.uhd30, X.recBy && X.recBy.hd, X.rec1]);
     const wl = ev.cams.filter(c => c.mob && c.k !== 'ptz').length, outs = [];
-    const pc = pr.how === 'pc';
-    if (pr.st > 0) outs.push(['o_stream', pr.st >= 2 ? t('cut_pgm') + ' · ' + t('cut_dests', '2+') : t('cut_pgm'), ids.includes(X.enc) ? t('viaEnc', nm(X.enc)) : pc ? 'vMix / OBS' : t('builtIn')]);
-    if (pr.scr !== 'none' && pr.scr !== 'overflow') outs.push(['o_screen', t('scr_' + pr.scr) + ' · ' + (pr.feed === 'same' ? t('cut_pgm') : pr.feed === 'aux' ? t('cut_aux') : pc ? t('cut_mix2') : t('cut_mix')), '']);
-    if (pr.scr === 'overflow') outs.push(['o_over', t('cut_pgm'), t('viaEnc', nm(X.dec))]);
-    if (pr.rec !== 'none') outs.push(['o_rec', pr.rec === 'iso' ? t('cut_iso') : t('cut_pgm'), ids.includes(X.rec1) ? t('viaRec', nm(X.rec1)) : pc ? 'vMix / OBS' : t('builtIn')]);
+    const pc = pr.how === 'pc', uhd = Q.q === 'uhd';
+    const scrFmt = pr.scr === 'proj' && uhd ? '1080p' : Q.pgm;
+    if (pr.st > 0) outs.push(['o_stream', (pr.st >= 2 ? t('cut_pgm') + ' · ' + t('cut_dests', '2+') : t('cut_pgm')) + ' · ' + Q.st, encId ? t('viaEnc', nm(encId)) : pc ? 'vMix / OBS' : t('builtIn')]);
+    if (pr.scr !== 'none' && pr.scr !== 'overflow') outs.push(['o_screen', t('scr_' + pr.scr) + ' · ' + (pr.feed === 'same' ? t('cut_pgm') : pr.feed === 'aux' ? t('cut_aux') : pc ? t('cut_mix2') : t('cut_mix')) + ' · ' + scrFmt, ids.includes(X.toHdmi && X.toHdmi.hd) || ids.includes(X.toHdmi && X.toHdmi.uhd) ? t('viaEnc', nm(ids.includes(X.toHdmi.uhd) && !(pr.scr === 'proj' && uhd) ? X.toHdmi.uhd : X.toHdmi.hd)) : '']);
+    if (pr.scr === 'overflow') outs.push(['o_over', t('cut_pgm') + ' · ' + Q.st, t('viaEnc', nm(X.dec))]);
+    if (pr.rec !== 'none') outs.push(['o_rec', (pr.rec === 'iso' ? t('cut_iso') : t('cut_pgm')) + ' · ' + Q.pgm, recId ? t('viaRec', nm(recId)) : pc ? 'vMix / OBS' : t('builtIn')]);
+    const pn = pd.panel, pnTxt = !pd.sw ? '' : pn && pn.id ? t('pn_' + pn.key) : pn && pn.key === 'builtin' ? t('pnlIncl') : t('pn_none');
+    const tr = ev.tr === 'ip' ? 'IP / NDI' : ev.tr === 'sdi' ? (uhd ? '12G-SDI' : '3G-SDI') : ev.tr.toUpperCase();
     return `<figure class="sigch" aria-label="${esc(t('chainK'))}">
-      <div class="ch-col ch-cams"><span class="meta">${esc(t('chCams'))}</span>${ev.cams.map((c, i) => `<span class="ch-n${c.mob && c.k !== 'ptz' ? ' wl' : ''}"><b>${i + 1}</b>${esc(P[c.m] ? P[c.m].name : c.m)}${c.mob && c.k !== 'ptz' ? ' · ' + esc(t('chWl', '')) : ''}</span>`).join('')}</div>
+      <div class="ch-col ch-cams"><span class="meta">${esc(t('chCams'))}</span>${ev.cams.map((c, i) => { const cp = (pd.cams || [])[i] || {};
+        return `<span class="ch-n${c.mob && c.k !== 'ptz' ? ' wl' : ''}${cp.up ? ' up' : ''}"><b>${i + 1}</b><span class="ch-m">${esc(P[c.m] ? P[c.m].name : c.m)}</span>${cp.cable ? `<span class="ch-t${cp.conv ? ' cv' : ''}">${esc(cp.up ? t('chUp') : cp.cable)}</span>` : ''}</span>`; }).join('')}</div>
       <div class="ch-arw" aria-hidden="true"></div>
-      <div class="ch-col ch-sw"><span class="meta">${esc(pc ? t('how_pc') : t('sSw'))}</span><b>${esc(sw)}</b><span class="meta-s">${esc(ev.tr === 'ip' ? 'IP / NDI' : ev.tr.toUpperCase())}${wl ? ' · ' + esc(t('chWl', wl)) : ''}</span></div>
+      <div class="ch-col ch-sw"><span class="meta">${esc(pc ? t('how_pc') : t('sSw'))} · ${esc(Q.pgm)}</span><b>${esc(sw)}</b><span class="meta-s">${esc(tr)}${wl ? ' · ' + esc(t('chWl', wl)) : ''}${pnTxt ? ' · ' + esc(t('chPanel')) + ': ' + esc(pnTxt) : ''}</span></div>
       <div class="ch-arw" aria-hidden="true"></div>
       <div class="ch-col ch-outs"><span class="meta">${esc(t('chOut'))}</span>${outs.length ? outs.map(([k, cut, via]) => `<span class="ch-o"><b>${esc(t(k))}</b><span>${esc(cut)}</span>${via ? `<span class="meta-s">${esc(via)}</span>` : ''}</span>`).join('') : '<span class="ch-o"><span class="meta-s">—</span></span>'}</div>
-    </figure>`;
+    </figure>${whyList(ev)}`;
+  }
+  /* the plain-language reasons behind the format parts (the same "why" the parts list shows) */
+  function whyList(ev) {
+    const X = D.PROD, set = [X.conv12, X.conv3, X.toHdmi && X.toHdmi.hd, X.toHdmi && X.toHdmi.uhd, X.enc4, X.encHd, X.recBy && X.recBy.hd, X.recBy && X.recBy.uhd30, X.recBy && X.recBy.uhd60, ...(X.uhdSw || []).map(s => s.id), ...(X.hdSw || []).map(s => s.id), ...Object.values(X.panels || {}).map(p => p[0])];
+    const ls = ev.bom.filter(l => !l.info && !l.own && ((l.id && set.includes(l.id)) || l.code === 'SW' && /4K|1080/.test(l.name || '')));
+    if (!ls.length) return '';
+    return `<details class="chwhy"${UI.why ? ' open' : ''}><summary class="meta"><span>${esc(t('whyFmt'))}</span><span class="meta-s">${ls.length}</span></summary><ul>${ls.map(l => `<li><b>${l.qty > 1 ? l.qty + ' × ' : ''}${esc(l.id && P[l.id] ? P[l.id].name : l.name)}</b><span>${esc(l.why)}${l.who && l.who.length ? ' · ' + esc(l.who.join(' · ')) : ''}</span></li>`).join('')}</ul></details>`;
   }
   /* round 4: lighting by role; each role shows its pick (any brand) and a picker of the store's lights */
   const LUI = { role:null, b:'' };
@@ -955,22 +996,62 @@
             <div class="cc-a"><button type="button" class="btn sm${id === cur ? ' solid' : ''}" data-lpick="${id}" aria-pressed="${id === cur}">${id === cur ? '✓ In the plan' : 'Use for ' + esc(PL.t('w_l_' + LUI.role).toLowerCase())}</button></div></li>`; }).join('')}</ul></div>`; }
     return `<ul class="lroles">${rows}</ul>${pick}`;
   }
+  /* round 5: one main quality choice + an optional refinement (frame rate; a 4K program can stream in 1080) */
+  function qualHTML(pr, ev) {
+    const Qd = (ev.prod && ev.prod.q) || { q:'hd', fps:30, pgm:'1080p30', st:'1080p30', sq:'hd' }, uq = pr.q === 'uhd';
+    const seg = (key, k, vals, cur) => `<span class="qr"><span class="meta-s">${esc(t(key))}</span><span class="seg sm" role="group" aria-label="${esc(t(key))}">${vals.map(v => `<button type="button" data-pr="${k}:${v}" aria-pressed="${String(cur) === String(v)}">${esc(t(k + '_' + v))}</button>`).join('')}</span></span>`;
+    const tr = ev.tr === 'ip' ? 'IP / NDI' : ev.tr === 'sdi' ? (uq ? '12G-SDI' : '3G-SDI') : ev.tr.toUpperCase();
+    return `<fieldset class="fs pqual"><legend class="meta">${esc(t('q_qual'))}<span class="meta-s">${esc(t('qualNote'))}</span></legend>
+      <div class="cds c2">${['hd', 'uhd'].map(v => `<button type="button" class="cd${(pr.q || 'hd') === v ? ' on' : ''}" data-pr="q:${v}" aria-pressed="${(pr.q || 'hd') === v}"><span class="n">${v === 'hd' ? '1920 × 1080' : '3840 × 2160'}<i aria-hidden="true"></i></span><b>${esc(t('qual_' + v))}</b><span class="meta-s">${esc(t('qd_' + v))}</span></button>`).join('')}</div>
+      <div class="qref">${seg('q_fps', 'fps', [30, 60], +pr.fps === 60 ? 60 : 30)}${uq && pr.st > 0 ? seg('q_sq', 'sq', ['same', 'hd'], pr.sq === 'hd' ? 'hd' : 'same') : ''}</div>
+      <p class="qline"><span class="ql-t">${esc(t('qlPgm', Qd.pgm))}</span><span>${esc(tr)}</span>${pr.st > 0 ? `<span>${esc(t('qlSt', Qd.st))}</span>` : ''}</p>
+      ${uq && pr.st > 0 && pr.sq === 'hd' ? `<p class="meta-s qsd">${esc(t('qlSd'))}</p>` : ''}
+    </fieldset>`;
+  }
+  /* the control panel is the customer's pick: only panels on the store that fit the planned switcher (for a 4K plan of up to 8
+     inputs, the TV Studio 4K8's built-in panel competes with a Constellation 4K + panel) */
+  function panelHTML(pr, ev) {
+    const pd = ev.prod || {}, pn = pd.panel; if (!pd.sw || !pn) return '';
+    const X = D.PROD, nIn = ev.n + (+(ev.packed && ev.packed.e) || 0), Q = pd.q || {}, tvs = pd.sw === X.tvs4k8;
+    const mix = pr.scr !== 'none' && pr.feed === 'mix';
+    const alt = Q.q === 'uhd' && ev.tr === 'sdi' && nIn <= 8 && !mix && pr.scr !== 'proj' && (tvs || pd.sw === 'atem1me');
+    const keys = alt ? ['builtin', 'none', 'mini', 'me1', 'me1_20'] : pn.opts, small = pn.opts.length === 2 && pn.opts[0] === 'none';
+    const sel = pn.key, auto = pr.pnl === 'auto' || pr.pnl === 'yes' || !pr.pnl;
+    const sug = alt ? (tvs ? (auto ? 'builtin' : null) : (auto ? pn.auto : null)) : pn.auto;
+    const card = k => { const lid = X.panels[k] && X.panels[k][0], p = lid && P[lid], on = k === sel;
+      const name = k === 'none' ? t(small ? 'pn_noneS' : 'pn_none') : t('pn_' + k), d = k === 'none' ? t(small ? 'pnd_noneS' : 'pnd_none') : k === 'builtin' ? t(tvs ? 'pnd_builtinOn' : 'pnd_builtin') : t('pnd_' + k);
+      const with_ = alt && k !== 'builtin' && tvs ? t('pnWith', P.atem1me ? P.atem1me.name : 'Constellation 4K') : '';
+      const price = p ? usd(p.usd) : k === 'builtin' ? t('pnlIncl') : t('pnlFree');
+      return `<button type="button" class="pc${on ? ' on' : ''}" data-pr="pnl:${k}" aria-pressed="${on}">
+        <span class="pc-i">${p ? `<img src="${p.src}" alt="" loading="lazy">` : k === 'builtin' && P[X.tvs4k8] ? `<img src="${P[X.tvs4k8].src}" alt="" loading="lazy">` : '<i aria-hidden="true"></i>'}</span>
+        <span class="pc-t"><b>${esc(name)}</b><span class="meta-s">${esc(d)}${with_ ? ' ' + esc(with_) + '.' : ''}${k === 'mini' && p ? ' ' + esc(t('pnStore', p.name)) + '.' : ''}</span></span>
+        <span class="pc-p"><b class="price">${esc(price)}</b>${on ? `<span class="pc-b meta">${esc(k === sug ? t('pnlSug') : t('pnlIn'))}</span>` : k === sug ? `<span class="pc-b sug meta">${esc(t('pnlSug'))}</span>` : ''}</span></button>`; };
+    return `<fieldset class="fs ppnl"><legend class="meta">${esc(t('q_pnl2'))}<span class="meta-s">${esc(t('pnlNote2'))}</span></legend>
+      <div class="pcs">${keys.map(card).join('')}</div>
+      ${!auto ? `<button type="button" class="lnk pnl-reset" data-pr="pnl:auto">${esc(t('pnlReset'))}</button>` : ''}
+    </fieldset>`;
+  }
   function stepProd() {
     const pr = prOf(Z), lt = ltOf(Z), opts = options(), o = opts[shownId(opts)], ev = o.ev;
     const q = (key, k, vals, cur, sub) => `<div class="fq pq"><span class="ql">${esc(t(key))}${sub ? `<span class="meta-s">${esc(sub)}</span>` : ''}</span><span class="seg" role="group" aria-label="${esc(t(key))}">${vals.map(v => `<button type="button" data-pr="${k}:${v}" aria-pressed="${String(cur) === String(v)}">${esc(t(k + '_' + v))}</button>`).join('')}</span></div>`;
     const lq = (key, k, vals, cur) => `<div class="fq pq"><span class="ql">${esc(t(key))}</span><span class="seg" role="group" aria-label="${esc(t(key))}">${vals.map(v => `<button type="button" data-lt="${k}:${v}" aria-pressed="${String(cur) === String(v)}">${esc(t(v === 1 ? 'yesLights' : v === 0 ? 'noLights' : v === 2 ? 'unsureLights' : k + '_' + v))}</button>`).join('')}</span></div>`;
     const scr = pr.scr !== 'none';
-    const checks = ev.checks.filter(c => c.lvl !== 'ok' && /screen|telão|cut|corte|aux|stream|transm|multiview|DMX|Companion|vMix|app|spec|wireless|sem fio|ProPresenter/i.test(c.txt)).slice(0, 6);
+    const fmtRe = /2160|1080|4K|up-convert|convertid|panel|painel/i;
+    const checks = ev.checks.filter(c => c.lvl === 'warn' && fmtRe.test(c.txt)).concat(ev.checks.filter(c => c.lvl !== 'ok' && !(c.lvl === 'warn' && fmtRe.test(c.txt)) && /screen|telão|cut|corte|aux|stream|transm|multiview|DMX|Companion|vMix|app|spec|wireless|sem fio|ProPresenter|2160|4K|panel|painel/i.test(c.txt))).slice(0, 7);
+    /* one swap button per camera model that can't deliver (all its positions at once) */
+    const pd = ev.prod || {}, swG = {}; (pd.cams || []).forEach((c, i) => { if (c && c.swap && P[c.swap] && ev.cams[i]) { const k = ev.cams[i].m + '>' + c.swap; (swG[k] = swG[k] || { m:c.swap, is:[] }).is.push(i); } });
+    const swaps = Object.values(swG).map(g => [g.is.join(','), g.m, g.is.map(i => i + 1).join(', ')]);
     return `<div class="pgrid4">
       <div class="pform">
         <h2 class="meta lh4"><span class="tally"></span>${esc(t('st4'))}</h2>
+        ${qualHTML(pr, ev)}
         ${q('q_rec', 'rec', ['none', 'pgm', 'iso'], pr.rec)}
         ${q('q_st', 'st', [0, 1, 2], pr.st)}
         ${q('q_scr', 'scr', ['none', 'led', 'proj', 'overflow'], pr.scr)}
         ${scr && pr.scr !== 'overflow' ? `<fieldset class="fs pfeed"><legend class="meta">${esc(t('q_feed'))}</legend><div class="cds">${['same', 'aux', 'mix'].map((f, i) => `<button type="button" class="cd${pr.feed === f ? ' on' : ''}" data-pr="feed:${f}" aria-pressed="${pr.feed === f}"><span class="n">${String(i + 1).padStart(2, '0')}<i aria-hidden="true"></i></span><b>${esc(t('feed_' + f))}</b><span class="meta-s">${esc(t('fd_' + f))}</span></button>`).join('')}</div></fieldset>` : ''}
         ${q('q_gfx', 'gfx', ['none', 'lower', 'lyrics'], pr.gfx, pr.gfx === 'lyrics' ? t('gfxNote') : '')}
         ${q('q_how', 'how', ['hw', 'pc'], pr.how, pr.how === 'pc' ? t('howNote') : '')}
-        ${pr.how === 'hw' ? q('q_pnl', 'pnl', ['none', 'yes'], pr.pnl || 'none', t('pnlNote')) : ''}
+        ${pr.how === 'hw' ? panelHTML(pr, ev) : ''}
         ${ev.cams.filter(c => P[c.m] && P[c.m].brand === 'Canon' && (c.k === 'ptz' || (D.CANON_IP || []).includes(c.m))).length >= 2 && ev.cams.some(c => c.k === 'ptz' && P[c.m].brand === 'Canon') ? q('q_cctl', 'cctl', ['auto', '300', '1000'], pr.cctl || 'auto', t('cctlNote')) : ''}
         ${q('q_lvl', 'lvl', ['s', 'm', 'p'], pr.lvl)}
         <h2 class="meta lh4"><span class="tally"></span>${esc(t('lightK'))}</h2>
@@ -987,6 +1068,7 @@
         <p class="meta"><span class="tally"></span>${esc(t('chainK'))}</p>
         ${chain(ev, pr)}
         ${checks.length ? `<ul class="checks pchecks">${checks.map(c => `<li class="${c.lvl}"><i aria-hidden="true"></i><span>${esc(c.txt)}</span></li>`).join('')}</ul>` : ''}
+        ${swaps.length ? `<div class="pswap">${swaps.map(([is, m, lab]) => `<button type="button" class="btn sm" data-swap="${is}:${m}">${esc(t('swapTo', P[m].brand + ' ' + P[m].name))} · ${esc(t('swapOn', lab))}</button>`).join('')}</div>` : ''}
         ${rollHTML(ev.bom)}
         <p class="ptot4"><b class="price">${usd(ev.total)}</b><span class="meta-s">${esc(t('priced'))} · ${esc(ev.quote.length === 1 ? t('plusQuote1') : t('plusQuote', ev.quote.length))}</span></p>
       </aside>
@@ -1220,7 +1302,8 @@
     if (b.dataset.au) { Z.au = +b.dataset.au; Z.dirty = 1; render(); return; }
     if (b.dataset.cd) { Z.cd = b.dataset.cd; Z.dirty = 1; render(); $(`[data-cd="${b.dataset.cd}"]`)?.focus(); return; }
     const keep = sel => { render(); const el = $(sel, panel); if (el) el.focus({ preventScroll:true }); };
-    if (b.dataset.pr) { const [k, v] = b.dataset.pr.split(':'); Z.pr = { ...prOf(Z), [k]: k === 'st' ? +v : v }; if (k === 'lvl') { /* level nudges the defaults */ } Z.dirty = 1; if (!Z.om) Z.o = null; keep(`[data-pr="${b.dataset.pr}"]`); save(); return; }
+    if (b.dataset.swap) { const [i, m] = b.dataset.swap.split(':'); if (P[m]) editLineup((cl, L) => i.split(',').forEach(j => { const c = cl[+j]; if (!c || c.own) return; c.m = m; c.lens = D.BODIES[m] ? autoLens(m, L, +j, cl.length) : null; c.ext = null; c.crop = false; })); keep('.pqual .cd.on'); save(); return; }
+    if (b.dataset.pr) { const [k, v] = b.dataset.pr.split(':'); Z.pr = { ...prOf(Z), [k]: k === 'st' || k === 'fps' ? +v : v }; if (k === 'lvl') { /* level nudges the defaults */ } Z.dirty = 1; if (!Z.om) Z.o = null; keep(`[data-pr="${b.dataset.pr}"]`); save(); return; }
     if (b.dataset.lrole) { LUI.role = LUI.role === b.dataset.lrole ? null : b.dataset.lrole; LUI.b = ''; keep(`[data-lrole="${b.dataset.lrole}"]`); return; }
     if (b.dataset.lb != null) { LUI.b = b.dataset.lb; keep(`[data-lb="${b.dataset.lb}"]`); return; }
     if (b.dataset.lpick) { const lt = ltOf(Z); Z.lt = { ...lt, pick:{ ...(lt.pick || {}), [LUI.role]: b.dataset.lpick } }; Z.dirty = 1; if (!Z.om) Z.o = null; keep(`[data-lpick="${b.dataset.lpick}"]`); save(); return; }
@@ -1260,7 +1343,9 @@
     if (b.dataset.iso) { PL.setLt({ iso:+b.dataset.iso }); $$('[data-iso]').forEach(x => x.setAttribute('aria-pressed', String(x === b))); const r = $('#pv3-read'); if (r) r.innerHTML = readouts(); return; }
     if (b.dataset.cct) { PL.setLt({ cct:+b.dataset.cct }); render(); return; }
   });
-  panel.addEventListener('toggle', e => { if (e.target.id === 'pv3-det') G3UI.det = e.target.open; }, true);
+  panel.addEventListener('toggle', e => { if (e.target.id === 'pv3-det') G3UI.det = e.target.open; if (e.target.classList && e.target.classList.contains('chwhy')) UI.why = e.target.open; }, true);
+  /* the advanced editor's format select: the guided answers follow it */
+  document.addEventListener('i9plan:fmt', e => { if (Z && Z.pr) { Z.pr = { ...Z.pr, q: e.detail === 'uhd' ? 'uhd' : 'hd' }; } else if (Z && Z.k) Z.pr = { ...prOf(Z), q: e.detail === 'uhd' ? 'uhd' : 'hd' }; });
   panel.addEventListener('change', e => {
     const i = e.target;
     if (i.dataset.ltc) { Z.lt = { ...ltOf(Z), [i.dataset.ltc]: i.checked ? 1 : 0 }; Z.dirty = 1; if (!Z.om) Z.o = null; render(); $(`[data-ltc="${i.dataset.ltc}"]`)?.focus(); save(); return; }

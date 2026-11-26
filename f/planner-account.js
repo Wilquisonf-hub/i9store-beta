@@ -169,6 +169,10 @@
   }
 
   /* ----- the presentation PDF: a print layout, window.print() ----- */
+  /* round 5: the picture quality and the control panel on the cover */
+  function qualLine() { const Q = PL.qualOf ? PL.qualOf() : null, pd = PL.prod; if (!Q) return '';
+    const pn = pd && pd.sw ? (pd.panel && pd.panel.id && P[pd.panel.id] ? P[pd.panel.id].name : pd.panel && pd.panel.key === 'builtin' ? 'panel built in' : 'no hardware panel') : '';
+    return Q.pgm + (Q.sq !== Q.q ? ' (stream ' + Q.st + ')' : '') + (pd && pd.sw && P[pd.sw] ? ' · ' + P[pd.sw].name + (pn ? ' + ' + pn : '') : ''); }
   function presentation() {
     const S = PL.state, w = WZ(), tt = PL.tally(), roll = w && w.rollup ? w.rollup(PL.bom) : null, a = prjLoad(), cur = a.find(p => p.id === CUR);
     const g3 = $('#g3box canvas'); let snap = ''; try { if (g3) snap = g3.toDataURL('image/jpeg', 0.85); } catch (e) {}
@@ -177,7 +181,7 @@
     const groups = Object.keys(GN).map(g => { const ls = PL.bom.filter(l => l.g === g && !l.info); if (!ls.length) return '';
       return `<section class="pzp-g"><h3>${GN[g]}</h3><table>${ls.map(l => { const p = l.id && P[l.id]; return `<tr><td>${l.qty}×</td><td>${esc(p ? p.brand + ' ' + p.name : l.name)}${l.spec && !p ? ` <span>${esc(l.spec)}</span>` : ''}</td><td>${l.own ? 'You have this' : p ? usd(p.usd * l.qty) : 'To quote'}</td></tr>`; }).join('')}</table></section>`; }).join('');
     pres.innerHTML = `<div class="pzp-cover"><p class="pzp-k">i9Store · Room plan</p><h1>${esc(cur ? cur.name : roomName())}</h1>
-        <p>${esc(roomName())} · ${S.cams.length} cameras · ${esc(new Date().toISOString().slice(0, 10))}</p>
+        <p>${esc(roomName())} · ${S.cams.length} cameras · ${esc(qualLine())} · ${esc(new Date().toISOString().slice(0, 10))}</p>
         ${ACC ? `<p>${esc(ACC.name)} · ${esc(ACC.emailMasked)}</p>` : ''}<p class="pzp-tot">${usd(tt.total)} <span>priced lines, before sales tax and shipping · ${tt.quote.length} lines to quote</span></p></div>
       <div class="pzp-pg"><h2>The plan</h2><div class="pzp-plan">${plan}</div>${snap ? `<h2>3D view</h2><img class="pzp-3d" src="${snap}" alt="3D view of the plan">` : ''}</div>
       <div class="pzp-pg"><h2>Signal chain</h2>${w && w.chain ? w.chain() : ''}${PL.lightCalc() ? `<h2>Light plan</h2>${w && w.readouts ? w.readouts(true) : ''}` : ''}</div>

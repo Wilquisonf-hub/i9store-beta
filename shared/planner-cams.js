@@ -67,6 +67,17 @@
     'sr-fz100':       ['SmallRig', 'Dummy Battery for Sony NP-FZ100', 'With US power adapter, 4268B', 35.99, 'Accessories', 'Batteries & power', '2024/09/images/original/67913_630.jpg', 'acessorios/baterias-e-carregadores/smallrig-dummy-battery-for-sony-np-fz100-with-power-adapter-american-standard/'],
     'canon-rcip100':  ['Canon', 'RC-IP100', 'PTZ joystick controller with touchscreen', 2099, 'Cameras', 'PTZ & robotic', '2022/01/images/original/30171_5231c004.jpg', 'acessorios-de-cameras/controles-remotos-para-cameras/canon-rc-ip100-controlador-de-joystick-ptz-com-telatouchscreen/'],
     'sony-rmip10':    ['Sony', 'RM-IP10', 'IP remote controller for BRC cameras', 1695, 'Cameras', 'PTZ & robotic', '2021/12/images/original/30048_sonyrmip10iprem.jpg', 'cameras/acessorios-de-cameras/sony-rm-ip10-ip-controlador-remoto-para-cameras-brc/'],
+    /* round 5 (26 Nov 2026): production quality. Read from each listing's JSON-LD (name, SKU, USD price, image) on
+       i9store.com/usa, raw read tmp-planner5/prices.tsv + prices2.tsv; every image checked white (four 6×6 px corners = 255). */
+    'microconv-3g':   ['Blackmagic Design', 'Micro Converter BiDirectional SDI/HDMI 3G', 'With power supply · SKU CONVBDC/SDI/HDMI03G/PS', 95, 'Studio', 'Converters', '2021/05/images/original/23422_blackmagic_desi.jpg', 'estudio/conversores/blackmagic-design-micro-conversor-bidirectional-sdihdmi-3g-com-fonte-de-alimentacao/'],
+    'sdi2hdmi-12g':   ['Blackmagic Design', 'Micro Converter SDI to HDMI 12G', 'With power supply · SKU CONVCMIC/SH12G/WPSU', 179, 'Studio', 'Converters', '2025/05/images/original/82980_119.jpg', 'estudio/conversores/blackmagic-design-microconversor-sdi-para-hdmi-12g-com-fonte-de-alimentacao/'],
+    'sdi2hdmi-3g':    ['Blackmagic Design', 'Micro Converter SDI to HDMI 3G', 'With power supply · SKU CONVCMIC/SH03G/WPSU', 85, 'Studio', 'Converters', '2021/12/images/original/30057_blackmagicdesig.jpg', 'estudio/conversores/blackmagic-design-micro-conversor-sdi-para-hdmi-3g/'],
+    'bmenc-hd':       ['Blackmagic Design', 'Streaming Encoder HD', 'Streaming encoder, 12G-SDI input', 599, 'Studio', 'Encoders & decoders', '2026/06/images/original/100424_blackmagic_desi.jpg', 'estudio/encoders-e-decoders/blackmagic-design-streaming-encoder-hd/'],
+    'hd-mini':        ['Blackmagic Design', 'HyperDeck Studio HD Mini', 'Recorder, 3G-SDI, up to 1080p60', 649, 'Studio', 'Recorders', '2021/12/images/original/30061_blackmagicdesig.jpg', 'acessorios-para-eletronicos/divisores-e-comutadores-de-audio-e-video/blackmagic-design-hyperdeck-mini-estudio-hd/'],
+    'hd-4kpro':       ['Blackmagic Design', 'HyperDeck Studio 4K Pro', 'Recorder, 12G-SDI, up to 2160p60', 1865, 'Studio', 'Recorders', '2026/03/images/original/98396_8.jpg', 'acessorios-para-eletronicos/divisores-e-comutadores-de-audio-e-video/blackmagic-design-hyperdeck-studio-4k-pro/'],
+    /* Sony FX5: two USA listings (body ILMEFX5B $4,898; with XLR handle ILMEFX5 $5,498); the body is offered */
+    'sony-fx5':       ['Sony', 'FX5', 'Full-frame E-mount cinema camera, body', 4898, 'Cameras', 'Cinema', '2026/09/images/original/106270_sonypressfx5fro.jpg', 'cameras/cinema/sony-fx5-cinema-camera/'],
+    'sr-cage-fx5':    ['SmallRig', 'HawkLock Cage for Sony FX5', 'SKU 6776', 89.99, 'Accessories', 'Cages & rigs', '2026/09/images/original/106609_6776.jpg', 'acessorios/cages-e-acessorios/smallrig-hawklock-cage-for-sony-fx5-6776/'],
   };
   for (const id in L) {
     if (I9.P[id]) continue;
@@ -135,6 +146,11 @@
       approx:true, read:READ, src:BMD + 'blackmagicstudiocamera/techspecs', note:'Approx. — verify: UHD is scaled from a 5.3K window, ≈20.2 mm derived. 12G-SDI in/out, HDMI 2.0, 10G Ethernet, PoE / 12 V.' },
     'bm-pocket6kpro': { mount:'EF', fmt:'s35', w:23.1, sdi:null, hdmi:true, res:'6K 50p · UHD 60p', pwr:'12 V DC supply',
       approx:true, read:READ, src:BMD + 'blackmagicpocketcinemacamera/techspecs', note:'Approx. — verify: 23.10 mm is the full sensor; the UHD area is not stated. HDMI out up to 1080p60, no SDI. Built-in NDs.' },
+    /* Sony FX5 (round 5, 26 Nov 2026): Sony's help guide for the ILME-FX5 / FX5B, spec page + "HDMI Output Connector Output
+       Formats" (helpguide.sony.net/ilc/2630/v1/en/contents/spec.html and hdmi_format.html). Terminals: HDMI type A, USB-C,
+       LAN; no SDI listed. 35.9 × 24.0 mm full-frame sensor; the UHD active width is not stated, so approx. */
+    'sony-fx5': { mount:'E', fmt:'ff', w:35.9, sdi:null, hdmi:true, res:'5K open gate (X-OCN) · 4K 120p', cage:'sr-cage-fx5', pwr:'USB-PD power supply (USB Type-C)',
+      approx:true, read:'2026-11-26', src:'https://helpguide.sony.net/ilc/2630/v1/en/contents/spec.html', note:'Approx. — verify: 35.9 mm is the full sensor; the UHD width is not stated. Full-size HDMI (type A), no SDI. Runs from a USB-PD supply (help guide: "Using the Camera with a USB Power Supply").' },
   });
   /* Super 35 crop recording modes (extra reach): w = image width in that mode. */
   D.BODIES['canon-c50'].crop = { w:24.4, label:'Super 35 crop', v:true, src:'https://www.usa.canon.com/shop/p/eos-c50', note:'24.4 × 13.7 mm in UHD; up to 60p.' };
@@ -271,6 +287,75 @@
     }); };
   D.LIGHTCTL = { ctl:'cuecore', panel:'vptouch', relay:'din-relay4', src:'https://www.visualproductions.nl/products/cuecore3' };
 
+  /* ---------- round 5 (26 Nov 2026): production quality (1080p HD or 2160p UHD 4K, 30p or 60p) ----------
+     VOUT: the highest 2160p frame rate each camera puts out LIVE on each interface (not what it records).
+       s  = over SDI (12G): 60 / 30, 0 = SDI tops out at 1080 or no SDI
+       h  = over HDMI: 60 / 30, 0 = HDMI tops out at 1080 or no HDMI, null = the maker does not state it (planned as HDMI 4K,
+            shown "verify")
+       ip = over NDI / the network: 60 / 30, 0 = 1080 max, null = not stated
+     v:true = every value read on the maker's own page / manual / help guide; approx:true = at least one value derived (the
+     note says which). Read 26 Nov 2026. Nothing is assumed from what a camera records. Every camera here does 1080p59.94 on
+     at least one output, so HD needs no check beyond the connector. */
+  const PSP = 'https://pro-av.panasonic.net/en/products/', CAS = 'https://asia.canon/en/business/';
+  D.VOUT = {
+    ue20:       { s:0, h:30, ip:30, v:true, src:PSP + 'aw-ue20/spec.html', note:'3G-SDI to 1080/59.94p; HDMI 2160/29.97p; IP H.264/H.265 to 3840×2160 at 30 fps.' },
+    'pana-ue40':{ s:0, h:30, ip:0, v:true, src:PSP + 'aw-ue50-40/spec.html', note:'No SDI (UE50 only); HDMI 1.4 to 2160/29.97p; IP to 1920×1080.' },
+    ue50:       { s:0, h:30, ip:0, v:true, src:PSP + 'aw-ue50-40/spec.html', note:'3G-SDI to 1080/59.94p; HDMI 1.4 to 2160/29.97p; IP to 1920×1080.' },
+    ue80:       { s:0, h:60, ip:0, v:true, src:PSP + 'aw-ue80/spec.html', note:'3G-SDI to 1080/59.94p (no 12G); HDMI 2.0 to 2160/59.94p; NDI to 1080/59.94p.' },
+    ue100:      { s:60, h:60, ip:60, v:true, src:PSP + 'aw-ue100/spec.html', note:'12G-SDI + 3G-SDI, HDMI 2.0, 2160/59.94p; full NDI carries 4K, NDI|HX2 does not.' },
+    ue160b:     { s:60, h:60, ip:60, v:true, src:PSP + 'aw-ue160/spec.html', note:'12G-SDI + 2 × 3G-SDI, HDMI 2.0, 2160/59.94p; full NDI to 2160/59.94p.' },
+    crn300:     { s:0, h:30, ip:30, v:true, src:CAS + 'cr-n300/main/specification', note:'3G-SDI to 1080/59.94p; HDMI to 2160/29.97p. Canon: "When 3840 × 2160 is selected for HDMI, video will not be outputted to SDI." NDI|HX2 to 2160/29.97.' },
+    crn500:     { s:0, h:30, ip:30, v:true, src:CAS + 'cr-n500/main/specification', note:'3G-SDI to 1080/59.94p; HDMI to 2160/29.97p; 4K on HDMI turns the SDI off. NDI|HX2 to 2160/29.97.' },
+    crn400b:    { s:60, h:60, ip:60, v:true, src:CAS + 'cr-n400/main/specification', note:'12G-SDI and HDMI to 2160/59.94p (the 3G-SDI goes dark at 4K); IP 2160/59.94 in H.265 only.' },
+    'srg-a12':  { s:0, h:30, ip:null, v:true, src:'https://www.sony.jp/products/catalog/SPC_SRG-A12.pdf', note:'Sony Japan spec sheet (pro.sony refused automated reads): 3G-SDI to 1080/59.94p, HDMI to 2160/29.97p; NDI|HX version and IP resolution not stated.' },
+    'brc-am7':  { s:60, h:60, ip:null, v:true, src:'https://www.sony.jp/products/catalog/SPC_BRC-AM7.pdf', note:'Sony Japan spec sheet: SDI OUT1 12G to 2160/59.94p (OUT2 3G), HDMI to 2160/59.94p; IP resolution not stated.' },
+    tail2:      { s:0, h:60, ip:60, v:true, src:'https://www.obsbot.com/obsbot-tail-2-ptzr-4k-live-production-camera/specs', note:'3G-SDI to 1080/60p; HDMI 2.0 to 2160/60p; NDI/RTSP/SRT to 4K60 (NDI type not stated).' },
+    'pxw-z90':  { s:0, h:30, ip:null, approx:true, src:'https://pro.sony/ue_US/products/handheld-camcorders/pxw-z90', note:'Approx. — verify: Sony "HDMI supports up to QFHD, 3G-SDI up to HD" (search excerpt; the page refused automated reads). 4K out at 30p is derived from its 4K 30p recording. SDI and HDMI do not output together.' },
+    'ag-cx350': { s:0, h:60, ip:null, v:true, src:PSP + 'ag-cx350/spec.html', note:'SDI to 1080/59.94p only; HDMI 3840 × 2160 to 59.94p. No 4K out in NDI|HX1 mode.' },
+    xa75:       { s:0, h:0, ip:null, v:true, src:'https://gdlp01.c-wss.com/gds/1/0300044791/02/xa70-75-im3-n-en.pdf', note:'Canon XA70/75 manual, "Video Output Configuration (Recording)": SDI and mini-HDMI put out 1080/59.94P at most while recording, even when recording UHD.' },
+    xf605:      { s:60, h:null, ip:null, v:true, src:CAS + 'xf605/main/specification', note:'12G-SDI 3840 × 2160 at 50/60p (Canon Asia). HDMI 4K output not stated on the pages read: verify.' },
+    r50v:       { s:0, h:60, ip:null, approx:true, src:'https://cam.start.canon/en/C021/manual/html/UG-11_Reference_0080.html', note:'Approx. — verify: micro-HDMI (type D) verified; 4K 59.94p out from a Canon search excerpt.' },
+    fx30:       { s:0, h:60, ip:null, v:true, src:'https://helpguide.sony.net/ilc/2220/v1/en/contents/TP1000885432.html', note:'HDMI type A, 4K to 59.94p 10-bit. Drops to 1080 with Log or a LUT on, unless HDMI-only output is set.' },
+    s5iix:      { s:0, h:null, ip:null, approx:true, src:'https://help.na.panasonic.com/answers/specifications-sheet-lumix-s-series-dc-s5m2x/', note:'Approx. — verify: HDMI type A puts out 4K (Panasonic: "To output motion pictures with 4K or higher, use a Premium High Speed HDMI cable"); the live 4K frame rate is not stated.' },
+    'canon-r6v':{ s:0, h:null, ip:null, approx:true, src:'https://asia.canon/en/consumer/eos-r6-v/body/specification', note:'Approx. — verify: full-size HDMI, no SDI; the HDMI 4K output rate was not found on Canon\'s pages.' },
+    'eos-r6m3': { s:0, h:60, ip:null, approx:true, src:'https://cam.start.canon/en/C022/manual/html/UG-11_Reference_0090.html', note:'Approx. — verify: HDMI type A verified; 4K out to 59.94p from a search excerpt of the same manual.' },
+    bm4k:       { s:60, h:60, ip:null, approx:true, src:'https://www.blackmagicdesign.com/products/blackmagicstudiocamera/techspecs/W-CAM-21', note:'Approx. — verify: 12G-SDI to 2160p60 and HDMI 2.0 in Ultra HD read on the page; 60p on the HDMI is derived (the page lists the standards, not per port).' },
+    bmstudio6k: { s:60, h:60, ip:null, approx:true, src:'https://www.blackmagicdesign.com/products/blackmagicstudiocamera/techspecs', note:'Approx. — verify: 12G-SDI to 2160p60 and HDMI 2.0 in Ultra HD; 60p on the HDMI is derived.' },
+    'bm-pocket6kpro': { s:0, h:0, ip:null, v:true, src:'https://www.blackmagicdesign.com/products/blackmagicpocketcinemacamera/techspecs', note:'"1 x HDMI up to 1080p60", no SDI: it cannot send 4K live.' },
+    'pyxis6k-l':{ s:60, h:0, ip:null, v:true, src:'https://www.blackmagicdesign.com/products/blackmagicpyxis/techspecs', note:'"1 x 12G-SDI up to 2160p60"; no HDMI.' },
+    'canon-c50':{ s:0, h:null, ip:null, v:true, src:CAS + 'eos-c50/main/product', note:'Full-size HDMI, "SDI Out: No". The HDMI 4K output format is not stated on the pages read: verify.' },
+    'sony-fx3': { s:0, h:60, ip:null, v:true, src:'https://helpguide.sony.net/ilc/2210/v1/en/contents/TP1000885432.html', note:'HDMI type A, 4K to 59.94p 10-bit (FX3A: same, helpguide.sony.net/ilc/2510).' },
+    'sony-fx5': { s:0, h:60, ip:null, v:true, src:'https://helpguide.sony.net/ilc/2630/v1/en/contents/hdmi_format.html', note:'HDMI type A puts out 3840 × 2160 to 59.94P when Output Format is set to it (the default is 1920 × 1080). No SDI.' },
+    c80:        { s:60, h:60, ip:null, v:true, src:'https://www.canon.ca/dam/canon/products/cameras/EOS-C80/EOS-C80-Specifications.pdf', note:'Canon Canada spec sheet: 12G-SDI and HDMI to 4096/3840 × 2160 at 59.94/50P.' },
+    'fx6-24105':{ s:60, h:null, ip:null, approx:true, src:'https://pro.sony/ue_US/products/handheld-camcorders/ilme-fx6v', note:'Approx. — verify: 12G-SDI and HDMI, QFHD on one port at a time (Sony FAQ excerpt); the 4K frame rate per port is not stated (60p on 12G is derived).' },
+    c400:       { s:60, h:null, ip:null, approx:true, src:'https://global.canon/ja/c-museum/wp-content/uploads/2025/12/cesc911_en.pdf', note:'Approx. — verify: 12G/6G/3G-SDI and HDMI type A; the maximum output format is not stated (60p on 12G is derived from the 12G standard).' },
+  };
+  /* the production side for each quality. Blackmagic tech specs read 26 Nov 2026:
+     /atemconstellation/techspecs (W-APS-25/26 HD: 3G-SDI, 1080p60 max; W-APS-40/41/42 4K: 12G-SDI, "Frame Rate and Format
+     Converters: On all N inputs" and "Down Conversion: 1 x selectable HD down converted output"),
+     /atemtelevisionstudio/techspecs/W-APS-23 (4K8: 8 × 12G-SDI in, 10 aux, RTMP streaming, USB-C / M.2 recording,
+     integrated panel; "Down Conversion: 1 x multi view" only), /microconverters/techspecs (12G models to 2160p60, 3G to
+     1080p60; the wPSU versions only add the +5 V supply in the box; no down-conversion stated),
+     /hyperdeckstudio/techspecs (HD Mini 3G-SDI to 1080p60; HD Plus 6G-SDI, Ultra HD to 2160p30; 4K Pro 12G-SDI to 2160p60),
+     /blackmagicstreamingprocessors/techspecs (Encoder HD: "12G-SDI input with built-in Ultra HD to HD downconverter",
+     streams to 1080p60; Encoder 4K: standards-converted 12G-SDI input, streams HD or Ultra HD to 2160p60),
+     /atemconstellation/advancedpanel (Advanced Panels over Ethernet to the Constellation; ATEM Micro Panel drives ATEM Software
+     Control over USB-C / Bluetooth, 10 sources direct, 20 with shift, 4 M/E select buttons). */
+  Object.assign(D.PROD, {
+    conv12:'microconv', conv3:'microconv-3g',                      /* camera / receiver HDMI → SDI: BiDirectional, with the power supply (no USB power at a camera) */
+    toHdmi:{ uhd:'sdi2hdmi-12g', hd:'sdi2hdmi-3g' },                 /* switcher SDI → a screen / TV's HDMI */
+    enc4:'bmenc', encHd:'bmenc-hd',
+    recBy:{ hd:'hd-mini', uhd30:'hyperdeck', uhd60:'hd-4kpro' },    /* hyperdeck = HyperDeck Studio HD Plus (Ultra HD to 2160p30) */
+    uhdSw:[ { id:'atem-tvs-4k8', inp:8, me:1, tvs:true }, { id:'atem1me', inp:10, me:1 }, { id:'atem2me-4k', inp:20, me:2 }, { id:'atem4me-4k', inp:40, me:4 } ],
+    hdSw:[ { id:'atem1mehd', inp:10, me:1 }, { id:'atem2me-hd', inp:20, me:2 } ],
+    dc:{ 'atem1me':1, 'atem2me-4k':1, 'atem4me-4k':1 },               /* one HD down-converted SDI output (Constellation 4K) */
+    mvSdi:{ atem1mehd:'hd', 'atem2me-hd':'hd', atem1me:'uhd', 'atem2me-4k':'uhd', 'atem4me-4k':'uhd' },   /* multiview on SDI only */
+    /* control panels on the store: [key, listing, M/E rows, source buttons direct] */
+    panels:{ mini:['atemmls', 1, 10], me1:['atem1me-panel', 1, 10], me1_20:['atem1me-panel20', 1, 20], me2:['atem2me-panel', 2, 20], me2_30:['atem2me-panel30', 2, 30] },
+    wl:{ se:{ id:'cineview-se', uhd:30, src:'https://accsoon.com/cineview-se-4k/', note:'HDMI 2.0 to 4K30 on TX and RX; "When the transmitter\'s HDMI input is 4K, the receiver\'s SDI output is not available." SDI 1080p60.' },
+         master:{ id:'cineview-master-tx', uhd:60, src:'https://accsoon.com/cineview-master-4k/', note:'HDMI to 4K60 on TX and RX; manual: "Receiver\'s SDI can only output up to 1080p60."' } },
+  });
+
   /* ---------- the curated picker: a bit from each brand, three families ---------- */
   /* fam: ptz | cc (camcorder) | lens (mirrorless / cine / studio, interchangeable lens). sub = the badge under the family. */
   D.CAMS = [
@@ -279,6 +364,6 @@
     ['pxw-z90', 'cc', 'Camcorder'], ['xa75', 'cc', 'Camcorder'], ['xf605', 'cc', 'Camcorder'], ['ag-cx350', 'cc', 'Camcorder'],
     ['r50v', 'lens', 'Mirrorless'], ['fx30', 'lens', 'Cinema'], ['bm4k', 'lens', 'Studio'], ['s5iix', 'lens', 'Mirrorless'], ['canon-r6v', 'lens', 'Mirrorless'],
     ['eos-r6m3', 'lens', 'Mirrorless'], ['bmstudio6k', 'lens', 'Studio'], ['bm-pocket6kpro', 'lens', 'Cinema'], ['pyxis6k-l', 'lens', 'Cinema'], ['canon-c50', 'lens', 'Cinema'],
-    ['sony-fx3', 'lens', 'Cinema'], ['c80', 'lens', 'Cinema'], ['fx6-24105', 'lens', 'Cinema'], ['c400', 'lens', 'Cinema'],
+    ['sony-fx3', 'lens', 'Cinema'], ['sony-fx5', 'lens', 'Cinema'], ['c80', 'lens', 'Cinema'], ['fx6-24105', 'lens', 'Cinema'], ['c400', 'lens', 'Cinema'],
   ].filter(([id, fam]) => I9.P[id] && (fam === 'ptz' ? D.PTZ[id] : fam === 'cc' ? D.CAMCORDER[id] : D.BODIES[id])).map(([id, fam, sub]) => ({ id, fam, sub }));
 })();

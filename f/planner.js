@@ -205,6 +205,42 @@
     g_pc:['Production computer for vMix / OBS','Computador de produção para vMix / OBS'], s_pc:['8+ cores, NVIDIA RTX-class GPU, 32 GB RAM, NVMe SSD (planning guide)','8+ núcleos, GPU classe NVIDIA RTX, 32 GB RAM, SSD NVMe (guia)'], w_pcPr:['Switches, records and streams in software','Corta, grava e transmite em software'],
     g_vmix4k:['vMix 4K or Pro licence, bought by the customer from vMix (not sold by i9)','Licença vMix 4K ou Pro, comprada pelo cliente na vMix (a i9 não vende)'], g_vmixhd:['vMix HD licence from vMix (not sold by i9), or free OBS Studio','Licença vMix HD na vMix (a i9 não vende), ou OBS Studio gratuito'],
     w_panelMini:['Control panel, no video: cuts, keys and macros on the {0}','Painel de controle, sem vídeo: cortes, keys e macros no {0}'],
+    /* round 5 (26 Nov 2026): production quality follows the whole chain, and the control panel is a choice */
+    w_conv12:['{0} sends 4K only over HDMI ({1}). A 12G BiDirectional converter at the camera puts it on 12G-SDI for the run: HDMI is a short-distance cable','{0} só envia 4K por HDMI ({1}). Um conversor bidirecional 12G na câmera coloca o sinal em 12G-SDI para o cabo: HDMI é cabo de curta distância'],
+    w_conv3:['{0} has no SDI out: a 3G BiDirectional converter at the camera puts its 1080 HDMI on 3G-SDI for the run','{0} não tem saída SDI: um conversor bidirecional 3G na câmera coloca o HDMI 1080 em 3G-SDI para o cabo'],
+    w_conv3Hd:['{0} reaches the switcher in 1080: a 3G BiDirectional converter puts its HDMI on 3G-SDI','{0} chega ao switcher em 1080: um conversor bidirecional 3G coloca o HDMI em 3G-SDI'],
+    w_convHdmi:['{0} has no HDMI out: converter to the HDMI switcher','{0} não tem saída HDMI: conversor para o switcher HDMI'],
+    w_convLong12:['HDMI run over 15 m: a 12G converter at each end (HDMI→SDI at the camera, SDI→HDMI at the switcher)','Cabo HDMI acima de 15 m: conversor 12G em cada ponta (HDMI→SDI na câmera, SDI→HDMI no switcher)'],
+    w_convLong3:['HDMI run over 15 m: a 3G converter at each end (HDMI→SDI at the camera, SDI→HDMI at the switcher)','Cabo HDMI acima de 15 m: conversor 3G em cada ponta (HDMI→SDI na câmera, SDI→HDMI no switcher)'],
+    w_wlConv:['The Accsoon receiver carries 4K only on HDMI (its SDI out stops at 1080p60): a 12G BiDirectional converter at the receiver puts the 4K picture on 12G-SDI','O receptor Accsoon só entrega 4K por HDMI (a saída SDI vai até 1080p60): um conversor bidirecional 12G no receptor coloca o 4K em 12G-SDI'],
+    w_wl60:['4K at 60p: the CineView SE 4K stops at 4K30, so the Master 4K (4K60) is planned','4K a 60p: o CineView SE 4K vai até 4K30, então o plano usa o Master 4K (4K60)'],
+    c_up:['{0} ({1}) can’t send {2} live ({3}): it reaches the switcher in 1080 and is up-converted. Swap to {4} for real {2}.','{0} ({1}) não envia {2} ao vivo ({3}): chega ao switcher em 1080 e é convertido para cima. Troque por {4} para {2} de verdade.'],
+    c_upNo:['{0} ({1}) can’t send {2} live ({3}): it reaches the switcher in 1080 and is up-converted.','{0} ({1}) não envia {2} ao vivo ({3}): chega ao switcher em 1080 e é convertido para cima.'],
+    c_unk:['{0} ({1}): the maker doesn’t state its HDMI 4K output rate; planned as {2} over HDMI, verify before ordering.','{0} ({1}): o fabricante não informa a taxa da saída 4K em HDMI; planejado como {2} em HDMI, confirme antes do pedido.'],
+    c_ipHd:['{0} ({1}): its network video tops out at 1080, so on NDI it can’t carry {2}. Use SDI, or a camera with 4K NDI.','{0} ({1}): o vídeo em rede vai até 1080, então em NDI não leva {2}. Use SDI, ou uma câmera com NDI 4K.'],
+    c_ipUnk:['{0} ({1}): the maker doesn’t state the network video resolution; verify {2} over NDI.','{0} ({1}): o fabricante não informa a resolução do vídeo em rede; confirme {2} em NDI.'],
+    c_wlUp:['{0}: the Accsoon transmitter takes 4K only on HDMI and this camera has no 4K HDMI out, so the wireless picture is 1080.','{0}: o transmissor Accsoon só aceita 4K por HDMI e esta câmera não tem saída 4K em HDMI, então o vídeo sem fio é 1080.'],
+    w_swUhd:['{0} inputs at {1}: 12G-SDI inputs, each with its own format converter (an HD source is up-converted)','{0} entradas em {1}: entradas 12G-SDI, cada uma com conversor de formato (uma fonte HD é convertida para cima)'],
+    w_swHd:['{0} inputs at {1}: 3G-SDI, 1080p60 maximum','{0} entradas em {1}: 3G-SDI, máximo 1080p60'],
+    c_swCmp:['4K switcher: the {0} makes the cheaper complete chain here ({1} with panel, encoder and recorder) than the {2} ({3}).','Switcher 4K: o {0} fecha a cadeia completa mais barata aqui ({1} com painel, encoder e gravador) do que o {2} ({3}).'],
+    c_tvsDc:['The TV Studio 4K8 has no down-converted program output (Blackmagic lists down-conversion on its multiview only), so a 1080 projector feed needs the Constellation 4K’s HD down-converted output.','O TV Studio 4K8 não tem saída de programa convertida para baixo (a Blackmagic só lista no multiview), então o projetor em 1080 pede a saída HD do Constellation 4K.'],
+    c_tvsStream:['TV Studio 4K8 streams over RTMP built in; Blackmagic doesn’t state its maximum stream resolution: verify 2160p before promising a 4K stream.','O TV Studio 4K8 transmite por RTMP embutido; a Blackmagic não informa a resolução máxima: confirme 2160p antes de prometer transmissão 4K.'],
+    w_encQ4:['Streams in {0}: Streaming Encoder 4K, 12G-SDI input, up to 2160p60','Transmite em {0}: Streaming Encoder 4K, entrada 12G-SDI, até 2160p60'],
+    w_encQh:['Streams in {0}: Streaming Encoder HD, up to 1080p60','Transmite em {0}: Streaming Encoder HD, até 1080p60'],
+    w_encQd:['Streams in {0} from the {1} program: the Streaming Encoder HD’s 12G-SDI input down-converts Ultra HD to HD','Transmite em {0} a partir do programa {1}: a entrada 12G-SDI do Streaming Encoder HD converte Ultra HD para HD'],
+    w_recQ:['Records the {0} program: {1}','Grava o programa {0}: {1}'], w_recQiso:['One recorder per camera for ISO at {0}: {1}','Um gravador por câmera para ISO em {0}: {1}'],
+    s_recHd:['3G-SDI, up to 1080p60','3G-SDI, até 1080p60'], s_rec30:['6G-SDI, Ultra HD up to 2160p30','6G-SDI, Ultra HD até 2160p30'], s_rec60:['12G-SDI, up to 2160p60','12G-SDI, até 2160p60'],
+    w_scrDc:['Projector in 1080: the {0}’s HD down-converted SDI output, turned into HDMI at the projector','Projetor em 1080: a saída SDI convertida para HD do {0}, virando HDMI no projetor'],
+    w_scrHd:['{0} feed: the switcher’s 3G-SDI aux, turned into HDMI at the {0}','Sinal do {0}: o aux 3G-SDI do switcher, virando HDMI no {0}'],
+    w_scrUhd:['{0} feed in {1}: a 12G-SDI aux, turned into HDMI at the LED processor','Sinal do {0} em {1}: um aux 12G-SDI, virando HDMI no processador do LED'],
+    g_dconv:['4K → 1080 down-converter for the projector','Conversor 4K → 1080 para o projetor'], w_dconv:['This switcher has no down-converted program out','Este switcher não tem saída de programa convertida para baixo'],
+    c_ledUhd:['LED wall at {0}: confirm the LED processor takes 2160p on HDMI; if it is an HD processor, feed it from the Constellation’s HD down-converted output instead.','Painel de LED em {0}: confirme que o processador aceita 2160p em HDMI; se for HD, use a saída HD convertida do Constellation.'],
+    c_ledUhdT:['LED wall at {0}: confirm the LED processor takes 2160p on HDMI; for an HD processor a 4K → 1080 down-converter is to quote (the TV Studio 4K8 down-converts only its multiview).','Painel de LED em {0}: confirme que o processador aceita 2160p em HDMI; para um processador HD, um conversor 4K → 1080 fica a cotar (o TV Studio 4K8 só converte o multiview).'],
+    w_mvConv:['Multiview to an HDMI monitor: the {0}’s multiview is on {1}-SDI only','Multiview num monitor HDMI: o multiview do {0} sai só em {1}-SDI'],
+    q_swpn:['Switcher · control','Switcher · controle'], pn_builtin:['panel built in','painel embutido'], pn_none:['no hardware panel (ATEM Software Control)','sem painel físico (ATEM Software Control)'],
+    w_pnlPick:['Control panel ({0}): {1}','Painel de controle ({0}): {1}'], pnlAuto:['suggested for {0} inputs at this level','sugerido para {0} entradas neste nível'], pnlMine:['your choice','sua escolha'],
+    c_pnlFall:['The control panel you picked doesn’t fit the {0}; the suggested one is used instead.','O painel escolhido não serve no {0}; o sugerido foi usado.'],
+    g_cap4k:['4K capture card, 12G-SDI, for the computer','Placa de captura 4K, 12G-SDI, para o computador'], w_cap4k:['The listed DeckLink Duo 2 / Quad 2 are 3G-SDI (HD): 4K capture is to quote','As DeckLink Duo 2 / Quad 2 listadas são 3G-SDI (HD): captura 4K a cotar'],
     g_bst:['Visual Productions B-Station2 wall panel','Painel de parede Visual Productions B-Station2'], s_vp:['to quote · Visual Productions, represented by i9','a cotar · Visual Productions, representada pela i9'],
     g_kiosc:['Kiosc app on your iPad (App Store)','App Kiosc no seu iPad (App Store)'],
     g_crmx:['Wireless DMX (CRMX) transmitter + receivers','Transmissor + receptores DMX sem fio (CRMX)'], s_crmx:['{0} receiver(s) for fixtures without built-in CRMX','{0} receptor(es) para luzes sem CRMX embutido'],
@@ -613,7 +649,7 @@
       g.lastChild.textContent = String(i + 1);
     });
   }
-  const runCable = c => S.tr === 'ip' ? 'Cat6' : S.tr === 'hdmi' ? (runOf(c) > R.hdmiActive ? 'HDMI→SDI' : 'HDMI') : (S.fmt === 'uhd' ? '12G-SDI' : '3G-SDI');
+  const runCable = c => S.tr === 'ip' ? 'Cat6' : S.tr === 'hdmi' ? (runOf(c) > R.hdmiActive ? 'HDMI→SDI' : 'HDMI') : pathOf(c).cable;
 
   /* ======================= camera views (schematic multiview) ======================= */
   function thumb(c, v, big) {
@@ -722,37 +758,133 @@
   }
 
   /* ======================= equipment list (BOM) + checks ======================= */
+  /* round 5 (26 Nov 2026): the production quality the customer picks in step 4 (S.fmt = 'hd' | 'uhd', S.pr.fps = 30 | 60,
+     S.pr.sq = 'hd' to stream a 4K program in 1080) follows every part: cameras (over the output actually used), converters,
+     switcher, recorder, encoder, screen feed and multiview. Facts in planner-cams.js (D.VOUT, D.PROD), sources there. */
+  const qualOf = () => { const pr = S.pr || {}, q = S.fmt === 'uhd' ? 'uhd' : 'hd', fps = +pr.fps === 60 ? 60 : 30, sq = q === 'uhd' && pr.sq === 'hd' ? 'hd' : q;
+    return { q, fps, sq, pgm:(q === 'uhd' ? '2160p' : '1080p') + fps, st:(sq === 'uhd' ? '2160p' : '1080p') + fps }; };
+  /* a camera's live 4K outputs: the read data, else what its connectors say (12G-SDI carries 2160p60 by standard; HDMI unknown) */
+  const vout = m => { const v = (D.VOUT || {})[m]; if (v) return v; const z = D.PTZ[m] || D.CAMCORDER[m] || D.BODIES[m] || {};
+    return { s: z.sdi === '12G' ? 60 : 0, h: z.hdmi ? null : 0, ip:null, approx:true, note:'' }; };
+  const camSpec = c => c.k === 'lens' ? D.BODIES[c.m] : zspec(c) || {};
+  /* the best 4K this camera can send live, in words (for the checks) */
+  const best4k = v => v.s ? '12G-SDI 2160p' + v.s : v.h ? 'HDMI 2160p' + v.h : v.h === 0 && v.s === 0 ? (LANG === 'pt' ? '1080 no máximo' : '1080 at most') : (LANG === 'pt' ? 'não informado' : 'not stated');
+  /* how one camera's picture reaches the switcher at the plan's quality.
+     conv: 'conv12' | 'conv3' | null (a converter at the camera); up: reaches only in 1080 (up-converted by the switcher's input
+     converter); unk: the maker doesn't state the rate used; cable: what runs to the control position */
+  function pathOf(c) {
+    const Q = qualOf(), z = camSpec(c), v = vout(c.m), f = Q.fps, uhd = Q.q === 'uhd';
+    const o = { uhd, conv:null, up:false, unk:false, ok:true, cable:'', v };
+    if (S.tr === 'sdi') {
+      if (!uhd) { if (!z.sdi) { o.conv = 'conv3'; o.cable = 'HDMI→3G-SDI'; } else o.cable = '3G-SDI'; }
+      else if (v.s >= f) o.cable = '12G-SDI';
+      else if (z.hdmi && (v.h == null || v.h >= f)) { o.conv = 'conv12'; o.cable = 'HDMI→12G-SDI'; o.unk = v.h == null; }
+      else { o.up = true; o.ok = false; if (z.sdi) o.cable = '3G-SDI · 1080'; else { o.conv = 'conv3'; o.cable = 'HDMI→3G-SDI · 1080'; } }
+    } else if (S.tr === 'hdmi') {
+      o.cable = runOf(c) > R.hdmiActive ? 'HDMI→SDI' : 'HDMI';
+      if (uhd && !(z.hdmi && (v.h == null || v.h >= f))) { o.up = true; o.ok = false; } else if (uhd) o.unk = v.h == null;
+    } else {
+      o.cable = 'Cat6';
+      if (uhd) { if (v.ip == null) o.unk = true; else if (v.ip < f) { o.up = true; o.ok = false; } }
+    }
+    return o;
+  }
+  /* the cheapest store camera of the same family that delivers the quality (verified rate), for the swap suggestion */
+  function swapFor(c) {
+    const Q = qualOf(); if (Q.q !== 'uhd') return null;
+    const fam = c.k === 'ptz' ? 'ptz' : c.k === 'cc' ? 'cc' : 'lens', f = Q.fps;
+    const fits = m => { const v = (D.VOUT || {})[m]; if (!v) return false; const z = D.PTZ[m] || D.CAMCORDER[m] || D.BODIES[m] || {};
+      return S.tr === 'ip' ? (v.ip || 0) >= f && !!z.ndi : S.tr === 'hdmi' ? (v.h || 0) >= f : v.s >= f || (z.hdmi && (v.h || 0) >= f); };
+    const br = P[c.m] ? P[c.m].brand : '';   /* same brand first (the customer's system stays one family), then the cheapest */
+    const list = (D.CAMS || []).filter(x => x.fam === fam && x.id !== c.m && P[x.id] && fits(x.id)).sort((a, b) => (P[b.id].brand === br) - (P[a.id].brand === br) || P[a.id].usd - P[b.id].usd);
+    return list.length ? list[0].id : null;
+  }
+  /* control panels: what fits this switcher, what the plan suggests, and the customer's pick (S.pr.pnl) */
+  const SMALL_SW = ['atemmp', 'atemmini', 'atemproiso', 'atemext', 'atemxiso', 'atemsdi', 'atemsdipro', 'atemsdix'];
+  function panelFor(id, nIn, pr) {
+    const X = D.PROD, tvs = id === X.tvs4k8, small = SMALL_SW.includes(id), me = /^atem2me/.test(id) ? 2 : /^atem4me/.test(id) ? 4 : 1;
+    const opts = tvs ? ['builtin'] : small ? ['none', 'mini'] : me >= 2 ? ['none', 'mini', 'me1', 'me1_20', 'me2', 'me2_30'] : ['none', 'mini', 'me1', 'me1_20'];
+    const mix = pr.scr && pr.scr !== 'none' && pr.feed === 'mix', want = pr.pnl === 'yes';
+    const auto = tvs ? 'builtin' : small ? (pr.lvl === 'p' || want ? 'mini' : 'none')
+      : pr.lvl === 'p' ? (me >= 2 && mix ? 'me2' : nIn > 10 ? 'me1_20' : 'me1') : pr.lvl === 's' && !want ? 'none' : 'mini';
+    /* a plan saved before round 5 carries no pnl: it had no panel unless it asked ('yes'), so it keeps none */
+    const ch = pr.pnl == null ? 'none' : !['auto', 'yes'].includes(pr.pnl) ? pr.pnl : null, key = ch && opts.includes(ch) ? ch : auto;
+    const pnl = X.panels && X.panels[key];
+    return { opts, auto, key, chosen:ch, fall: !!ch && !opts.includes(ch), id: pnl && P[pnl[0]] ? pnl[0] : null };
+  }
+  const panelUsd = (id, nIn, pr) => { const p = panelFor(id, nIn, pr); return p.id ? P[p.id].usd : 0; };
+  const fmtTxt = () => { const Q = qualOf(); return Q.pgm + (Q.sq !== Q.q ? ' · ' + (LANG === 'pt' ? 'transmissão ' : 'stream ') + Q.st : ''); };
+  const usd0 = v => '$' + Math.round(v).toLocaleString('en-US');
+  let PROD = null;   /* what the last build decided about quality, switcher and panel (the wizard's step 4 reads it) */
+
   /* round 3: the wizard's production answers (S.pr) choose the switcher, recorder, encoder and outputs.
-     pr = { rec:'none'|'pgm'|'iso', st:0|1|2, scr:'none'|'led'|'proj'|'overflow', feed:'same'|'aux'|'mix', gfx:'none'|'lower'|'lyrics', how:'hw'|'pc' } */
+     pr = { rec:'none'|'pgm'|'iso', st:0|1|2, scr:'none'|'led'|'proj'|'overflow', feed:'same'|'aux'|'mix', gfx:'none'|'lower'|'lyrics', how:'hw'|'pc',
+            lvl:'s'|'m'|'p', pnl:'auto'|'none'|'builtin'|'mini'|'me1'|'me1_20'|'me2'|'me2_30', fps:30|60, sq:'same'|'hd' } */
   function prodBuild(nC, nIn, add, warn, hd, labs, cams) {
-    const pr = S.pr, X = D.PROD, scr = pr.scr && pr.scr !== 'none' ? pr.scr : null;
+    const pr = S.pr, X = D.PROD, scr = pr.scr && pr.scr !== 'none' ? pr.scr : null, Q = qualOf(), uhd = Q.q === 'uhd';
+    const recId = !uhd ? X.recBy.hd : Q.fps === 60 ? X.recBy.uhd60 : X.recBy.uhd30, recSpec = t(!uhd ? 's_recHd' : Q.fps === 60 ? 's_rec60' : 's_rec30');
+    const encId = Q.sq === 'uhd' ? X.enc4 : X.encHd;
     if (pr.gfx === 'lyrics') add('sw', { name:t('g_lyr'), spec:'', qty:1, why:t('w_lyr'), code:'PC', role:'pc' });
     if (pr.how === 'pc') {
       add('sw', { name:t('g_pc'), spec:t('s_pc'), qty:1, why:t('w_pcPr'), code:'PC', role:'pc' });
-      add('sw', { name:t(pr.feed === 'mix' || pr.rec === 'iso' ? 'g_vmix4k' : 'g_vmixhd'), spec:'', qty:1, why:t('w_vmix'), code:'SW', role:'sw' });
-      const ins = cams.filter(c => !c.mob || c.k === 'ptz').length + cams.filter(c => c.mob && c.k !== 'ptz').length;
+      add('sw', { name:t(pr.feed === 'mix' || pr.rec === 'iso' || uhd ? 'g_vmix4k' : 'g_vmixhd'), spec:'', qty:1, why:t('w_vmix'), code:'SW', role:'sw' });
+      const ins = cams.length;
       if (S.tr === 'hdmi') add('sw', { id:X.cards.hdmi, qty:Math.ceil(ins / 4), why:t('w_card', ins), role:'sw' });
+      else if (uhd) add('sw', { name:t('g_cap4k'), spec:'× ' + ins, qty:1, why:t('w_cap4k'), code:'PC', role:'sw' });
       else { const need = ins + (scr && pr.feed !== 'same' ? 1 : 0); add('sw', { id: need <= 4 ? X.cards.sdi4 : X.cards.sdi8, qty:Math.max(1, Math.ceil(need / 8)), why:t('w_card', ins), role:'sw' }); }
       if (pr.st >= 2) warn(t('c_st2', pr.st >= 2 ? '2+' : pr.st), 'info');
+      PROD.sw = null;
     } else {
       if (pr.lvl === 's') warn(t('c_obs'), 'info');
-      let id = null;
-      if (scr && pr.feed === 'mix') { id = hd ? X.me2.hd : X.me2.uhd; add('sw', { id, qty:1, why:t('w_me2'), role:'sw' });
-        if (pr.pnl === 'yes' && pr.lvl !== 'p' && X.panel && P[X.panel.me2]) add('sw', { id:X.panel.me2, qty:1, why:t('w_panel2'), role:'panel' }); }
-      else if (S.tr === 'hdmi') { if (!hd) { add('sw', { name:t('g_uhdhdmi'), spec:t('g_bigsw', nIn), qty:1, why:t('w_uhdhdmi'), code:'SW', role:'sw' }); warn(t('c_uhdHdmi')); }
-        else id = nIn <= 4 ? (pr.rec === 'iso' ? 'atemproiso' : 'atemmp') : nIn <= 8 ? (pr.rec === 'iso' ? 'atemxiso' : 'atemext') : null; }
-      else id = !hd ? (nIn <= 8 && P[X.tvs4k8] ? X.tvs4k8 : nIn <= 10 ? 'atem1me' : null) : nIn <= 4 ? 'atemsdipro' : nIn <= 8 ? 'atemsdix' : nIn <= 10 ? 'atem1mehd' : null;
-      if (id && !(scr && pr.feed === 'mix')) add('sw', { id, qty:1, why:t('w_swPr', nC, S.ext, nIn) + (X.iso.includes(id) && pr.rec === 'iso' ? ' · ' + t('w_iso') : ''), role:'sw' });
-      if (!id && !(S.tr === 'hdmi' && !hd)) { add('sw', { name:t('g_bigsw', nIn), spec:'', qty:1, why:t('w_bigsw'), code:'SW', role:'sw' }); warn(t('c_inputs', nIn, 10)); }
+      let id = null, swWhy = '';
+      const mix = !!(scr && pr.feed === 'mix');
+      if (S.tr === 'hdmi') {
+        if (uhd) { add('sw', { name:t('g_uhdhdmi'), spec:t('g_bigsw', nIn), qty:1, why:t('w_uhdhdmi'), code:'SW', role:'sw' }); warn(t('c_uhdHdmi')); }
+        else id = nIn <= 4 ? (pr.rec === 'iso' ? 'atemproiso' : 'atemmp') : nIn <= 8 ? (pr.rec === 'iso' ? 'atemxiso' : 'atemext') : null;
+        if (id) swWhy = t('w_swPr', nC, S.ext, nIn);
+      } else if (uhd) {
+        /* 4K: the Constellation 4K range or the TV Studio 4K8. The 4K8 has its panel, streaming and recording built in; the
+           Constellation needs an encoder, a recorder and (optionally) a panel. Both are costed complete and the cheaper one is
+           planned. The 4K8 drops out when the customer picks a separate panel, or a 1080 projector needs a down-converted out. */
+        const ch = pr.pnl == null ? 'none' : !['auto', 'yes'].includes(pr.pnl) ? pr.pnl : null;
+        const extra = s => (pr.st > 0 && !(s.tvs && Q.sq === 'uhd') ? P[encId].usd : 0) + (pr.rec === 'pgm' && !s.tvs ? P[recId].usd : 0) + (pr.rec === 'iso' ? P[recId].usd * nC : 0) + panelUsd(s.id, nIn, pr);
+        const cands = X.uhdSw.filter(s => P[s.id] && s.inp >= nIn && (!mix || s.me >= 2) && !(s.tvs && ((ch && ch !== 'builtin') || scr === 'proj')) && !(!s.tvs && ch === 'builtin'))
+          .map(s => ({ ...s, cost:P[s.id].usd + extra(s) })).sort((a, b) => a.cost - b.cost || (a.tvs ? 1 : -1));
+        const tv = X.uhdSw.find(s => s.tvs);
+        if (cands.length) {
+          id = cands[0].id; swWhy = t('w_swUhd', nIn, Q.pgm);
+          const other = cands.find(s => !!s.tvs !== !!cands[0].tvs);
+          if (other) warn(t('c_swCmp', P[id].name, usd0(cands[0].cost), P[other.id].name, usd0(other.cost)), 'info');
+          else if (tv && scr === 'proj' && !cands[0].tvs && nIn <= tv.inp) warn(t('c_tvsDc'), 'info');
+          if (cands[0].tvs && pr.st > 0 && Q.sq === 'uhd') warn(t('c_tvsStream'), 'info');
+        }
+      } else {
+        id = mix ? (nIn <= 20 ? X.me2.hd : null) : nIn <= 4 ? 'atemsdipro' : nIn <= 8 ? 'atemsdix' : nIn <= 10 ? 'atem1mehd' : nIn <= 20 ? 'atem2me-hd' : null;
+        if (id) swWhy = /^atem(1|2)me/.test(id) ? t('w_swHd', nIn, Q.pgm) : t('w_swPr', nC, S.ext, nIn);
+      }
+      if (id) add('sw', { id, qty:1, why:(mix ? t('w_me2') + ' · ' : '') + swWhy + (X.iso.includes(id) && pr.rec === 'iso' ? ' · ' + t('w_iso') : ''), role:'sw' });
+      if (!id && !(S.tr === 'hdmi' && uhd)) { add('sw', { name:t('g_bigsw', nIn), spec:'', qty:1, why:t('w_bigsw'), code:'SW', role:'sw' }); warn(t('c_inputs', nIn, uhd ? 40 : 20)); }
+      PROD.sw = id;
       if (id) {
-        if (pr.rec === 'iso' && !X.iso.includes(id)) add('sw', { id:X.rec1, qty:nC, why:t('w_recIso'), role:'sw' });
-        else if (pr.rec !== 'none' && !X.rec.includes(id)) add('sw', { id:X.rec1, qty:1, why:t('w_recPgm'), role:'sw' });
-        if (pr.st > 0 && !X.stream.includes(id)) add('sw', { id:X.enc, qty:1, why:t('w_encPr'), role:'pc' });
+        const isTvs = id === X.tvs4k8, sdiOut = isTvs || /^atem(1|2|4)me/.test(id);
+        /* recording and streaming the switcher doesn't do itself, in the plan's format */
+        if (pr.rec === 'iso' && !X.iso.includes(id)) add('sw', { id:recId, qty:nC, why:t('w_recQiso', Q.pgm, recSpec), role:'sw' });
+        else if (pr.rec !== 'none' && !X.rec.includes(id)) add('sw', { id:recId, qty:1, why:t('w_recQ', Q.pgm, recSpec), role:'sw' });
+        if (pr.st > 0 && (!X.stream.includes(id) || (isTvs && Q.sq !== 'uhd'))) add('sw', { id:encId, qty:1, why: Q.sq === 'uhd' ? t('w_encQ4', Q.st) : uhd ? t('w_encQd', Q.st, Q.pgm) : t('w_encQh', Q.st), role:'pc' });
         if (pr.st >= 2) warn(t('c_st2', '2+'), 'info');
         if (scr && X.oneOut.includes(id)) warn(t('c_oneOut', P[id].name), 'info');
-        if (pr.lvl === 'p' && scr && pr.feed === 'mix' && P[X.panel2]) add('sw', { id:X.panel2, qty:1, why:t('w_panel2'), role:'panel' });
-        else if (pr.pnl === 'yes' && X.panel && !/^atem2me/.test(id)) { const pid = /^atem2me/.test(id) ? X.panel.me2 : /^atem1me/.test(id) ? X.panel.me1 : id === X.tvs4k8 ? null : X.panel.mini;
-          if (pid && P[pid]) add('sw', { id:pid, qty:1, why:pid === X.panel.mini ? t('w_panelMini', P[id].name) : t('w_panel2'), role:'panel' }); }
+        /* the control panel: the customer's pick, else the suggestion */
+        const pn = panelFor(id, nIn, pr); PROD.panel = pn;
+        if (pn.fall) warn(t('c_pnlFall', P[id].name), 'info');
+        if (pn.id) add('sw', { id:pn.id, qty:1, why:t('w_pnlPick', pn.chosen && !pn.fall ? t('pnlMine') : t('pnlAuto', nIn), pn.id === X.panel.mini ? t('w_panelMini', P[id].name) : X.panels[pn.key][1] >= 2 ? t('w_panel2') : P[pn.id].name), role:'panel' });
+        /* screen feed and multiview from an SDI-only switcher: HDMI at the screen / monitor, in the right format */
+        if (sdiOut && scr && scr !== 'overflow') {
+          const sn = t('scr_' + scr);
+          if (scr === 'proj' && uhd) { if (X.dc[id]) add('sw', { id:X.toHdmi.hd, qty:1, why:t('w_scrDc', P[id].name), role:'sw' }); else { add('sw', { name:t('g_dconv'), spec:'2160p → 1080p', qty:1, why:t('w_dconv'), code:'SW', role:'sw' }); warn(t('c_tvsDc')); } }
+          else if (uhd) { add('sw', { id:X.toHdmi.uhd, qty:1, why:t('w_scrUhd', sn, Q.pgm), role:'sw' }); warn(t(X.dc[id] ? 'c_ledUhd' : 'c_ledUhdT', Q.pgm), 'info'); }
+          else add('sw', { id:X.toHdmi.hd, qty:1, why:t('w_scrHd', sn), role:'sw' });
+        }
+        if (X.mvSdi[id]) add('mon', { id:X.toHdmi[X.mvSdi[id]], qty:1, why:t('w_mvConv', P[id].name, X.mvSdi[id] === 'uhd' ? '12G' : '3G') });
       }
     }
     if (scr) {
@@ -937,7 +1069,8 @@
       const l = { key, g, ...o, role, own:owned, who: o.who ? [...o.who] : [] }; out.push(l); return l;
     };
     const warn = (txt, lvl = 'warn') => chk.push({ lvl, txt });
-    const cams = S.cams, nC = cams.length, hd = S.fmt === 'hd';
+    const cams = S.cams, nC = cams.length, hd = S.fmt === 'hd', Q = qualOf();
+    PROD = { q:Q, sw:null, panel:null, cams:[] };
     const views = cams.map(view);
     const labs = cams.map((c, i) => camLab(i));
 
@@ -994,7 +1127,7 @@
     if (ownPc) add('sw', { name:t('g_pc'), spec:'', qty:1, why:t(S.tr === 'ip' ? 'w_pcNdi' : 'w_pc'), code:'PC', role:'pc' });
     if (S.tr === 'ip') {
       if (ownPc) add('sw', { name:t('g_ndisoft'), spec:t('g_ndiswSpec', nIn), qty:1, why:t('w_ndisoft'), code:'NDI', role:'sw', own:false });
-      else add('sw', { name:t('g_ndisw'), spec:t('g_ndiswSpec', nIn), qty:1, why:t('w_ndisw'), code:'NDI', role:'sw' });
+      else add('sw', { name:t('g_ndisw'), spec:t('g_ndiswSpec', nIn) + (hd ? '' : ' · ' + Q.pgm), qty:1, why:t('w_ndisw'), code:'NDI', role:'sw' });
       /* round 3: the NDI switcher / software records and streams; the screen still needs its run and its cut */
       if (S.pr && D.PROD) { const pr = S.pr, scr = pr.scr && pr.scr !== 'none' ? pr.scr : null;
         if (pr.gfx === 'lyrics') add('sw', { name:t('g_lyr'), spec:'', qty:1, why:t('w_lyr'), code:'PC', role:'pc' });
@@ -1023,32 +1156,45 @@
     cams.forEach((c, i) => {
       const lab = labs[i], run = runOf(c), z = zspec(c);
       const camSdi = c.k === 'lens' ? D.BODIES[c.m].sdi : z.sdi, camHdmi = c.k === 'lens' ? D.BODIES[c.m].hdmi : z.hdmi;
+      const pa = pathOf(c), conv = hd ? (D.PROD && D.PROD.conv3) || 'microconv' : 'microconv';
+      PROD.cams[i] = { cable:pa.cable, conv:pa.conv, up:pa.up, unk:pa.unk, swap:null };
       if (c.mob && c.k !== 'ptz' && D.WIRELESS) { mobs.push(i); return; }   /* round 3: a handheld camera reaches the switcher wirelessly */
+      /* round 5: a camera that can't deliver the quality (flag + the cheapest same-family store camera that can), or one whose rate is not stated */
+      if (pa.up && !c.own) { const sw = swapFor(c); PROD.cams[i].swap = sw; warn(sw ? t(S.tr === 'ip' ? 'c_ipHd' : 'c_up', lab, modelName(c), Q.pgm, best4k(pa.v), P[sw].brand + ' ' + P[sw].name) : t(S.tr === 'ip' ? 'c_ipHd' : 'c_upNo', lab, modelName(c), Q.pgm, best4k(pa.v))); }
+      else if (pa.up) warn(t(S.tr === 'ip' ? 'c_ipHd' : 'c_upNo', lab, modelName(c), Q.pgm, best4k(pa.v)));
+      else if (pa.unk) warn(t(S.tr === 'ip' ? 'c_ipUnk' : 'c_unk', lab, modelName(c), Q.pgm), 'info');
       if (S.tr === 'hdmi') {
-        if (!camHdmi) add('sw', { id:'microconv', qty:1, why:t('w_conv', 'HDMI'), who:[lab] });
+        if (!camHdmi) add('sw', { id:conv, qty:1, why:t('w_convHdmi', modelName(c)), who:[lab] });
         if (run <= R.hdmiPassive) { add('cab', { id:'hdmi76', qty:1, why:t('w_sdi'), who:[lab + ' ' + lenTxt(run)] }); warn(t('c_hdmiOk', lab, lenTxt(run)), 'ok'); }
         else if (run <= 10) { add('cab', { id:'hdmiaoc10', qty:1, why:t('w_sdi'), who:[lab + ' ' + lenTxt(run)] }); warn(t('c_hdmiAoc', lab, lenTxt(run))); }
         else if (run <= R.hdmiActive) { add('cab', { id:'hdmiaoc15', qty:1, why:t('w_sdi'), who:[lab + ' ' + lenTxt(run)] }); warn(t('c_hdmiAoc', lab, lenTxt(run))); }
-        else { add('sw', { id:'microconv', qty:2, why:t('w_convLong'), who:[lab] }); sdiRuns.push([lab, run]); warn(t('c_hdmiLong', lab, lenTxt(run))); }
+        else { add('sw', { id:conv, qty:2, why:t(hd ? 'w_convLong3' : 'w_convLong12'), who:[lab] }); sdiRuns.push([lab, run]); warn(t('c_hdmiLong', lab, lenTxt(run))); }
       } else if (S.tr === 'sdi') {
-        if (!camSdi) add('sw', { id:'microconv', qty:1, why:t('w_conv', 'SDI'), who:[lab] });
-        if (!hd && camSdi === '3G') warn(t('c_3g', lab + ' (' + modelName(c) + ')'));
-        const lim = hd ? R.sdi3G : R.sdi12G;
-        if (run > lim) { add('sw', { id:'fiberconv', qty:2, why:t('w_fiber'), who:[lab] }); add('cab', { name:t('g_fiber'), spec:buyLen(run), qty:1, why:t('w_fiber'), who:[lab], code:'FIBER', len:buyLen(run) }); warn(t('c_sdiLong', lab, lenTxt(run), hd ? '3G-SDI' : '12G-SDI', lim)); }
+        /* the converter at the camera: HDMI → 12G-SDI when its 4K is HDMI-only, HDMI → 3G-SDI for a 1080 picture */
+        if (pa.conv === 'conv12') add('sw', { id:D.PROD.conv12, qty:1, why:t('w_conv12', modelName(c), 'HDMI 2160p' + (pa.v.h || Q.fps)), who:[lab], approx:pa.unk });
+        else if (pa.conv === 'conv3') add('sw', { id:D.PROD.conv3, qty:1, why:t(pa.up ? 'w_conv3Hd' : 'w_conv3', modelName(c)), who:[lab] });
+        const lim = hd || pa.up ? R.sdi3G : R.sdi12G;
+        if (run > lim) { add('sw', { id:'fiberconv', qty:2, why:t('w_fiber'), who:[lab] }); add('cab', { name:t('g_fiber'), spec:buyLen(run), qty:1, why:t('w_fiber'), who:[lab], code:'FIBER', len:buyLen(run) }); warn(t('c_sdiLong', lab, lenTxt(run), lim === R.sdi3G ? '3G-SDI' : '12G-SDI', lim)); }
         else { sdiRuns.push([lab, run]); maxSdi = Math.max(maxSdi, run); }
       }
       if (S.tr === 'ip') catRuns.push([lab, run, 'ip']);
       else if (c.k === 'ptz') catRuns.push([lab, run, S.ctl === 'ip' ? 'ctl' : '422']);
     });
     if (mobs.length) {
-      const WL = D.WIRELESS, base = S.tr === 'sdi' ? WL.sdi : WL.hdmi;
-      mobs.forEach(i => { const c = cams[i], lab = labs[i], d = Math.hypot(c.x - S.ctrl.x, c.y - S.ctrl.y) + (S.xr || 0);
+      const WL = D.WIRELESS, W5 = (D.PROD || {}).wl, base = S.tr === 'sdi' ? WL.sdi : WL.hdmi;
+      mobs.forEach(i => { const c = cams[i], lab = labs[i], d = Math.hypot(c.x - S.ctrl.x, c.y - S.ctrl.y) + (S.xr || 0), v = vout(c.m), z5 = camSpec(c);
         let id = base; if (d > WL.los[base] * WL.indoor) id = WL.long;
+        /* round 5: 4K goes through the Accsoon link only on HDMI (TX in, RX out); 4K60 needs the Master 4K */
+        const wl4k = !hd && z5.hdmi && (v.h == null || v.h >= Q.fps);
+        if (!hd && W5 && wl4k && Q.fps === 60 && id === W5.se.id) { id = W5.master.id; warn(t('w_wl60'), 'info'); }
+        if (!hd && !wl4k) { warn(t('c_wlUp', lab)); PROD.cams[i].up = true; PROD.cams[i].cable = 'Wireless · 1080'; }
+        else PROD.cams[i].cable = hd ? 'Wireless' : 'Wireless · HDMI 4K';
         const rng = Math.round(WL.los[id] * WL.indoor);
         add('sw', { id, qty:1, why:t('w_wl', rng), who:[lab], approx:!!(WL.kitVerify || {})[id] });
         if ((WL.kitVerify || {})[id]) warn(t('c_wlKit', P[id].brand + ' ' + P[id].name, WL.kitVerify[id]), 'info');
         if (d > rng) warn(t('c_wlFar', lab, lenTxt(d), rng, P[id].name));
         if (S.tr === 'ip') add('sw', { name:t('g_ndirx'), spec:'HDMI → NDI|HX', qty:1, why:t('w_ndienc'), who:[lab], code:'NDI' });
+        if (!hd && wl4k && S.tr === 'sdi' && D.PROD.conv12) { add('sw', { id:D.PROD.conv12, qty:1, why:t('w_wlConv'), who:[lab] }); PROD.cams[i].conv = 'wl12'; }
         add('net', { name:t('g_npf'), spec:'NP-F', qty:1, why:t('w_npf'), who:[lab], code:'PWR' }); });
       warn(t('c_wlNotes'), 'info');
     }
@@ -1186,7 +1332,7 @@
   const CODEGLYPH = { SDI:'SDI', CAT6:'CAT6', XLR:'XLR', AUD:'AUD', HDMI:'HDMI', FIBER:'FIBER', BNC:'BNC', NET:'NET', AC:'AC', UPS:'UPS', BRKT:'BRKT', ARM:'ARM', LENS:'LENS', NDI:'NDI', SW:'SW', CTRL:'CTRL', DMX:'DMX', MON:'MON', ICOM:'ICOM', PC:'PC', PWR:'PWR', SVC:'SVC' };
   function renderBOM() {
     const { priced, quote, owned, total } = tally(BOM);
-    $('#bom-m').textContent = `${t('t_' + S.tpl)} · ${lenTxt(S.w)} × ${lenTxt(S.d)} · ${S.cams.length} ${t('q_cams').toLowerCase()} · ${S.tr === 'ip' ? 'IP / NDI' : S.tr.toUpperCase()} · ${S.fmt === 'hd' ? '1080p' : '2160p'}`;
+    $('#bom-m').textContent = `${t('t_' + S.tpl)} · ${lenTxt(S.w)} × ${lenTxt(S.d)} · ${S.cams.length} ${t('q_cams').toLowerCase()} · ${S.tr === 'ip' ? 'IP / NDI' : S.tr.toUpperCase()} · ${fmtTxt()}`;
     $('#btot').innerHTML = `<div class="tp"><span class="meta">${t('totalPriced')}</span><span class="price" id="ptotal">${usd(total)}</span>
       <span class="meta-s cnt"><span>${t('pricedLines', priced.length)}</span><span><i class="qd"></i>${t('quoteLines', quote.length)}</span>${owned.length ? `<span><i class="ow"></i>${t('ownedLines', owned.length)}</span>` : ''}</span></div>
       <div class="acts"><button type="button" class="btn sig" id="b-quote">${t('reqQuote')}</button><button type="button" class="btn solid" id="b-addall">${t('addAll')}</button>
@@ -1498,7 +1644,7 @@
   ['#room-w', '#room-d'].forEach(id => { $(id).addEventListener('change', dimChange); $(id).addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); dimChange(); } }); });
   $('#units').addEventListener('click', e => { const b = e.target.closest('[data-unit]'); if (!b) return; S.unit = b.dataset.unit; update({ stat:true, force:true }); });
   $('#transport').addEventListener('click', e => { const b = e.target.closest('[data-tr]'); if (!b) return; S.tr = b.dataset.tr; update({ force:true }); say(b.textContent + ' · ' + t('tr_' + S.tr)); });
-  $('#fmt').addEventListener('change', e => { S.fmt = e.target.value; update(); });
+  $('#fmt').addEventListener('change', e => { S.fmt = e.target.value; update(); document.dispatchEvent(new CustomEvent('i9plan:fmt', { detail:S.fmt })); });
   $('#ctl').addEventListener('change', e => { S.ctl = e.target.value; update(); });
   $('#ext').addEventListener('change', e => { S.ext = clamp(Math.round(+e.target.value || 0), 0, 8); update(); });
   $('#xr')?.addEventListener('change', e => { const v = parseFloat(String(e.target.value).replace(',', '.')) / (S.unit === 'ft' ? FT : 1); S.xr = clamp(Math.round((v || 0) * 10) / 10, 0, 200); update(); });
@@ -1522,7 +1668,7 @@
   function summary() {
     const lines = BOM.filter(l => !l.info), { quote, owned, total } = tally(BOM);
     let s = t('q_title') + '\n' + '='.repeat(t('q_title').length) + '\n\n';
-    s += `${t('q_room')}: ${t('t_' + S.tpl)} · ${lenTxt(S.w)} × ${lenTxt(S.d)}\n${t('q_sig')}: ${S.tr === 'ip' ? 'IP / NDI' : S.tr.toUpperCase()} · ${S.fmt === 'hd' ? '1080p' : '2160p'} · PTZ ${S.ctl === 'ip' ? 'IP' : 'RS-422'}\n\n${t('q_cams')}:\n`;
+    s += `${t('q_room')}: ${t('t_' + S.tpl)} · ${lenTxt(S.w)} × ${lenTxt(S.d)}\n${t('q_sig')}: ${S.tr === 'ip' ? 'IP / NDI' : S.tr.toUpperCase()} · ${fmtTxt()} · PTZ ${S.ctl === 'ip' ? 'IP' : 'RS-422'}\n${PROD && PROD.sw && P[PROD.sw] ? t('q_swpn') + ': ' + P[PROD.sw].name + ' · ' + (PROD.panel && PROD.panel.id ? P[PROD.panel.id].name : PROD.panel && PROD.panel.key === 'builtin' ? t('pn_builtin') : t('pn_none')) + '\n' : ''}\n${t('q_cams')}:\n`;
     S.cams.forEach((c, i) => { const v = view(c); s += `  ${camLab(i)}  ${modelName(c)}${c.k === 'lens' ? ' + ' + (D.LENSES[c.lens] ? P[c.lens].name : c.lens === 'kit' ? D.BODIES[c.m].kit.name : t('otherLens')) + (extOf(c) ? ' + ' + (extOf(c).builtin ? extOf(c).name : P[c.ext].name) : '') + (c.crop ? ' · S35' : '') + ' @ ' + c.f.toFixed(0) + ' mm' : ' @ ' + zoomX(c).toFixed(1) + '×'} · ${v.h.toFixed(1)}° · ${v.cls ? t('s_' + v.cls) + ' ' + lenTxt(v.fw) : t('noTarget')} · ${t('m_' + c.mnt)} · ${runCable(c)} ${lenTxt(runOf(c))}\n`; });
     s += `\n${t('q_list')}:\n`;
     GROUPS.forEach(g => { const ls = lines.filter(l => l.g === g); if (!ls.length) return; s += `  [${t('g_' + g)}]\n`;
@@ -1557,14 +1703,14 @@
      evaluate(o)    -> the parts list + totals for a packed plan ({ setup:id } for a setup), without touching the open plan
      loadPlan(o) / loadSetup(id) -> replace the open plan (both views read and write this one plan) */
   function evaluate(o) {
-    const keep = { S, SETUP, BOM, CHECKS, Z };
+    const keep = { S, SETUP, BOM, CHECKS, Z, PROD };
     try {
       if (o && o.setup) { if (!SETS()[o.setup]) return null; SETUP = fromSetup(o.setup); } else if (!unpack(o)) return null;
       build();
       const tt = tally(BOM);
       return { ...tt, bom:BOM, checks:CHECKS, tr:S.tr, fmt:S.fmt, n:S.cams.length, maxRun:S.cams.length ? Math.max(...S.cams.map(runOf)) : 0,
-        cams:S.cams.map(c => ({ k:c.k, m:c.m, own:!!c.own, lens:c.lens, man:c.man, ext:extOf(c) ? c.ext : null, crop:!!c.crop, mob:!!c.mob })), packed:packPlan(), light:lightCalc() };
-    } finally { S = keep.S; SETUP = keep.SETUP; BOM = keep.BOM; CHECKS = keep.CHECKS; Z = keep.Z; }
+        cams:S.cams.map(c => ({ k:c.k, m:c.m, own:!!c.own, lens:c.lens, man:c.man, ext:extOf(c) ? c.ext : null, crop:!!c.crop, mob:!!c.mob })), packed:packPlan(), light:lightCalc(), prod:PROD ? { ...PROD, cams:PROD.cams.slice() } : null };
+    } finally { S = keep.S; SETUP = keep.SETUP; BOM = keep.BOM; CHECKS = keep.CHECKS; Z = keep.Z; PROD = keep.PROD; }
   }
   function compose(spec) { const keep = S; try { fromSpec(spec, spec.tpl); return packPlan(); } finally { S = keep; } }
   function loadPlan(o) {
@@ -1585,7 +1731,7 @@
   window.I9PLANNER = { get state() { return S; }, view, hfov, runOf, get bom() { return BOM; }, get checks() { return CHECKS; }, select, update,
     get setup() { return fromThisSetup() ? SETUP : null; }, get edited() { return planKey() !== BASE; },
     /* wizard + 3D */
-    evaluate, compose, loadPlan, loadSetup, tally: () => tally(BOM), TPL, ROLES, t, lenTxt, modelName, camLab, runCable, pname, defaultLens, fNum,
+    evaluate, compose, loadPlan, loadSetup, tally: () => tally(BOM), get prod() { return PROD; }, qualOf, vout, TPL, ROLES, t, lenTxt, modelName, camLab, runCable, pname, defaultLens, fNum,
     lightSpots, luxAt, lightCalc, lightLevels, LOOKS, setLt, apAt, zoomX, faceH,
     get lang() { return LANG; }, get z() { return Z; }, set zGet(f) { zGet = f; }, save: () => { clearTimeout(hashT); saveHash(); }, planKey,
     get sel() { return sel; }, get queryTemplate() { return queryTemplate(); }, get bootHash() { return BOOT_HASH; }, get hashKind() { return /^#p=/.test(BOOT_HASH) ? 'p' : /^#adv|^#(tpl|for)=[\w-]+&v=a/.test(BOOT_HASH) ? 'adv' : /^#(tpl|for)/.test(BOOT_HASH) ? 'tpl' : ''; },
