@@ -178,6 +178,44 @@
     c_dim:['{0}: {1} effective at this zoom. Rule of thumb: past about f/8 a dim room needs more light or a higher ISO.','{0}: {1} efetivo neste zoom. Regra prática: acima de f/8 uma sala escura pede mais luz ou ISO mais alto.'],
     c_ic:['{0}: the {1} covers Super 35. Turn on the body’s Super 35 crop mode or the lens’s built-in 1.5× extender.','{0}: a {1} cobre Super 35. Ligue o modo crop Super 35 do corpo ou o extensor 1,5× da lente.'],
     ctlOk:['confirmed','confirmado'],
+    /* round 3: production, wireless, Canon control, lighting */
+    w_canonAll:['One controller runs all {0} Canon cameras (controller firmware 1.3.0+, C50 firmware 1.0.4.1+)','Um controlador comanda as {0} câmeras Canon (firmware 1.3.0+, C50 1.0.4.1+)'],
+    g_c50eth:['USB-C to Ethernet adapter for the EOS C50','Adaptador USB-C para Ethernet da EOS C50'], w_c50eth:['The C50 has no Ethernet port; Canon-tested adapters only (or Wi-Fi)','A C50 não tem porta Ethernet; só adaptadores testados pela Canon (ou Wi-Fi)'],
+    c_canonAlt:['Canon RC-IP300 (not on the store) or the free Canon Remote Camera Control app (up to 20 cameras) can also run these cameras.','O Canon RC-IP300 (fora da loja) ou o app gratuito Remote Camera Control (até 20 câmeras) também comandam estas câmeras.'],
+    w_wl:['Wireless camera link, about {0} m planning range indoors','Link sem fio da câmera, cerca de {0} m de alcance planejado em ambiente interno'],
+    g_npf:['NP-F batteries and charger for the wireless link','Baterias NP-F e carregador para o link sem fio'], w_npf:['Transmitter on the camera, receiver at the switcher','Transmissor na câmera, receptor no switcher'],
+    g_ndirx:['HDMI to NDI encoder at the wireless receiver','Encoder HDMI para NDI no receptor sem fio'],
+    c_wlFar:['{0}: {1} to the receiver is past the {2} m indoor planning range of the {3}. Move the receiver closer or use a longer-range kit.','{0}: {1} até o receptor passa do alcance planejado de {2} m do {3}. Aproxime o receptor ou use um kit de maior alcance.'],
+    c_wlNotes:['Wireless cameras: lock to non-DFS or 6 GHz channels for live services; add an audio delay of about 2–6 frames on the switcher; each receiver uses one switcher input; wireless SDI is 1080p max.','Câmeras sem fio: fixe canais não-DFS ou 6 GHz em cultos ao vivo; atrase o áudio uns 2–6 quadros no switcher; cada receptor usa uma entrada; SDI sem fio vai até 1080p.'],
+    c_wlKit:['{0}: {1}','{0}: {1}'],
+    w_swPr:['{0} camera inputs + {1} other = {2} inputs','{0} câmeras + {1} outras = {2} entradas'],
+    w_panel2:['Two M/E rows on a hardware panel make the second cut practical to run','Duas fileiras M/E num painel físico tornam o segundo corte prático'],
+    c_obs:['Starter level: OBS Studio (free) on a computer with a capture card is the lowest-cost way to switch, with one program out.','Nível inicial: OBS Studio (gratuito) num computador com placa de captura é o jeito mais barato, com um programa só.'],
+    w_me2:['Two M/Es: M/E 1 makes the stream, M/E 2 a different cut for the screen','Dois M/Es: M/E 1 faz a transmissão, M/E 2 um corte diferente para o telão'],
+    w_iso:['Records every camera separately (ISO)','Grava cada câmera separadamente (ISO)'], w_recPgm:['Records the program: this switcher has no recorder','Grava o programa: este switcher não tem gravador'], w_recIso:['One recorder per camera for ISO: this switcher records program only','Um gravador por câmera para ISO: este switcher grava só o programa'],
+    w_encPr:['Streams the program: this switcher has no built-in streaming','Transmite o programa: este switcher não transmite sozinho'],
+    g_scr:['Video run to the {0}, sized on site','Cabo de vídeo até o {0}, dimensionado no local'], w_scr:['{0}','{0}'],
+    scr_led:['LED wall','painel de LED'], scr_proj:['projector','projetor'], scr_overflow:['overflow room','sala de apoio'],
+    w_dec:['Decodes the stream for the overflow room','Decodifica a transmissão na sala de apoio'],
+    c_feedSame:['The screen and the stream show the same cut.','O telão e a transmissão mostram o mesmo corte.'],
+    c_feedAux:['The screen shows one source on an aux (a camera, the lyrics computer or the program), not a second mix.','O telão mostra uma fonte num aux (uma câmera, o computador de letras ou o programa), não um segundo corte.'],
+    c_oneOut:['{0} has one HDMI out: feeding the screen takes away the operator’s multiview. Use the software multiview or a larger switcher.','{0} tem uma saída HDMI: alimentar o telão tira o multiview do operador. Use o multiview do software ou um switcher maior.'],
+    c_st2:['Streaming to {0} platforms: the switcher streams to one destination; use a restream service or vMix (up to 5 destinations).','Transmissão para {0} plataformas: o switcher transmite para um destino; use um serviço de restream ou o vMix (até 5).'],
+    g_lyr:['Lyrics / presentation computer (ProPresenter is not on the store)','Computador de letras / apresentação (ProPresenter não está na loja)'], w_lyr:['Into a switcher input; full-screen lyrics on the screen, keyed on the stream','Numa entrada do switcher; letras em tela cheia no telão, sobrepostas na transmissão'],
+    g_pc:['Production computer for vMix / OBS','Computador de produção para vMix / OBS'], s_pc:['8+ cores, NVIDIA RTX-class GPU, 32 GB RAM, NVMe SSD (planning guide)','8+ núcleos, GPU classe NVIDIA RTX, 32 GB RAM, SSD NVMe (guia)'], w_pcPr:['Switches, records and streams in software','Corta, grava e transmite em software'],
+    g_vmix4k:['vMix 4K or Pro licence','Licença vMix 4K ou Pro'], g_vmixhd:['vMix HD licence (or free OBS Studio)','Licença vMix HD (ou OBS Studio gratuito)'], w_vmix:['Not on the store; Mix 2 → Output 2 gives the screen its own cut on 4K / Pro','Fora da loja; Mix 2 → Output 2 dá ao telão um corte próprio no 4K / Pro'],
+    w_card:['Captures {0} camera inputs into the computer','Captura {0} entradas de câmera no computador'],
+    w_l_key:['Key light, one per person on camera','Luz principal, uma por pessoa em cena'], w_l_fill:['Soft fill','Preenchimento suave'], w_l_back:['Back / hair light','Contraluz'], w_l_bg:['Background colour','Cor de fundo'], w_l_wash:['Stage wash','Luz geral de palco'],
+    w_cue:['Lighting controller: scenes, schedules, 4 DMX ports','Controlador de luz: cenas, horários, 4 portas DMX'], w_panel:['The pastor / host panel: one-touch scenes','Painel do pastor / apresentador: cenas com um toque'],
+    w_relay:['Switches a mains ON AIR sign from the scene (installed by an electrician)','Liga uma placa ON AIR na tomada pela cena (instalada por eletricista)'],
+    g_dmxrun:['DMX cable runs, 5-pin, sized on site','Cabos DMX de 5 pinos, dimensionados no local'], g_jack:['3.5 mm to 5-pin DMX cable for the Forza 150B','Cabo DMX 3,5 mm para 5 pinos da Forza 150B'],
+    w_crmxTx:['Wireless DMX (CRMX) transmitter on the controller','Transmissor DMX sem fio (CRMX) no controlador'], w_crmxRx:['CRMX receiver for fixtures without built-in CRMX','Receptor CRMX para luzes sem CRMX'],
+    c_noDmx:['{0} has no DMX: app or remote only, outside the lighting scenes.','{0} não tem DMX: só app ou controle, fora das cenas.'],
+    c_dmxVerify:['{0}: {1}','{0}: {1}'],
+    c_vmixAuto:['One button can start the service: the CueCore3 sends TCP to vMix (port 8099) with the lights scene. Each end is documented; Visual Productions publishes no direct note.','Um botão pode iniciar o culto: a CueCore3 envia TCP ao vMix (porta 8099) com a cena de luz. Cada lado é documentado; a Visual Productions não publica nota direta.'],
+    c_compAuto:['To trigger an ATEM or OBS from the lighting scenes you need Bitfocus Companion on a computer as a bridge (not documented by Visual Productions).','Para acionar um ATEM ou OBS pelas cenas de luz é preciso o Bitfocus Companion num computador como ponte (não documentado pela Visual Productions).'],
+    c_app:['Lights on the NANLINK app (Bluetooth / 2.4 GHz) at this level. Brazil projects use Aputure (Sidus Link) instead.','Luzes pelo app NANLINK (Bluetooth / 2,4 GHz) neste nível. Projetos no Brasil usam Aputure (Sidus Link).'],
+    c_aputure:['Brazil projects use Aputure (Sidus Link) for the same plan.','Projetos no Brasil usam Aputure (Sidus Link) para o mesmo plano.'],
     camLabel:['CAM {0}','CAM {0}'], ctrlLabel:['CTRL · switcher','CTRL · switcher'], facing:['facing','virada para'],
   };
   let LANG = 'en';
@@ -249,6 +287,7 @@
      customer already has), per camera own:true. */
   function fromSpec(T, key) {
     const s = { tpl:key, w:T.w, d:T.d, unit:S ? S.unit : 'm', tr:T.tr, fmt:T.fmt, ctl:T.ctl === '422' ? '422' : 'ip', ext:T.ext || 0, xr:T.xr || 0, own:(T.own || []).filter(r => ROLES.includes(r)),
+      pr:T.pr ? { ...T.pr } : null, lt:T.lt ? { ...T.lt } : null,
       furn:T.furn.map(f => ({ id:nid(), ...f })), ppl:T.ppl.map(p => ({ id:nid(), ...p })), ctrl:{ ...T.ctrl }, cams:[] };
     T.cams.forEach(c => {
       const cam = newCam(c.k, c.m, s, c);
@@ -295,7 +334,7 @@
   const fromThisSetup = () => SETUP && SETUP.tpl === S.tpl;
   function newCam(k, m, s, o = {}) {
     const c = { id:nid(), k, m, x:o.x ?? s.w / 2, y:o.y ?? s.d * 0.85, a:o.a ?? 0, z:0, f:0, lens:o.lens || null, sf:null,
-      mnt:o.mnt || (k === 'ptz' ? 'wall' : 'tripod'), man:o.man ?? (k !== 'ptz'), tgt:-1, ext:o.ext || null, crop:!!o.crop };
+      mnt:o.mnt || (k === 'ptz' ? 'wall' : 'tripod'), man:o.man ?? (k !== 'ptz'), tgt:-1, ext:o.ext || null, crop:!!o.crop, mob:!!o.mob };
     if (k === 'lens') { const b = D.BODIES[m]; c.sf = b.fmt; if (!c.lens) c.lens = defaultLens(m); c.f = lensRange(c)[0]; }
     return c;
   }
@@ -408,7 +447,7 @@
     const defs = el('defs', {}, svg);
     const pat = el('pattern', { id:'hatch', width:0.4, height:0.4, patternUnits:'userSpaceOnUse', patternTransform:'rotate(45)' }, defs);
     el('line', { x1:0, y1:0, x2:0, y2:0.4, class:'hatch' }, pat);
-    ['stat', 'runs', 'cones', 'furn', 'ppl', 'ctrl', 'ann', 'cams'].forEach(n => { L[n] = el('g', { class:'l-' + n }, svg); });
+    ['stat', 'runs', 'cones', 'furn', 'lits', 'ppl', 'ctrl', 'ann', 'cams'].forEach(n => { L[n] = el('g', { class:'l-' + n }, svg); });
   }
   function measure() {
     const vbW = S.w + pad * 2.4, vbH = S.d + pad * 2.2;
@@ -502,6 +541,11 @@
       const below = dy < 0.3; set(g.children[3], { x:p.x, y: p.y + (below ? r + 14 * k : -r - 7 * k), 'font-size':10.5 * k });
       g.children[3].textContent = pname(p.n);
     });
+    /* round 3: the starting light plan (schematic) */
+    L.lits.innerHTML = '';
+    lightSpots().forEach(o => { const r = 7 * k, g = el('g', { class:'lit lit-' + o.r }, L.lits);
+      el('rect', { x:o.x - r, y:o.y - r, width:r * 2, height:r * 2, transform:`rotate(45 ${r2(o.x)} ${r2(o.y)})` }, g);
+      el('text', { x:o.x, y:o.y + 3.6 * k, 'text-anchor':'middle', 'font-size':9.5 * k }, g).textContent = o.r; });
     /* annotation: frame width line at the selected camera's subject */
     L.ann.innerHTML = '';
     if (sid != null) {
@@ -652,6 +696,78 @@
   }
 
   /* ======================= equipment list (BOM) + checks ======================= */
+  /* round 3: the wizard's production answers (S.pr) choose the switcher, recorder, encoder and outputs.
+     pr = { rec:'none'|'pgm'|'iso', st:0|1|2, scr:'none'|'led'|'proj'|'overflow', feed:'same'|'aux'|'mix', gfx:'none'|'lower'|'lyrics', how:'hw'|'pc' } */
+  function prodBuild(nC, nIn, add, warn, hd, labs, cams) {
+    const pr = S.pr, X = D.PROD, scr = pr.scr && pr.scr !== 'none' ? pr.scr : null;
+    if (pr.gfx === 'lyrics') add('sw', { name:t('g_lyr'), spec:'', qty:1, why:t('w_lyr'), code:'PC', role:'pc' });
+    if (pr.how === 'pc') {
+      add('sw', { name:t('g_pc'), spec:t('s_pc'), qty:1, why:t('w_pcPr'), code:'PC', role:'pc' });
+      add('sw', { name:t(pr.feed === 'mix' || pr.rec === 'iso' ? 'g_vmix4k' : 'g_vmixhd'), spec:'', qty:1, why:t('w_vmix'), code:'SW', role:'sw' });
+      const ins = cams.filter(c => !c.mob || c.k === 'ptz').length + cams.filter(c => c.mob && c.k !== 'ptz').length;
+      if (S.tr === 'hdmi') add('sw', { id:X.cards.hdmi, qty:Math.ceil(ins / 4), why:t('w_card', ins), role:'sw' });
+      else { const need = ins + (scr && pr.feed !== 'same' ? 1 : 0); add('sw', { id: need <= 4 ? X.cards.sdi4 : X.cards.sdi8, qty:Math.max(1, Math.ceil(need / 8)), why:t('w_card', ins), role:'sw' }); }
+      if (pr.st >= 2) warn(t('c_st2', pr.st >= 2 ? '2+' : pr.st), 'info');
+    } else {
+      if (pr.lvl === 's') warn(t('c_obs'), 'info');
+      let id = null;
+      if (scr && pr.feed === 'mix') { id = hd ? X.me2.hd : X.me2.uhd; add('sw', { id, qty:1, why:t('w_me2'), role:'sw' }); }
+      else if (S.tr === 'hdmi') { if (!hd) { add('sw', { name:t('g_uhdhdmi'), spec:t('g_bigsw', nIn), qty:1, why:t('w_uhdhdmi'), code:'SW', role:'sw' }); warn(t('c_uhdHdmi')); }
+        else id = nIn <= 4 ? (pr.rec === 'iso' ? 'atemproiso' : 'atemmp') : nIn <= 8 ? (pr.rec === 'iso' ? 'atemxiso' : 'atemext') : null; }
+      else id = !hd ? (nIn <= 10 ? 'atem1me' : null) : nIn <= 4 ? 'atemsdipro' : nIn <= 8 ? 'atemsdix' : nIn <= 10 ? 'atem1mehd' : null;
+      if (id && !(scr && pr.feed === 'mix')) add('sw', { id, qty:1, why:t('w_swPr', nC, S.ext, nIn) + (X.iso.includes(id) && pr.rec === 'iso' ? ' · ' + t('w_iso') : ''), role:'sw' });
+      if (!id && !(S.tr === 'hdmi' && !hd)) { add('sw', { name:t('g_bigsw', nIn), spec:'', qty:1, why:t('w_bigsw'), code:'SW', role:'sw' }); warn(t('c_inputs', nIn, 10)); }
+      if (id) {
+        if (pr.rec === 'iso' && !X.iso.includes(id)) add('sw', { id:X.rec1, qty:nC, why:t('w_recIso'), role:'sw' });
+        else if (pr.rec !== 'none' && !X.rec.includes(id)) add('sw', { id:X.rec1, qty:1, why:t('w_recPgm'), role:'sw' });
+        if (pr.st > 0 && !X.stream.includes(id)) add('sw', { id:X.enc, qty:1, why:t('w_encPr'), role:'pc' });
+        if (pr.st >= 2) warn(t('c_st2', '2+'), 'info');
+        if (scr && X.oneOut.includes(id)) warn(t('c_oneOut', P[id].name), 'info');
+        if (pr.lvl === 'p' && scr && pr.feed === 'mix' && P[X.panel2]) add('sw', { id:X.panel2, qty:1, why:t('w_panel2'), role:'sw' });
+      }
+    }
+    if (scr) {
+      if (scr === 'overflow') add('sw', { id:X.dec, qty:1, why:t('w_dec'), role:'sw' });
+      else add('cab', { name:t('g_scr', t('scr_' + scr)), spec:'', qty:1, why:t('w_scr', t(pr.feed === 'same' ? 'c_feedSame' : pr.feed === 'aux' ? 'c_feedAux' : 'w_me2')), code:'SDI' });
+      warn(t(pr.feed === 'same' ? 'c_feedSame' : pr.feed === 'aux' ? 'c_feedAux' : 'w_me2'), 'info');
+    }
+  }
+  /* round 3: Nanlite starting plan + control (S.lt = { on, k, big, ctl:'app'|'dmx'|'crmx', panel, relay }) */
+  function lightBuild(add, warn, nP) {
+    const lt = S.lt; if (!lt.on) return;
+    const plan = (D.LIGHTPLAN[lt.k] || D.LIGHTPLAN.corp)(Math.max(1, nP), !!lt.big);
+    const C = D.LIGHTCTL, F = D.FIXT, dmxOn = lt.ctl === 'dmx' || lt.ctl === 'crmx';
+    let rx = 0;
+    plan.forEach(([id, role, q]) => { if (!P[id] || !q) return; add('lit', { id, qty:q, why:t('w_l_' + role), role:'lit' });
+      const f = F[id] || {};
+      if (dmxOn && !f.dmx) warn(t('c_noDmx', P[id].name), 'info');
+      if (dmxOn && f.verify) warn(t('c_dmxVerify', P[id].name, f.verify), 'info');
+      if (lt.ctl === 'crmx' && f.dmx && !f.crmx) rx += q;
+      if (lt.ctl === 'dmx' && f.jack) add('lit', { name:t('g_jack'), spec:'', qty:q, why:'', code:'DMX', role:'lit' }); });
+    if (dmxOn) {
+      add('lit', { id:C.ctl, qty:1, why:t('w_cue'), role:'lit' });
+      if (lt.ctl === 'dmx') add('lit', { name:t('g_dmxrun'), spec:'', qty:1, why:'', code:'DMX', role:'lit' });
+      else { add('lit', { id:C.crmxTx, qty:1, why:t('w_crmxTx'), role:'lit' }); if (rx) add('lit', { id:C.crmxRx, qty:rx, why:t('w_crmxRx'), role:'lit' }); }
+      if (lt.panel) add('lit', { id:C.panel, qty:1, why:t('w_panel'), role:'lit' });
+      if (lt.relay) add('lit', { id:C.relay, qty:1, why:t('w_relay'), role:'lit' });
+      warn(t(S.pr && S.pr.how === 'pc' ? 'c_vmixAuto' : 'c_compAuto'), 'info');
+      warn(t('c_aputure'), 'info');
+    } else warn(t('c_app'), 'info');
+  }
+  /* round 3: where the starting light plan stands on the 2D plan (schematic: key and fill in front, back behind) */
+  function lightSpots() {
+    if (!S.lt || !S.lt.on || !D.LIGHTPLAN || !S.ppl.length) return [];
+    const out = [], cx = S.cams.length ? S.cams.reduce((a, c) => a + c.x, 0) / S.cams.length : S.w / 2, cy = S.cams.length ? S.cams.reduce((a, c) => a + c.y, 0) / S.cams.length : S.d;
+    const plan = (D.LIGHTPLAN[S.lt.k] || D.LIGHTPLAN.corp)(S.ppl.length, !!S.lt.big), roles = Object.fromEntries(plan.map(([, r, q]) => [r, q]));
+    const at = (p, ang, dist) => ({ x:clamp(p.x + Math.sin(rad(ang)) * dist, 0.15, S.w - 0.15), y:clamp(p.y - Math.cos(rad(ang)) * dist, 0.15, S.d - 0.15) });
+    S.ppl.forEach((p, i) => { const a = (deg(Math.atan2(cx - p.x, -(cy - p.y))) + 360) % 360;
+      if (i < (roles.key || 0) || (roles.key && S.ppl.length > roles.key && i < roles.key)) out.push({ ...at(p, a - 40, 2), r:'K' });
+      if (roles.back && i < roles.back) out.push({ ...at(p, a + 180 + 25, 1.3), r:'B' }); });
+    if (roles.fill) out.push({ ...at(S.ppl[0], ((deg(Math.atan2(cx - S.ppl[0].x, -(cy - S.ppl[0].y))) + 360) % 360) + 45, 2.2), r:'F' });
+    if (roles.wash) for (let i = 0; i < roles.wash; i++) out.push({ x:S.w * (i + 1) / (roles.wash + 1), y:clamp(cy * 0.55, 0.3, S.d - 0.3), r:'W' });
+    if (roles.bg) out.push({ x:S.w / 2, y:0.25, r:'C' });
+    return out;
+  }
   const GROUPS = ['cam', 'sw', 'cab', 'net', 'mnt', 'aud', 'lit', 'mon'];
   const REACH_FW = 1.6;   /* m: wider than this at full zoom, aimed at one person, is not a close-up any more */
   let BOM = [], CHECKS = [];
@@ -704,8 +820,15 @@
     const pan = ptz.filter(([c]) => P[c.m].brand === 'Panasonic'), can = ptz.filter(([c]) => P[c.m].brand === 'Canon'), sny = ptz.filter(([c]) => P[c.m].brand === 'Sony');
     const ctl = D.PTZCTL || {};
     if (pan.length >= 2) add('cam', { id:'rp60', qty:1, why:t('w_rp60', pan.length), who:pan.map(([, i]) => labs[i]) });
-    if (can.length >= 2) { if (ctl.Canon && P[ctl.Canon]) add('cam', { id:ctl.Canon, qty:1, why:t('w_ptzCtl', can.length, 'Canon'), who:can.map(([, i]) => labs[i]) });
-      else add('cam', { name:t('g_canonCtl'), spec:'RC-IP100 / RC-IP300', qty:1, why:t('w_canonCtl'), who:can.map(([, i]) => labs[i]), code:'CTRL' }); }
+    /* round 3: Canon PTZ + Canon cinema bodies (C50 / C80 / C400 / XF605) on one RC-IP1000 */
+    const canCine = cams.map((c, i) => [c, i]).filter(([c]) => (D.CANON_IP || []).includes(c.m));
+    const canAll = can.concat(canCine);
+    if (can.length >= 1 && canAll.length >= 2) {
+      if (ctl.Canon && P[ctl.Canon]) add('cam', { id:ctl.Canon, qty:1, why:canCine.length ? t('w_canonAll', canAll.length) : t('w_ptzCtl', can.length, 'Canon'), who:canAll.map(([, i]) => labs[i]) });
+      else add('cam', { name:t('g_canonCtl'), spec:'RC-IP1000 / RC-IP300', qty:1, why:t('w_canonCtl'), who:canAll.map(([, i]) => labs[i]), code:'CTRL' });
+      canCine.forEach(([c, i]) => { if ((D.CANON_ETH || {})[c.m]) add('cam', { name:t('g_c50eth'), spec:D.CANON_ETH[c.m], qty:1, why:t('w_c50eth'), who:[labs[i]], code:'NET' }); });
+      if (canCine.length) warn(t('c_canonAlt'), 'info');
+    }
     if (sny.length >= 2 && ctl.Sony && P[ctl.Sony]) add('cam', { id:ctl.Sony, qty:1, why:t('w_ptzCtl', sny.length, 'Sony') + (D.PTZCTL_OK && D.PTZCTL_OK.Sony ? ' · ' + D.PTZCTL_OK.Sony : ''), who:sny.map(([, i]) => labs[i]) });
 
     /* --- switching & streaming --- */
@@ -717,7 +840,15 @@
     if (S.tr === 'ip') {
       if (ownPc) add('sw', { name:t('g_ndisoft'), spec:t('g_ndiswSpec', nIn), qty:1, why:t('w_ndisoft'), code:'NDI', role:'sw', own:false });
       else add('sw', { name:t('g_ndisw'), spec:t('g_ndiswSpec', nIn), qty:1, why:t('w_ndisw'), code:'NDI', role:'sw' });
+      /* round 3: the NDI switcher / software records and streams; the screen still needs its run and its cut */
+      if (S.pr && D.PROD) { const pr = S.pr, scr = pr.scr && pr.scr !== 'none' ? pr.scr : null;
+        if (pr.gfx === 'lyrics') add('sw', { name:t('g_lyr'), spec:'', qty:1, why:t('w_lyr'), code:'PC', role:'pc' });
+        if (pr.st >= 2) warn(t('c_st2', '2+'), 'info');
+        if (scr === 'overflow') add('sw', { id:D.PROD.dec, qty:1, why:t('w_dec'), role:'sw' });
+        else if (scr) add('cab', { name:t('g_scr', t('scr_' + scr)), spec:'', qty:1, why:t(pr.feed === 'same' ? 'c_feedSame' : pr.feed === 'aux' ? 'c_feedAux' : 'w_me2'), code:'SDI' });
+        if (scr) warn(t(pr.feed === 'same' ? 'c_feedSame' : pr.feed === 'aux' ? 'c_feedAux' : 'w_me2'), 'info'); }
     }
+    else if (S.pr && D.PROD) prodBuild(nC, nIn, add, warn, hd, labs, cams);
     else {
       const list = S.tr === 'hdmi' ? (hd ? D.SWITCHERS.hdmi : null) : (hd ? D.SWITCHERS.sdi : D.SWITCHERS.sdiUHD);
       if (!list) { add('sw', { name:t('g_uhdhdmi'), spec:t('g_bigsw', nIn), qty:1, why:t('w_uhdhdmi'), code:'SW', role:'sw' }); warn(t('c_uhdHdmi')); }
@@ -733,9 +864,11 @@
     /* --- cabling (per run) --- */
     const sdiRuns = [], catRuns = [];
     let maxSdi = 0;
+    const mobs = [];
     cams.forEach((c, i) => {
       const lab = labs[i], run = runOf(c), z = zspec(c);
       const camSdi = c.k === 'lens' ? D.BODIES[c.m].sdi : z.sdi, camHdmi = c.k === 'lens' ? D.BODIES[c.m].hdmi : z.hdmi;
+      if (c.mob && c.k !== 'ptz' && D.WIRELESS) { mobs.push(i); return; }   /* round 3: a handheld camera reaches the switcher wirelessly */
       if (S.tr === 'hdmi') {
         if (!camHdmi) add('sw', { id:'microconv', qty:1, why:t('w_conv', 'HDMI'), who:[lab] });
         if (run <= R.hdmiPassive) { add('cab', { id:'hdmi76', qty:1, why:t('w_sdi'), who:[lab + ' ' + lenTxt(run)] }); warn(t('c_hdmiOk', lab, lenTxt(run)), 'ok'); }
@@ -752,6 +885,18 @@
       if (S.tr === 'ip') catRuns.push([lab, run, 'ip']);
       else if (c.k === 'ptz') catRuns.push([lab, run, S.ctl === 'ip' ? 'ctl' : '422']);
     });
+    if (mobs.length) {
+      const WL = D.WIRELESS, base = S.tr === 'sdi' ? WL.sdi : WL.hdmi;
+      mobs.forEach(i => { const c = cams[i], lab = labs[i], d = Math.hypot(c.x - S.ctrl.x, c.y - S.ctrl.y) + (S.xr || 0);
+        let id = base; if (d > WL.los[base] * WL.indoor) id = WL.long;
+        const rng = Math.round(WL.los[id] * WL.indoor);
+        add('sw', { id, qty:1, why:t('w_wl', rng), who:[lab], approx:!!(WL.kitVerify || {})[id] });
+        if ((WL.kitVerify || {})[id]) warn(t('c_wlKit', P[id].brand + ' ' + P[id].name, WL.kitVerify[id]), 'info');
+        if (d > rng) warn(t('c_wlFar', lab, lenTxt(d), rng, P[id].name));
+        if (S.tr === 'ip') add('sw', { name:t('g_ndirx'), spec:'HDMI → NDI|HX', qty:1, why:t('w_ndienc'), who:[lab], code:'NDI' });
+        add('net', { name:t('g_npf'), spec:'NP-F', qty:1, why:t('w_npf'), who:[lab], code:'PWR' }); });
+      warn(t('c_wlNotes'), 'info');
+    }
     if (S.tr === 'sdi' && sdiRuns.length && !chk.some(c => c.txt.includes('SDI') && c.lvl === 'warn')) warn(t('c_sdiOk', lenTxt(maxSdi), hd ? R.sdi3G : R.sdi12G, hd ? '3G-SDI' : '12G-SDI'), 'ok');
     const sdiTotal = sdiRuns.reduce((a, r) => a + Math.ceil(r[1]), 0);
     if (sdiRuns.length) {
@@ -800,6 +945,7 @@
     /* --- mounts --- */
     cams.forEach((c, i) => {
       const lab = labs[i], heavy = c.k === 'lens' && D.BODIES[c.m].studio;
+      if (c.mob && c.k !== 'ptz') return;   /* handheld: no tripod */
       if (c.mnt === 'tripod') add('mnt', { id: heavy ? 'focus12' : 'ad01', qty:1, why:t(heavy ? 'w_tripodHeavy' : 'w_tripod'), who:[lab], role:'tri' });
       else if (c.mnt === 'wall' || c.mnt === 'ceiling') add('mnt', { name:t(c.mnt === 'wall' ? 'g_wall' : 'g_ceil', modelName(c)), spec:'', qty:1, why:t('w_bracket'), who:[lab], code:'BRKT' });
     });
@@ -828,9 +974,12 @@
     }
 
     /* --- lighting (suggestion) --- */
+    if (S.lt && D.LIGHTPLAN) lightBuild(add, warn, nP);
+    else {
     const lit = { podcast:[['a200d', 2], ['pt2c', 1]], church:[['ls600d', 2]], studio:[['nova', 2], ['p60c', 1]], event:[['ls1200d', 2]], empty:[['p60c', 1]] }[T.lit];
     lit.forEach(([id, q]) => add('lit', { id, qty:q, why:t('w_lit_' + T.lit) }));
     if (T.lit === 'church') add('lit', { name:t('g_dmx'), spec:'', qty:1, why:t('w_dmx'), code:'DMX' });
+    }
 
     /* --- monitoring & intercom --- */
     add('mon', { name:t('g_mv'), spec:'', qty:1, why:t('w_mv'), code:'MON' });
@@ -980,7 +1129,8 @@
     const o = { v:1, t:S.tpl, w:r2(S.w), d:r2(S.d), u:S.unit, tr:S.tr, fm:S.fmt, ct:S.ctl, e:S.ext, c:[r2(S.ctrl.x), r2(S.ctrl.y)],
       f:S.furn.map(f => [f.k, r2(f.x), r2(f.y), r2(f.w), r2(f.h)]), p:S.ppl.map(p => [p.n, r2(p.x), r2(p.y), Math.round(p.a)]),
       k:S.cams.map(c => { const a = [c.k, c.m, r2(c.x), r2(c.y), Math.round(c.a * 10) / 10, Math.round(c.z * 1000) / 1000, r2(c.f), c.lens, c.sf, c.mnt, c.man ? 1 : 0, c.tgt];
-        if (c.own || c.ext || c.crop) a.push(c.own ? 1 : 0); if (c.ext || c.crop) a.push(c.ext || 0, c.crop ? 1 : 0); return a; }) };
+        if (c.own || c.ext || c.crop || c.mob) a.push(c.own ? 1 : 0); if (c.ext || c.crop || c.mob) a.push(c.ext || 0, c.crop ? 1 : 0); if (c.mob) a.push(1); return a; }) };
+    if (S.pr) o.pr = S.pr; if (S.lt) o.lt = S.lt;
     /* only when used, so plans saved before the wizard keep the same link */
     if (S.xr) o.x = r2(S.xr);
     if (S.own && S.own.length) o.o = S.own.slice();
@@ -991,11 +1141,12 @@
     S = { tpl:o.t, w:clamp(+o.w, 2, 80), d:clamp(+o.d, 2, 80), unit:o.u === 'ft' ? 'ft' : 'm', tr:['sdi', 'hdmi', 'ip'].includes(o.tr) ? o.tr : 'sdi', fmt:o.fm === 'uhd' ? 'uhd' : 'hd', ctl:o.ct === '422' ? '422' : 'ip', ext:clamp(+o.e || 0, 0, 8),
       ctrl:{ x:+o.c[0], y:+o.c[1] }, furn:(o.f || []).filter(f => FURN[f[0]]).map(f => ({ id:nid(), k:f[0], x:+f[1], y:+f[2], w:+f[3], h:+f[4] })),
       ppl:(o.p || []).map(p => ({ id:nid(), n:String(p[0]).slice(0, 28), x:+p[1], y:+p[2], a:+p[3] || 0 })), cams:[],
-      xr:clamp(+o.x || 0, 0, 200), own:Array.isArray(o.o) ? o.o.filter(r => ROLES.includes(r)) : [] };
+      xr:clamp(+o.x || 0, 0, 200), own:Array.isArray(o.o) ? o.o.filter(r => ROLES.includes(r)) : [],
+      pr:o.pr && typeof o.pr === 'object' ? o.pr : null, lt:o.lt && typeof o.lt === 'object' ? o.lt : null };
     Z = o.z && typeof o.z === 'object' ? o.z : null;
     (o.k || []).forEach(a => {
       const [kk, m] = a; const ok = kk === 'ptz' ? D.PTZ[m] : kk === 'cc' ? D.CAMCORDER[m] : kk === 'lens' ? D.BODIES[m] : null; if (!ok || !P[m]) return;
-      const c = newCam(kk, m, S, { x:+a[2], y:+a[3], a:+a[4], mnt:a[9], man:!!a[10], lens:a[7], ext:D.EXT && D.EXT[a[13]] ? a[13] : null, crop:!!a[14] && !!(D.BODIES[m] && D.BODIES[m].crop) });
+      const c = newCam(kk, m, S, { x:+a[2], y:+a[3], a:+a[4], mnt:a[9], man:!!a[10], lens:a[7], ext:D.EXT && D.EXT[a[13]] ? a[13] : null, crop:!!a[14] && !!(D.BODIES[m] && D.BODIES[m].crop), mob:!!a[15] });
       c.z = clamp(+a[5] || 0, 0, 1); if (kk === 'lens') { c.sf = D.FORMATS[a[8]] ? a[8] : c.sf; const [lo, hi] = lensRange(c); c.f = clamp(+a[6] || lo, lo, hi); }
       c.tgt = Number.isInteger(a[11]) ? a[11] : -1; if (!R.rise[c.mnt]) c.mnt = 'tripod';
       if (a[12]) c.own = true;
@@ -1250,7 +1401,7 @@
       build();
       const tt = tally(BOM);
       return { ...tt, bom:BOM, checks:CHECKS, tr:S.tr, fmt:S.fmt, n:S.cams.length, maxRun:S.cams.length ? Math.max(...S.cams.map(runOf)) : 0,
-        cams:S.cams.map(c => ({ k:c.k, m:c.m, own:!!c.own, lens:c.lens, man:c.man, ext:extOf(c) ? c.ext : null, crop:!!c.crop })), packed:packPlan() };
+        cams:S.cams.map(c => ({ k:c.k, m:c.m, own:!!c.own, lens:c.lens, man:c.man, ext:extOf(c) ? c.ext : null, crop:!!c.crop, mob:!!c.mob })), packed:packPlan() };
     } finally { S = keep.S; SETUP = keep.SETUP; BOM = keep.BOM; CHECKS = keep.CHECKS; Z = keep.Z; }
   }
   function compose(spec) { const keep = S; try { fromSpec(spec, spec.tpl); return packPlan(); } finally { S = keep; } }

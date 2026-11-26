@@ -9,8 +9,8 @@
 <link rel="icon" href="../shared/i9-seal.webp">
 <!-- guided (wizard) or advanced view, decided before first paint so neither flashes: #tpl=<kind> opens the guided steps on
      step 2 with that kind; #tpl=<kind>&v=a (or #adv=<kind>) and plans saved before the wizard open the advanced editor; a
-     plan saved by the wizard reopens on its step; ?template= lands on step 5 -->
-<script>(function(){var h=location.hash,a=/^#adv|^#(tpl|for)=[\w-]+&v=a/.test(h),s=/^#(tpl|for)/.test(h)&&!a?2:0,m=h.match(/^#p=([\w-]+)/);if(m){try{var o=JSON.parse(decodeURIComponent(escape(atob(m[1].replace(/-/g,'+').replace(/_/g,'/')))));a=!(o.z&&o.z.v==='w');s=o.z&&+o.z.s}catch(e){}}var r=document.documentElement;r.className+=a?' pl-adv':' pl-wiz';if(!a)r.setAttribute('data-wzs',s||(/[?&]template=/.test(location.search)?5:1))})();</script>
+     plan saved by the wizard reopens on its step; ?template= lands on step 6 (the plan) -->
+<script>(function(){var h=location.hash,a=/^#adv|^#(tpl|for)=[\w-]+&v=a/.test(h),s=/^#(tpl|for)/.test(h)&&!a?2:0,m=h.match(/^#p=([\w-]+)/);if(m){try{var o=JSON.parse(decodeURIComponent(escape(atob(m[1].replace(/-/g,'+').replace(/_/g,'/')))));a=!(o.z&&o.z.v==='w');s=o.z&&+o.z.s}catch(e){}}var r=document.documentElement;r.className+=a?' pl-adv':' pl-wiz';if(!a)r.setAttribute('data-wzs',s||(/[?&]template=/.test(location.search)?6:1))})();</script>
 <!-- three.js for the 3D step only: planner-3d.js is imported when step 6 opens, never before -->
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"}}</script>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>

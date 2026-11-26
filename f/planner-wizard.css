@@ -5,13 +5,13 @@
 
 /* ---------- which view: guided steps or the advanced editor (one plan) ---------- */
 .pl-wiz .phead,.pl-wiz .desk,.pl-wiz #bom,.pl-wiz .advbar{display:none}
-.pl-wiz[data-wzs="7"] #bom{display:block}
+.pl-wiz[data-wzs="8"] #bom{display:block}
 .pl-adv .wz,.pl-adv .wz-foot{display:none}
-.pl-wiz[data-wzs="7"] .wz{padding-bottom:28px}
-.wz-panel.s7,.pl-wiz[data-wzs="7"] .wz-hd{display:none}
+.pl-wiz[data-wzs="8"] .wz{padding-bottom:28px}
+.wz-panel.s8,.pl-wiz[data-wzs="8"] .wz-hd{display:none}
 /* steps 5–6: the plan and the 3D view are the content; a shorter heading brings them onto the first screen */
-.pl-wiz[data-wzs="5"] .wz-hd,.pl-wiz[data-wzs="6"] .wz-hd{margin:26px 0 18px}
-.pl-wiz[data-wzs="5"] .wz-hd h1,.pl-wiz[data-wzs="6"] .wz-hd h1{font-size:clamp(2rem,3vw,2.75rem)}
+.pl-wiz[data-wzs="6"] .wz-hd,.pl-wiz[data-wzs="7"] .wz-hd{margin:26px 0 18px}
+.pl-wiz[data-wzs="6"] .wz-hd h1,.pl-wiz[data-wzs="7"] .wz-hd h1{font-size:clamp(2rem,3vw,2.75rem)}
 .have.hnote{cursor:default;border-style:dashed;background:none;color:var(--ink-3);justify-content:flex-end}
 .have.hnote p{margin:0;font:400 12px/1.55 var(--mono);color:var(--ink-3)}
 .have.hnote:hover{border-color:var(--rule)}
@@ -38,7 +38,7 @@
 .wz-adv .ic{width:14px;height:14px;transition:transform .3s var(--ease)}
 .wz-adv:hover{color:var(--ink)}
 .wz-adv:hover .ic{transform:translateX(3px)}
-.wz-steps ol{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:6px}
+.wz-steps ol{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:6px}
 .wz-steps button{width:100%;display:flex;flex-direction:column;justify-content:space-between;gap:8px;min-height:60px;padding:9px 12px 10px;border:1px solid var(--rule);background:var(--panel);color:var(--ink-3);text-align:left;cursor:pointer;font:inherit;transition:border-color .2s,background .2s,color .2s}
 .wz-steps .n{display:flex;justify-content:space-between;align-items:center;font:400 10px/1 var(--mono);letter-spacing:.14em}
 .wz-steps .n i{width:8px;height:8px;border:1px solid var(--rule-2)}
@@ -600,3 +600,50 @@
 .ldim i{flex:none;width:7px;height:7px;margin-top:5px;border:1px solid var(--signal)}
 .cp-fix{margin:8px 0 0;min-height:38px;font-size:13px;display:flex}
 @media (max-width:699px){ .lnrow>.meta-s{width:100%} .leff{margin-left:0} }
+
+/* =================== round 3: production + lights (step 4), the signal chain, the cost rollup =================== */
+.pgrid4{display:grid;grid-template-columns:minmax(0,1fr) 400px;gap:28px;align-items:start}
+.pform{min-width:0}
+.lh4{display:flex;align-items:center;gap:10px;margin:26px 0 4px;color:var(--ink-3);font-weight:400}
+.lh4:first-child{margin-top:0}
+.pq .seg{justify-self:end}
+.pfeed{padding:16px 0 16px;border-top:1px solid var(--rule)}
+.pfeed .cd{min-height:118px}
+.pnote{margin:4px 0 0;color:var(--ink-3)}
+.psum4{position:sticky;top:96px;padding:18px 20px 20px;border:1px solid var(--rule);background:var(--panel);min-width:0}
+.psum4>.meta{display:flex;align-items:center;gap:10px;margin:0 0 12px;color:var(--ink-3)}
+.sigch{display:grid;grid-template-columns:1fr;gap:0;margin:0;padding:0}
+.ch-col{display:flex;flex-direction:column;gap:5px;padding:12px 14px;border:1px solid var(--rule-2)}
+.ch-col>.meta{color:var(--ink-3)}
+.ch-sw{background:var(--ink);color:var(--black);border-color:var(--ink)}
+.ch-sw>.meta,.ch-sw .meta-s{color:rgba(10,10,10,.62)}
+.ch-sw b{font-size:17px;font-weight:700;letter-spacing:-.015em}
+.ch-n{display:flex;align-items:center;gap:8px;font:400 12px/1.4 var(--mono)}
+.ch-n b{display:grid;place-items:center;width:20px;height:20px;border:1px solid var(--rule-2);font-size:11px}
+.ch-n.wl b{border-style:dashed;border-color:var(--signal)}
+.ch-arw{height:22px;margin:0 auto;width:2px;background:var(--rule-2);position:relative}
+.ch-arw::after{content:"";position:absolute;left:-4px;bottom:-1px;border:5px solid transparent;border-top-color:var(--rule-2);border-bottom:0}
+.ch-o{display:grid;grid-template-columns:96px minmax(0,1fr);gap:2px 10px;padding:6px 0;border-top:1px solid var(--rule);font:400 12px/1.45 var(--mono)}
+.ch-o:first-of-type{border-top:0}
+.ch-o b{font:600 13px/1.3 var(--sans)}
+.ch-o .meta-s{grid-column:2;color:var(--ink-3);font-size:11px}
+.psum4 .pchecks{margin:14px 0 0}
+.psum4 .pchecks li{font-size:12.5px}
+.roll{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin:14px 0 0;padding-top:12px;border-top:1px solid var(--rule)}
+.roll>div{display:flex;flex-direction:column;gap:2px;min-width:0}
+.roll .meta{font-size:9.5px;color:var(--ink-3);letter-spacing:.1em}
+.roll b.price{font:700 15px/1.2 var(--sans);letter-spacing:-.015em}
+.roll .meta-s{font-size:10.5px;color:var(--ink-3)}
+.psum4 .roll{grid-template-columns:repeat(2,minmax(0,1fr))}
+.ptot4{display:flex;flex-direction:column;gap:2px;margin:14px 0 0;padding-top:12px;border-top:1px solid var(--rule)}
+.ptot4 b{font:700 26px/1.1 var(--sans);letter-spacing:-.03em}
+.ptot4 .meta-s{color:var(--ink-3)}
+.wzb .roll{border-top-color:var(--s-rule-2)}
+.wzb .roll .meta,.wzb .roll .meta-s{color:var(--s-ink-3)}
+.cp-tg{grid-area:own;display:flex;flex-direction:column;align-items:flex-start}
+#plan .lit rect{fill:var(--signal);fill-opacity:.9;stroke:#0a0a0a;stroke-width:1;vector-effect:non-scaling-stroke}
+#plan .lit text{font-family:var(--mono);fill:#000;font-weight:700}
+@media (max-width:1099px){ .pgrid4{grid-template-columns:1fr} .psum4{position:static} .roll{grid-template-columns:repeat(2,minmax(0,1fr))} }
+@media (min-width:700px) and (max-width:1099px) and (orientation:landscape){ .pgrid4{grid-template-columns:minmax(0,1fr) 340px} .psum4{position:sticky} }
+@media (max-width:699px){ .pq{grid-template-columns:1fr} .pq .seg{justify-self:start;display:grid;grid-template-columns:repeat(auto-fit,minmax(100px,1fr));width:100%} .pq .seg button{border-bottom:1px solid var(--rule);white-space:normal;min-width:0;padding:8px 10px;line-height:1.25}
+  .psum4{margin:16px calc(-1 * var(--g)) 0;border-left:0;border-right:0;padding:16px var(--g)} .pfeed .cd{min-height:0} }

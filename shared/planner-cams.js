@@ -44,6 +44,16 @@
     'lumix-s100500':  ['Panasonic', 'Lumix S 100-500mm f/5-7.1 O.I.S.', 'Telephoto zoom lens, L-Mount', 2097.99, 'Lenses', 'L mount', '2025/10/images/original/91746_11a.jpg', 'lentes/l-mount/panasonic-lente-lumix-s-100-500mm-f5-71-ois-l-mount/'],
     'canon-cs401200pl': ['Canon', 'CINE-SERVO 40-1200mm T5.0-10.8', 'Cinema servo zoom with built-in 1.5x extender, ARRI PL', 79999, 'Lenses', 'PL mount', '2026/04/images/original/99106_1.jpg', 'lentes/pl-mount/canon-lente-cine-servo-40-1200mm-t50-108-cinema-zoom-arri-pl/'],
     'nisi-athena-plrf': ['NiSi', 'Athena PL to Canon RF adapter', 'Mount adapter for PL lenses on Canon RF cameras', 209, 'Lenses', 'Lens accessories', '2024/03/images/original/59513_1698069925_1787.jpg', 'lentes/acessorios-de-lentes/nisi-athena-pl-rf-adaptador-para-lentes-de-montagem-pl-para-cameras-canon-rf/'],
+    /* round 3 (25 Nov 2026; tmp-planner3/research.md + store-prices.tsv, images re-read from each listing's JSON-LD and
+       checked white) */
+    'canon-rcip1000': ['Canon', 'RC-IP1000', 'Advanced PTZ controller', 5382.53, 'Cameras', 'PTZ & robotic', '2024/09/images/original/67919_631.jpg', 'acessorios-de-cameras/controles-remotos-para-cameras/canon-controlador-ptz-avancado-rc-ip1000/'],
+    'forza60bii':     ['Nanlite', 'Forza 60B II', 'Bi-color LED monolight', 319, 'Lighting', 'LED lights', '2023/04/images/original/49229_1673336808_1736.jpg', 'iluminacao/luzes-de-led/nanlite-forza-60b-ii-luz-de-led-monolight-bicolor/'],
+    'forza150b':      ['Nanlite', 'Forza 150B', 'Bi-color LED light kit', 539, 'Lighting', 'LED lights', '2022/06/images/original/34909_nanliteforza150.jpg', 'iluminacao/luzes-de-led/nanlite-forza-150b-kit-de-luz-de-led-bi-color/'],
+    'forza300bii':    ['Nanlite', 'Forza 300B II', 'Bi-color LED monolight', 999, 'Lighting', 'LED lights', '2024/07/images/original/63926_8165.jpg', 'iluminacao/iluminacao/nanlite-luz-de-led-forza-300b-ii-monolight-bicolor/'],
+    'forza500bii':    ['Nanlite', 'Forza 500B II', 'Bi-color LED monolight', 1499, 'Lighting', 'LED lights', '2024/07/images/original/63938_8304.jpg', 'iluminacao/luzes-de-led/nanlite-luz-de-led-forza-500b-ii-monolight-bicolor/'],
+    'pavoslim60cl':   ['Nanlite', 'PavoSlim 60CL', 'RGBWW LED panel', 599, 'Lighting', 'LED lights', '2024/05/images/original/62266_10267.jpg', 'iluminacao/luzes-de-led/nanlite-painel-led-pavoslim-60cl-rgb/'],
+    'pavotube2-6c':   ['Nanlite', 'PavoTube II 6C', 'RGBWW LED tube, 10", internal battery', 89, 'Lighting', 'LED lights', '2020/09/images/original/19117_30213.jpg', 'iluminacao/luzes-de-led/nanlite-pavotube-ii-6c-tubo-de-led-rgbww-com-bateria-interna/'],
+    'pavotube15c-2':  ['Nanlite', 'PavoTube 15C, 2-light kit', '2\' RGBW LED tubes, internal battery', 429, 'Lighting', 'LED lights', '2020/09/images/original/19226_30322.jpg', 'iluminacao/luzes-de-led/nanlite-kit-com-2-pavotube-15c-2-tubo-led-rgbw-com-bateria-interna/'],
     /* cages, power, PTZ controllers */
     'sr-cage-c50':    ['SmallRig', 'Cage for Canon EOS C50', 'SKU 5656', 69.99, 'Accessories', 'Cages & rigs', '2026/09/images/original/106722_5656.jpg', 'acessorios/cages-e-acessorios/smallrig-cage-for-canon-eos-c50/'],
     'sr-cage-c80':    ['SmallRig', 'Cage for Canon EOS C80', 'SKU 5810', 99.99, 'Accessories', 'Cages & rigs', '2026/09/images/original/106724_5810.jpg', 'acessorios/cages-e-acessorios/smallrig-cage-for-canon-eos-c80/'],
@@ -185,8 +195,45 @@
   D.LONG = { RF:['canon-rf100400', 'canon-rf600f11', 'canon-rf200800', 'canon-rf100500', 'canon-cs401200pl'], E:['sony-fe200600', 'sony-fe100400gm'], L:['lumix-s100500'], EF:[], MFT:[], B4:[] };
 
   /* PTZ joysticks on the store, by brand (used from two PTZ of one brand) */
-  D.PTZCTL = { Panasonic:'rp60', Canon:'canon-rcip100', Sony:'sony-rmip10' };
+  /* round 3: the RC-IP100 is discontinued (asia.canon) and its last firmware (v1.40, Dec 2023) does not list the C50/C80/C400;
+     the RC-IP1000 on firmware 1.3.0 (15 Oct 2026) lists CR-N300–N700, C50 (camera fw 1.0.4.1+), C80 and C400 (canon.jp
+     rcip1000-v130). Panasonic AW-RP60 is current; the AW-RP120 is discontinued and never offered. */
+  D.PTZCTL = { Panasonic:'rp60', Canon:'canon-rcip1000', Sony:'sony-rmip10' };
+  D.CANON_IP = ['canon-c50', 'c80', 'c400', 'xf605'];   /* Canon cinema / XF bodies the RC-IP1000 runs next to CR-N PTZ */
+  D.CANON_ETH = { 'canon-c50':'USB-C to Ethernet adapter (Canon-tested: StarTech US1GC30W / US2GC30, UGREEN UG-USBC-25052)' };
   D.PTZCTL_OK = { Sony:'RM-IP10 with SRG-A12 and BRC-AM7 confirmed (owner, 25 Nov 2026)' };
+
+  /* ---------- round 3: production (switching, recording, streaming, outputs), wireless video, lighting ----------
+     Blackmagic facts: blackmagicdesign.com /products/atemmini, /atemsdi, /atemconstellation techspecs (read 25 Nov 2026). */
+  D.PROD = {
+    iso:['atemproiso', 'atemxiso', 'atemsdipro', 'atemsdix'],            /* record every camera separately */
+    stream:['atemmp', 'atemproiso', 'atemext', 'atemxiso', 'atemsdipro', 'atemsdix'],   /* built-in RTMP/SRT, one destination */
+    rec:['atemmp', 'atemproiso', 'atemext', 'atemxiso', 'atemsdipro', 'atemsdix'],      /* program recording to USB-C */
+    oneOut:['atemmp', 'atemproiso'],                                     /* one HDMI out: the screen or the operator's multiview */
+    aux:{ atemmp:1, atemproiso:1, atemext:2, atemxiso:4, atemsdi:2, atemsdipro:2, atemsdix:4, atem1mehd:6, atem1me:6, 'atem2me-hd':12, 'atem2me-4k':12 },
+    me2:{ hd:'atem2me-hd', uhd:'atem2me-4k' }, panel2:'atem2me-panel', rec1:'hyperdeck', enc:'bmenc', dec:'bmdec', bridge:'atem-bridge', conv:'microconv-bidi',
+    cards:{ hdmi:'decklink-quad-hdmi', sdi4:'decklink-duo2', sdi8:'decklink-quad2' },
+    src:'https://www.blackmagicdesign.com/products/atemconstellation/techspecs',
+  };
+  /* Accsoon wireless (accsoon.com product pages, 25 Nov 2026). los = line-of-sight metres; plan on 25 % of it indoors (rule of thumb). */
+  D.WIRELESS = { sdi:'cineview-se', hdmi:'cineview-he', long:'cineview-master-tx', los:{ 'cineview-se':400, 'cineview-he':350, 'cineview-master-tx':2500 }, indoor:0.25, alt:'bolt6',
+    kitVerify:{ 'cineview-master-tx':'Store title says "transmitter"; at TX $445 + RX $445 it is probably the kit — verify' } };
+  /* Nanlite (nanlite.com product API + manuals, 25 Nov 2026). dmx = wired DMX/RDM; crmx = built-in wireless DMX; quiet = 20 dBA or fanless. */
+  D.FIXT = {
+    forza60bii:{ dmx:true, quiet:true }, forza150b:{ dmx:true, quiet:true, jack:true }, forza300bii:{ dmx:true }, forza500bii:{ dmx:true }, forza720b:{ dmx:true, quiet:true },
+    pavoslim60cl:{ dmx:true, crmx:true, quiet:true }, pavoslim240c:{ dmx:true, crmx:true, quiet:true }, pavoslim240cl:{ dmx:true, crmx:true, quiet:true },
+    'pavotube2-6c':{ dmx:false, quiet:true }, 'pavotube15c-2':{ dmx:true, quiet:true, verify:'DMX over a 3.5 mm cable: verify' }, 'pavotube2-60x':{ dmx:true, quiet:true },
+  };
+  /* starting light plan per room type: [fixture, role, how many] with n = people on camera (planning choice, not data) */
+  D.LIGHTPLAN = {
+    podcast:n => n <= 2 ? [['forza60bii', 'key', n], ['forza60bii', 'fill', 1], ['pavotube2-6c', 'back', n], ['pavotube15c-2', 'bg', 1]] : [['forza150b', 'key', Math.ceil(n / 2)], ['forza60bii', 'fill', 1], ['pavotube2-6c', 'back', n], ['pavotube15c-2', 'bg', 1]],
+    church:(n, big) => big ? [['forza500bii', 'key', Math.max(2, Math.min(4, n + 1))], ['forza300bii', 'back', 2], ['pavoslim240cl', 'wash', 2]] : [['forza300bii', 'key', Math.max(2, Math.min(4, n))], ['forza60bii', 'back', 2]],
+    studio:n => [['forza300bii', 'key', Math.max(1, n)], ['forza150b', 'fill', 1], ['forza60bii', 'back', Math.max(1, n)], ['pavotube15c-2', 'bg', 1]],
+    event:n => [['forza720b', 'key', 2], ['forza300bii', 'back', 2]],
+    school:n => [['forza300bii', 'key', 2], ['forza60bii', 'back', 2]],
+    corp:n => [['pavoslim60cl', 'key', Math.max(1, n)], ['forza60bii', 'back', Math.max(1, n)]],
+  };
+  D.LIGHTCTL = { ctl:'cuecore', panel:'vptouch', relay:'din-relay4', crmxTx:'exalux-tx100n-basic', crmxRx:'exalux-rx100s', src:'https://www.visualproductions.nl/products/cuecore3' };
 
   /* ---------- the curated picker: a bit from each brand, three families ---------- */
   /* fam: ptz | cc (camcorder) | lens (mirrorless / cine / studio, interchangeable lens). sub = the badge under the family. */

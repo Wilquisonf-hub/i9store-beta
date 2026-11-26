@@ -24,17 +24,19 @@
   const W = {
     kick:['Room planner · Guided','Planejador de sala · Guiado'], toAdv:['Advanced editor','Editor avançado'],
     advK:['Advanced editor','Editor avançado'], advT:['The same plan as the guided steps, with every control.','O mesmo plano dos passos guiados, com todos os controles.'], toWiz:['Back to the guided steps','Voltar aos passos guiados'],
-    back:['Back','Voltar'], next:['Next','Avançar'], stepOf:['Step {0} of 7','Passo {0} de 7'],
-    st1:['What you’re making','O que vai produzir'], st2:['The room','A sala'], st3:['Cameras','Câmeras'], st4:['Budget','Orçamento'],
-    st5:['The plan','O plano'], st6:['3D view','Vista 3D'], st7:['List & quote','Lista e cotação'],
+    back:['Back','Voltar'], next:['Next','Avançar'], stepOf:['Step {0} of 8','Passo {0} de 8'],
+    st1:['What you’re making','O que vai produzir'], st2:['The room','A sala'], st3:['Cameras','Câmeras'], st4:['Production','Produção'], st5:['Budget','Orçamento'],
+    st6:['The plan','O plano'], st7:['3D view','Vista 3D'], st8:['List & quote','Lista e cotação'],
     h1:['What are you making?','O que você vai produzir?'],
     l1:['Pick the closest. It sets a starting room, the people on camera and the gear. You can change all of it.','Escolha o mais próximo. Ele define a sala, as pessoas em cena e os equipamentos iniciais. Tudo pode mudar.'],
     h2:['Tell us about the room.','Conte como é a sala.'],
     l2:['Rough numbers are fine. We place the stage, the people and the control desk for you.','Números aproximados servem. Nós posicionamos o palco, as pessoas e a mesa de controle.'],
     h3:['Choose your cameras.','Escolha suas câmeras.'],
     l3:['Pick the type of camera first, then a model for each position in the room. Every model is a store listing at today’s price.','Escolha primeiro o tipo de câmera, depois um modelo para cada posição da sala. Todo modelo é um produto da loja, com o preço de hoje.'],
-    h4:['Set a budget.','Defina um orçamento.'],
-    l4:['Tick what you already own, set a budget, and we price three ways to do it from live store listings, and say which one fits.','Marque o que você já tem, defina um orçamento, e calculamos três formas de montar com os preços da loja, dizendo qual cabe.'],
+    h4:['Record, stream, screens and lights.','Gravação, transmissão, telões e luz.'],
+    l4:['Tell us where the picture goes. We pick the switcher, recorder and encoder that do it, draw the signal chain, and add a light plan.','Diga para onde vai a imagem. Escolhemos o switcher, gravador e encoder, desenhamos a cadeia de sinal e somamos um plano de luz.'],
+    h5:['Set a budget.','Defina um orçamento.'],
+    l5:['Tick what you already own, set a budget, and we price three ways to do it from live store listings, and say which one fits.','Marque o que você já tem, defina um orçamento, e calculamos três formas de montar com os preços da loja, dizendo qual cabe.'],
     haveK:['Already have','Já tenho'], haveL:['Ticked items stay on the plan at $0 and leave the shopping list.','Itens marcados ficam no plano a $0 e saem da lista de compras.'],
     /* step 3: cameras */
     camType:['Camera type','Tipo de câmera'], ourPick:['Our pick for this room','Nossa escolha para esta sala'],
@@ -65,16 +67,41 @@
     sWarn:['{0} camera can’t frame its shot from there','{0} câmera não enquadra o plano daí'], sWarnN:['{0} cameras can’t frame their shot from there','{0} câmeras não enquadram o plano daí'],
     a_conv:['{0} × HDMI→SDI converter','{0} × conversor HDMI→SDI'], a_ctl:['PTZ joystick','Joystick PTZ'], a_cage:['{0} × cage','{0} × gaiola'], a_poe:['PoE switch','Switch PoE'], a_enc:['{0} × NDI encoder (to quote)','{0} × encoder NDI (a cotar)'], a_tri:['{0} × tripod','{0} × tripé'], a_brk:['{0} × bracket (to quote)','{0} × suporte (a cotar)'], a_pwr:['{0} × mains power','{0} × energia na tomada'],
     camsSub:['Cameras','Câmeras'], t_c:['Your cameras','Suas câmeras'],
+    /* round 3: production + lighting step */
+    q_rec:['Record?','Gravar?'], rec_none:['No','Não'], rec_pgm:['The program','O programa'], rec_iso:['Every camera (ISO)','Cada câmera (ISO)'],
+    q_st:['Stream?','Transmitir?'], st_0:['No','Não'], st_1:['1 platform','1 plataforma'], st_2:['2 or more','2 ou mais'],
+    q_scr:['Send video to a screen?','Enviar vídeo para um telão?'], scr_none:['No','Não'], scr_led:['LED wall','Painel de LED'], scr_proj:['Projector','Projetor'], scr_overflow:['Overflow room','Sala de apoio'],
+    q_feed:['Screen and stream: same cut?','Telão e transmissão: mesmo corte?'], feed_same:['Same cut','Mesmo corte'], feed_aux:['One source on the screen','Uma fonte no telão'], feed_mix:['A different cut','Um corte diferente'],
+    fd_same:['The screen shows exactly the stream. Fewest parts.','O telão mostra exatamente a transmissão. Menos peças.'],
+    fd_aux:['The screen gets one source (a camera, lyrics, the program) on an aux, not a second mix.','O telão recebe uma fonte (câmera, letras, programa) num aux, não um segundo corte.'],
+    fd_mix:['A full second mix for the room: lyrics full-screen in the room, clean cameras on the stream.','Um segundo corte completo: letras em tela cheia na sala, câmeras limpas na transmissão.'],
+    q_gfx:['Graphics and lyrics','Gráficos e letras'], gfx_none:['None','Nenhum'], gfx_lower:['Lower thirds','Créditos'], gfx_lyrics:['Lyrics','Letras'],
+    gfxNote:['Lyrics run on a computer into the switcher. ProPresenter is common but not on the store.','Letras rodam num computador ligado ao switcher. ProPresenter é comum, mas não está na loja.'],
+    q_how:['Switch on','Cortar em'], how_hw:['A hardware switcher','Um switcher físico'], how_pc:['A computer (vMix / OBS)','Um computador (vMix / OBS)'],
+    q_lvl:['Level','Nível'], lvl_s:['Starter','Inicial'], lvl_m:['Standard','Padrão'], lvl_p:['Pro','Pro'],
+    chainK:['Signal chain','Cadeia de sinal'], chCams:['Cameras','Câmeras'], chWl:['{0} wireless','{0} sem fio'], chOut:['Outputs','Saídas'],
+    o_stream:['Stream','Transmissão'], o_screen:['Screen','Telão'], o_rec:['Record','Gravação'], o_over:['Overflow room','Sala de apoio'],
+    cut_pgm:['Program','Programa'], cut_aux:['Aux · one source','Aux · uma fonte'], cut_mix:['M/E 2 · its own cut','M/E 2 · corte próprio'], cut_mix2:['Mix 2 · its own cut','Mix 2 · corte próprio'], cut_iso:['Program + every camera','Programa + cada câmera'], cut_dests:['{0} platforms','{0} plataformas'],
+    viaEnc:['via {0}','via {0}'], viaRec:['on {0}','em {0}'], builtIn:['built in','embutido'],
+    lightK:['Lights & control','Luz e controle'], q_lights:['Add a light plan?','Incluir plano de luz?'], yesLights:['Yes, Nanlite','Sim, Nanlite'], noLights:['No, we have light','Não, já temos luz'],
+    q_ctl:['Who runs the lights?','Quem opera a luz?'], ctl_app:['An app (NANLINK)','Um app (NANLINK)'], ctl_dmx:['Scenes on DMX (wired)','Cenas em DMX (cabo)'], ctl_crmx:['Scenes on wireless DMX','Cenas em DMX sem fio'],
+    q_panel:['A one-touch panel for the pastor / host','Painel de um toque para o pastor / apresentador'], q_relay:['An ON AIR sign','Placa ON AIR'],
+    panelNote:['KioscTouch2 wall screen (or the Kiosc app on your iPad) → CueCore3 → the lights. Scenes: Worship · Preaching · Baptism · House lights.','Tela de parede KioscTouch2 (ou o app Kiosc no seu iPad) → CueCore3 → as luzes. Cenas: Louvor · Pregação · Batismo · Luz da casa.'],
+    panelNoteP:['KioscTouch2 (or the Kiosc app) → CueCore3: an “On air” scene; the relay switches a mains ON AIR sign.','KioscTouch2 (ou o app Kiosc) → CueCore3: cena “No ar”; o relé liga uma placa ON AIR.'],
+    noArt:['No Nanlite on the store takes Art-Net or sACN: the scenes land on DMX from the CueCore3 ports.','Nenhuma Nanlite da loja aceita Art-Net ou sACN: as cenas saem em DMX pelas portas da CueCore3.'],
+    roll_cam:['Cameras','Câmeras'], roll_prod:['Production','Produção'], roll_lit:['Lighting & control','Luz e controle'], roll_cab:['Cables & mounts','Cabos e suportes'], rollQ:['{0} to quote','{0} a cotar'],
+    mob:['Mobile / handheld','Móvel / na mão'], mobNote:['Wireless link to the switcher','Link sem fio até o switcher'], oneCtl:['One controller runs all {0} cameras','Um controlador comanda as {0} câmeras'],
+    whyK:['Why this switcher','Por que este switcher'],
     lensStd:['Lens','Lente'], lensLong:['Long reach','Longo alcance'], extAdd:['+ {0}','+ {0}'], cropAdd:['{0} ×{1}','{0} ×{1}'],
     effTxt:['{0} effective','{0} efetivo'], dimTip:['Rule of thumb: past about f/8 a dim room needs more light or a higher ISO.','Regra prática: acima de f/8 uma sala escura pede mais luz ou ISO mais alto.'],
     adaptTip:['PL lens: needs the {0} (in the parts list) and the body’s Super 35 crop or the lens’s built-in 1.5× extender. {1} kg: heavy support to quote.','Lente PL: precisa do {0} (na lista) e do crop Super 35 do corpo ou do extensor 1,5× da lente. {1} kg: suporte reforçado a cotar.'],
     fixIt:['Use {0}','Usar {0}'], fixReach:['reaches {0}','alcança {0}'], builtinExt:['built-in 1.5×','1,5× embutido'],
-    h5:['Here’s your plan.','Este é o seu plano.'],
-    l5:['Drag a camera to move it, drag its dot to aim. When it looks right, approve it.','Arraste uma câmera para mover, arraste o ponto para mirar. Quando estiver certo, aprove.'],
-    h6:['See it in 3D.','Veja em 3D.'],
-    l6:['A simple model of the approved plan. Orbit and zoom, or look through each camera.','Um modelo simples do plano aprovado. Gire e aproxime, ou olhe por cada câmera.'],
-    h7:['Your equipment list.','Sua lista de equipamentos.'],
-    l7:['Everything the plan needs, grouped. What you have is at $0; lines to quote are priced by a specialist.','Tudo o que o plano precisa, em grupos. O que você tem fica a $0; as linhas a cotar são precificadas por um especialista.'],
+    h6:['Here’s your plan.','Este é o seu plano.'],
+    l6:['Drag a camera to move it, drag its dot to aim. When it looks right, approve it.','Arraste uma câmera para mover, arraste o ponto para mirar. Quando estiver certo, aprove.'],
+    h7:['See it in 3D.','Veja em 3D.'],
+    l7:['A simple model of the approved plan. Orbit and zoom, or look through each camera.','Um modelo simples do plano aprovado. Gire e aproxime, ou olhe por cada câmera.'],
+    h8:['Your equipment list.','Sua lista de equipamentos.'],
+    l8:['Everything the plan needs, grouped. What you have is at $0; lines to quote are priced by a specialist.','Tudo o que o plano precisa, em grupos. O que você tem fica a $0; as linhas a cotar são precificadas por um especialista.'],
     /* step 1 */
     k_church:['Church service','Culto na igreja'], kd_church:['Services streamed and on the screens, run by volunteers.','Cultos transmitidos e nos telões, operados por voluntários.'],
     k_podcast:['Podcast','Podcast'], kd_podcast:['Two to four people at a table, on video.','De duas a quatro pessoas à mesa, em vídeo.'],
@@ -203,6 +230,12 @@
 
   /* ----- cameras (step 3): families, the curated store models, recipes per family ----- */
   const FAMS = ['ptz', 'cc', 'lens', 'mix'];
+  /* round 3: production + light defaults per kind (planning starting points; the customer changes them in step 4) */
+  const PRDEF = k => ({ church:{ rec:'pgm', st:1, scr:'led', feed:'same', gfx:'lyrics', how:'hw', lvl:'m' }, podcast:{ rec:'iso', st:1, scr:'none', feed:'same', gfx:'lower', how:'hw', lvl:'m' },
+    studio:{ rec:'pgm', st:1, scr:'none', feed:'same', gfx:'lower', how:'hw', lvl:'m' }, event:{ rec:'pgm', st:1, scr:'led', feed:'aux', gfx:'lower', how:'hw', lvl:'m' },
+    school:{ rec:'pgm', st:1, scr:'proj', feed:'same', gfx:'none', how:'hw', lvl:'s' }, corp:{ rec:'pgm', st:1, scr:'none', feed:'same', gfx:'lower', how:'hw', lvl:'m' } }[k] || { rec:'pgm', st:1, scr:'none', feed:'same', gfx:'none', how:'hw', lvl:'m' });
+  const LTDEF = k => ({ on:1, ctl:'app', panel:0, relay:0 });
+  const prOf = z => z.pr || PRDEF(z.k), ltOf = z => z.lt || LTDEF(z.k);
   /* the family each kind's own recipes already use (those recipes stay the starting picks for that family) */
   const FAMDEF = { church:'ptz', podcast:'mix', studio:'mix', event:'mix', school:'ptz', corp:'ptz' };
   const CAMS = (D.CAMS || []).filter(c => P[c.id]);
@@ -235,7 +268,7 @@
   /* the customer's own lineup: the transport of our "recommended" pick, moved off IP when a camera has no NDI */
   function lineupCustom(z) {
     const base = lineupTier(z, 'r');
-    const cams = z.cl.map(c => ({ k:kOf(c.m), m:c.m, lens:c.lens || null, own:!!c.own, ext:c.ext || null, crop:!!c.crop }));
+    const cams = z.cl.map(c => ({ k:kOf(c.m), m:c.m, lens:c.lens || null, own:!!c.own, ext:c.ext || null, crop:!!c.crop, mob:!!c.mob }));
     const tr = base.tr === 'ip' && cams.some(c => !specOf(c.m).ndi) ? 'sdi' : base.tr;
     return { tr, cams };
   }
@@ -394,15 +427,17 @@
     cams = cams.slice(0, 4);
     const n = cams.length;
     cams.forEach((c, i) => { if (c.k === 'lens' && !c.lens) c.lens = autoLens(c.m, L, i, n); if (c.man == null) c.man = manFor(z, c.k); });
-    return { tpl:L.tpl, w:L.w, d:L.d, tr:trOverride || rec.tr, fmt:'hd', ext: z.k === 'podcast' || z.k === 'studio' ? 0 : 1, xr:L.xr, own:z.ow.slice(),
+    const lt = ltOf(z);
+    return { pr:prOf(z), lt:{ on:lt.on, ctl:lt.ctl, panel:lt.panel, relay:lt.relay, k:z.k, big: z.k === 'church' && z.w * z.d > 450 ? 1 : 0 },
+      tpl:L.tpl, w:L.w, d:L.d, tr:trOverride || rec.tr, fmt:'hd', ext: z.k === 'podcast' || z.k === 'studio' ? 0 : 1, xr:L.xr, own:z.ow.slice(),
       furn:L.furn, ppl:L.ppl, ctrl:L.ctrl,
       cams:cams.map((c, i) => { const s = n === 1 ? { ...L.slots[0], aim:'all', shot:'wide' } : L.slots[i];
         const { x, y } = camAt(L, s, c.k);   /* manned cameras stand on tripods, off the wall / mid-aisle */
-        return { k:c.k, m:c.m, lens:c.lens || null, ext:c.ext || null, crop:!!c.crop, x, y, mnt: c.k === 'ptz' ? s.mnt : 'tripod', man: c.man ?? (c.k !== 'ptz'), aim:s.aim, shot:s.shot, own:!!c.own }; }) };
+        return { k:c.k, m:c.m, lens:c.lens || null, ext:c.ext || null, crop:!!c.crop, mob:!!c.mob, x, y, mnt: c.k === 'ptz' ? s.mnt : 'tripod', man: c.man ?? (c.k !== 'ptz'), aim:s.aim, shot:s.shot, own:!!c.own }; }) };
   }
   let OPT_CACHE = { key:'', opts:null };
   function options() {
-    const key = JSON.stringify([Z.k, Z.w, Z.d, Z.n, Z.au, Z.cd, Z.oc, Z.on, Z.ow, Z.st, Z.fam, Z.cn, Z.cl, PL.lang]);
+    const key = JSON.stringify([Z.k, Z.w, Z.d, Z.n, Z.au, Z.cd, Z.oc, Z.on, Z.ow, Z.st, Z.fam, Z.cn, Z.cl, Z.pr, Z.lt, PL.lang]);
     if (OPT_CACHE.key === key) return OPT_CACHE.opts;
     const opts = {};
     (Z.cl ? ['c'] : []).concat(TIERS).forEach(tier => {
@@ -459,22 +494,25 @@
   }
 
   /* ======================= wizard state (rides in the plan hash as z) ======================= */
-  const DEF = () => ({ v:'w', s:1, mx:1, k:null, rp:'m', w:16, d:24, fr:'s', n:3, au:1, cd:'back', oc:'none', on:0, ow:[], b:null, o:null, om:0, lo:null, pl:0, dirty:1, ap:0, apk:'', st:null,
+  const DEF = () => ({ v:'w', sv:2, s:1, mx:1, k:null, pr:null, lt:null, rp:'m', w:16, d:24, fr:'s', n:3, au:1, cd:'back', oc:'none', on:0, ow:[], b:null, o:null, om:0, lo:null, pl:0, dirty:1, ap:0, apk:'', st:null,
     fam:null, cn:null, cl:null, same:0, pos:0 });
   let Z = DEF();
   function valid(z) {
     const d = DEF(); if (!z || typeof z !== 'object') return d;
     const o = { ...d, ...z };
-    o.v = o.v === 'a' ? 'a' : 'w'; o.s = clamp(Math.round(+o.s || 1), 1, 7); o.mx = clamp(Math.round(+o.mx || o.s), o.s, 7);
+    o.v = o.v === 'a' ? 'a' : 'w';
+    if (!z.sv && +o.s >= 4) { o.s = +o.s + 1; o.mx = +(o.mx || o.s) + 1; }   /* links saved before the production step (round 3) */
+    o.sv = 2; o.s = clamp(Math.round(+o.s || 1), 1, 8); o.mx = clamp(Math.round(+o.mx || o.s), o.s, 8);
+    o.pr = o.pr && typeof o.pr === 'object' ? { ...PRDEF(o.k), ...o.pr } : null; o.lt = o.lt && typeof o.lt === 'object' ? { ...LTDEF(o.k), ...o.lt } : null;
     o.k = KINDS[o.k] ? o.k : null; o.w = clamp(+o.w || 16, 2, 80); o.d = clamp(+o.d || 24, 2, 80); o.n = clamp(Math.round(+o.n || 1), 1, 8);
     o.au = o.au ? 1 : 0; o.cd = ['near', 'back', 'booth'].includes(o.cd) ? o.cd : 'back'; o.fr = o.fr === 'l' ? 'l' : 's';
     o.oc = ['none', 'ptz', 'cc', 'lens'].includes(o.oc) ? o.oc : 'none'; o.on = clamp(Math.round(+o.on || 0), 0, 4);
     o.ow = Array.isArray(o.ow) ? o.ow.filter(r => OWN.includes(r)) : []; o.b = o.b ? clamp(+o.b, 500, 1e6) : null;
     o.fam = FAMS.includes(o.fam) ? o.fam : null; o.cn = o.cn ? clamp(Math.round(+o.cn), 1, 4) : null;
     /* the customer's camera picks: [model, lens, owned] per position, store models only */
-    o.cl = Array.isArray(o.cl) ? o.cl.slice(0, 4).map(c => Array.isArray(c) ? { m:c[0], lens:c[1] || null, own:!!c[2], ext:c[3] || null, crop:!!c[4] } : c)
+    o.cl = Array.isArray(o.cl) ? o.cl.slice(0, 4).map(c => Array.isArray(c) ? { m:c[0], lens:c[1] || null, own:!!c[2], ext:c[3] || null, crop:!!c[4], mob:!!c[5] } : c)
       .filter(c => c && P[c.m] && (D.PTZ[c.m] || D.CAMCORDER[c.m] || D.BODIES[c.m])).map(c => ({ m:c.m, lens:D.BODIES[c.m] && (c.lens === 'kit' || c.lens === 'other' || D.LENSES[c.lens]) ? c.lens : null, own:!!c.own,
-        ext:D.EXT && D.EXT[c.ext] && D.EXT[c.ext].lenses.includes(c.lens) ? c.ext : null, crop:!!c.crop && !!(D.BODIES[c.m] && D.BODIES[c.m].crop) })) : null;
+        ext:D.EXT && D.EXT[c.ext] && D.EXT[c.ext].lenses.includes(c.lens) ? c.ext : null, crop:!!c.crop && !!(D.BODIES[c.m] && D.BODIES[c.m].crop), mob:!!c.mob })) : null;
     if (o.cl && !o.cl.length) o.cl = null;
     o.same = o.same ? 1 : 0; o.pos = clamp(Math.round(+o.pos || 0), 0, 3);
     o.o = ['e', 'r', 'p', 's', 'c'].includes(o.o) ? o.o : null; o.st = o.st && window.I9S && window.I9S.SET && window.I9S.SET[o.st] ? o.st : null;
@@ -482,7 +520,7 @@
     if (o.o === 'c' && !o.cl) o.o = null;
     return o;
   }
-  PL.zGet = () => { const o = {}; Object.keys(Z).forEach(k => { let v = Z[k]; if (k === 'cl' && v) v = v.map(c => c.ext || c.crop ? [c.m, c.lens || 0, c.own ? 1 : 0, c.ext || 0, c.crop ? 1 : 0] : [c.m, c.lens || 0, c.own ? 1 : 0]); if (v !== null && v !== '' && !(Array.isArray(v) && !v.length)) o[k] = v; }); return o; };
+  PL.zGet = () => { const o = {}; Object.keys(Z).forEach(k => { let v = Z[k]; if (k === 'cl' && v) v = v.map(c => c.mob ? [c.m, c.lens || 0, c.own ? 1 : 0, c.ext || 0, c.crop ? 1 : 0, 1] : c.ext || c.crop ? [c.m, c.lens || 0, c.own ? 1 : 0, c.ext || 0, c.crop ? 1 : 0] : [c.m, c.lens || 0, c.own ? 1 : 0]); if (v !== null && v !== '' && !(Array.isArray(v) && !v.length)) o[k] = v; }); return o; };
   const save = () => PL.save();
   const hasPlan = () => Z.pl && !Z.dirty && Z.lo === Z.o;
   const hashOf = s => { let h = 5381; for (let i = 0; i < s.length; i++) h = ((h << 5) + h + s.charCodeAt(i)) | 0; return (h >>> 0).toString(36); };
@@ -526,10 +564,10 @@
     save();
   }
   function go(s, opt = {}) {
-    s = clamp(s, 1, 7);
+    s = clamp(s, 1, 8);
     if (s > 1 && !Z.k) s = 1;
-    if (s >= 5) ensurePlan();
-    if (s >= 6 && !Z.ap && !opt.approve && s > Z.mx) s = 5;
+    if (s >= 6) ensurePlan();
+    if (s >= 7 && !Z.ap && !opt.approve && s > Z.mx) s = 6;
     Z.s = s; Z.mx = Math.max(Z.mx, s);
     render();
     save();
@@ -542,11 +580,11 @@
   function renderChrome() {
     $('#wz-kick').textContent = t('kick'); $('#to-adv-l').textContent = t('toAdv');
     $('#advbar-k').textContent = t('advK'); $('#advbar-t').textContent = t('advT'); $('#to-wiz-l').textContent = t('toWiz');
-    stepsEl.innerHTML = [1, 2, 3, 4, 5, 6, 7].map(i => {
-      const cur = i === Z.s, done = i < Z.s || (i <= Z.mx && i !== Z.s), dis = i > Z.mx && !(i === Z.mx + 1 && canNext() && i <= 5);
+    stepsEl.innerHTML = [1, 2, 3, 4, 5, 6, 7, 8].map(i => {
+      const cur = i === Z.s, done = i < Z.s || (i <= Z.mx && i !== Z.s), dis = i > Z.mx && !(i === Z.mx + 1 && canNext() && i <= 6);
       return `<li><button type="button" data-go="${i}" class="${cur ? 'cur' : done ? 'done' : ''}"${cur ? ' aria-current="step"' : ''}${dis ? ' disabled' : ''}><span class="n">${String(i).padStart(2, '0')}<i aria-hidden="true"></i></span><b>${esc(t('st' + i))}</b></button></li>`;
     }).join('');
-    $('#wz-progbar').style.width = (Z.s / 7 * 100).toFixed(1) + '%';
+    $('#wz-progbar').style.width = (Z.s / 8 * 100).toFixed(1) + '%';
     $('#wz-h').textContent = t('h' + Z.s);
     $('#wz-lede').textContent = t('l' + Z.s);
     root.setAttribute('data-wzs', Z.s);
@@ -554,15 +592,16 @@
     $('#wz-back').classList.toggle('off', Z.s === 1); $('#wz-back').disabled = Z.s === 1; $('#wz-back-l').textContent = t('back');
     const nx = $('#wz-next'), nl = $('#wz-next-l');
     nx.disabled = !canNext();
-    nl.textContent = Z.s === 5 ? t('approveNext') : Z.s === 6 ? t('toList') : Z.s === 7 ? t('reqQuote') : t('next') + ': ' + t('st' + (Z.s + 1));
-    nx.classList.toggle('noarrow', Z.s === 7);
+    nl.textContent = Z.s === 6 ? t('approveNext') : Z.s === 7 ? t('toList') : Z.s === 8 ? t('reqQuote') : t('next') + ': ' + t('st' + (Z.s + 1));
+    nx.classList.toggle('noarrow', Z.s === 8);
     let sum = `<span class="meta">${esc(t('stepOf', Z.s))}</span>`;
-    if (Z.s >= 5 && Z.pl) { const tt = PL.tally(); sum += `<span class="tot"><b class="price">${usd(tt.total)}</b><span class="meta-s">${esc(tt.quote.length === 1 ? t('plusQuote1') : t('plusQuote', tt.quote.length))}</span></span>`; }
-    else if (Z.s === 4 && Z.b) sum += `<span class="tot"><span class="meta-s">${esc(t('upTo'))}</span> <b class="price">${usd0(Z.b)}</b></span>`;
+    if (Z.s >= 6 && Z.pl) { const tt = PL.tally(); sum += `<span class="tot"><b class="price">${usd(tt.total)}</b><span class="meta-s">${esc(tt.quote.length === 1 ? t('plusQuote1') : t('plusQuote', tt.quote.length))}</span></span>`; }
+    else if (Z.s === 4 && Z.k) { const cs = camSum(); sum += `<span class="tot"><span class="meta-s">${esc(t('sPlan'))}</span> <b class="price">${usd(cs.ev.total)}</b><span class="meta-s">${esc(cs.ev.quote.length === 1 ? t('plusQuote1') : t('plusQuote', cs.ev.quote.length))}</span></span>`; }
+    else if (Z.s === 5 && Z.b) sum += `<span class="tot"><span class="meta-s">${esc(t('upTo'))}</span> <b class="price">${usd0(Z.b)}</b></span>`;
     else if (Z.s === 3 && Z.k) { const cs = camSum(); sum += `<span class="tot"><span class="meta-s">${esc(t('camsSub'))}</span> <b class="price">${usd(cs.cam)}</b><span class="meta-s">· ${esc(t('sPlan'))} ${usd(cs.ev.total)}</span></span>`; }
     $('#wz-sum').innerHTML = sum;
   }
-  function canNext() { return Z.s === 1 ? !!Z.k : Z.s === 7 ? true : true; }
+  function canNext() { return Z.s === 1 ? !!Z.k : true; }
 
   /* ----- step 1: what you're making ----- */
   function step1() {
@@ -639,11 +678,11 @@
   function shownId(opts) { if (Z.cl && (Z.o === 'c' || !Z.o)) return 'c'; return Z.o && opts[Z.o] ? Z.o : Z.st && opts.s ? 's' : 'r'; }
   function lineupShown() {
     const opts = options(), id = shownId(opts);
-    if (id === 'c') return Z.cl.map(c => ({ k:kOf(c.m), m:c.m, lens:D.BODIES[c.m] ? c.lens || opts.c.ev.cams[Z.cl.indexOf(c)]?.lens || null : null, own:!!c.own, ext:c.ext || null, crop:!!c.crop }));
-    return opts[id].ev.cams.slice(0, 4).map(c => ({ k:c.k, m:c.m, lens:c.k === 'lens' ? c.lens : null, own:!!c.own, ext:c.ext || null, crop:!!c.crop }));
+    if (id === 'c') return Z.cl.map(c => ({ k:kOf(c.m), m:c.m, lens:D.BODIES[c.m] ? c.lens || opts.c.ev.cams[Z.cl.indexOf(c)]?.lens || null : null, own:!!c.own, ext:c.ext || null, crop:!!c.crop, mob:!!c.mob }));
+    return opts[id].ev.cams.slice(0, 4).map(c => ({ k:c.k, m:c.m, lens:c.k === 'lens' ? c.lens : null, own:!!c.own, ext:c.ext || null, crop:!!c.crop, mob:!!c.mob }));
   }
   function editLineup(fn) {
-    const cl = lineupShown().map(c => ({ m:c.m, lens:c.lens, own:c.own, ext:c.ext || null, crop:!!c.crop }));
+    const cl = lineupShown().map(c => ({ m:c.m, lens:c.lens, own:c.own, ext:c.ext || null, crop:!!c.crop, mob:!!c.mob }));
     fn(cl, layout(Z));
     Z.cl = cl; Z.cn = cl.length; Z.o = 'c'; Z.om = 1; Z.dirty = 1;
   }
@@ -754,7 +793,8 @@
       <button type="button" class="cp-sel" data-pos="${i}" aria-pressed="${act}" aria-controls="cpick"><span class="cn">${i + 1}</span><span class="cp-r"><b>${esc(t('rl_' + role))}</b><span class="meta-s">${esc(framing)}</span></span></button>
       <span class="pk"><img src="${p.src}" alt=""></span>
       <span class="cp-m"><span class="cc-b">${esc(brandShort(p.brand))}</span><b>${esc(p.name)}</b><span class="meta-s">${c.own ? esc(t('youHaveS')) : usd(p.usd)}${specOf(c.m).approx ? ` <span class="vf">${esc(t('verify'))}</span>` : ''}</span></span>
-      <label class="cp-own"><input type="checkbox" data-owncam="${i}"${c.own ? ' checked' : ''}><span class="box" aria-hidden="true"></span><span>${esc(t('haveCam'))}</span></label>
+      <span class="cp-tg"><label class="cp-own"><input type="checkbox" data-owncam="${i}"${c.own ? ' checked' : ''}><span class="box" aria-hidden="true"></span><span>${esc(t('haveCam'))}</span></label>
+      ${c.k !== 'ptz' ? `<label class="cp-own"><input type="checkbox" data-mob="${i}"${c.mob ? ' checked' : ''}><span class="box" aria-hidden="true"></span><span>${esc(t('mob'))}</span></label>` : ''}</span>
       ${lensChips(c, i)}
       ${msg ? `<p class="cp-w"><i aria-hidden="true"></i><span>${esc(msg)}${sg ? `<button type="button" class="tbtn cp-fix" data-fix="${i}:${sg.lens}:${sg.ext || ''}:${sg.crop ? 1 : 0}">${esc(t('fixIt', sgName))} · ${esc(t('fixReach', PL.lenTxt(sg.fw)))}</button>` : ''}</span></p>` : rc && rc.ok && !rc.nd.wide ? `<p class="cp-ok meta-s">${esc(t('reachOk', PL.lenTxt(rc.fw), PL.lenTxt(rc.nd.d)))}</p>` : ''}
     </li>`;
@@ -778,6 +818,8 @@
       tri ? t('a_tri', tri) : '', brk ? t('a_brk', brk) : ''].filter(Boolean);
     const bad = lu.filter((c, i) => { const r = reach(L, i, n, c.k, c.m, c.lens, c.ext, c.crop); return r && r.bad; }).length;
     const tr = ev.tr === 'ip' ? 'IP / NDI' : ev.tr.toUpperCase();
+    const ctlL = ev.bom.find(l => l.id && l.id === (D.PTZCTL || {}).Canon);
+    if (ctlL) adds.unshift(t('oneCtl', ctlL.who.length) + ' · ' + P[ctlL.id].name);
     return `<p class="meta"><span class="tally"></span>${esc(t('sumK'))} · ${n}</p>
       <h2>${esc(title(ev))}</h2>
       <dl class="csdl">
@@ -824,7 +866,66 @@
       </div>`;
   }
 
-  /* ----- step 4: budget ----- */
+  /* ----- step 4 (round 3): production + lights ----- */
+  const ROLL = { cam:['cam'], prod:['sw', 'mon', 'aud', 'net'], lit:['lit'], cab:['cab', 'mnt'] };
+  function rollup(bom) {
+    const o = {}; Object.keys(ROLL).forEach(k => { const ls = bom.filter(l => !l.info && ROLL[k].includes(l.g === 'net' && l.code === 'PWR' && l.why === PL.t('w_npf') ? 'net' : l.g));
+      o[k] = { tot:ls.filter(l => !l.own && l.id && P[l.id]).reduce((a, l) => a + P[l.id].usd * l.qty, 0), q:ls.filter(l => !l.own && !(l.id && P[l.id])).length }; });
+    return o;
+  }
+  const rollHTML = bom => { const r = rollup(bom); return `<div class="roll">${Object.keys(ROLL).map(k => `<div><span class="meta">${esc(t('roll_' + k))}</span><b class="price">${usd(r[k].tot)}</b><span class="meta-s">${r[k].q ? esc(t('rollQ', r[k].q)) : '&nbsp;'}</span></div>`).join('')}</div>`; };
+  function chain(ev, pr) {
+    const sw = ev.bom.filter(l => l.g === 'sw' && (l.role === 'sw')).map(l => l.id && P[l.id] ? P[l.id].name : l.name)[0] || '—';
+    const ids = ev.bom.map(l => l.id), nm = id => P[id] ? P[id].name : id, X = D.PROD;
+    const swId = (ev.bom.find(l => l.g === 'sw' && l.role === 'sw' && l.id) || {}).id;
+    const wl = ev.cams.filter(c => c.mob && c.k !== 'ptz').length, outs = [];
+    const pc = pr.how === 'pc';
+    if (pr.st > 0) outs.push(['o_stream', pr.st >= 2 ? t('cut_pgm') + ' · ' + t('cut_dests', '2+') : t('cut_pgm'), ids.includes(X.enc) ? t('viaEnc', nm(X.enc)) : pc ? 'vMix / OBS' : t('builtIn')]);
+    if (pr.scr !== 'none' && pr.scr !== 'overflow') outs.push(['o_screen', t('scr_' + pr.scr) + ' · ' + (pr.feed === 'same' ? t('cut_pgm') : pr.feed === 'aux' ? t('cut_aux') : pc ? t('cut_mix2') : t('cut_mix')), '']);
+    if (pr.scr === 'overflow') outs.push(['o_over', t('cut_pgm'), t('viaEnc', nm(X.dec))]);
+    if (pr.rec !== 'none') outs.push(['o_rec', pr.rec === 'iso' ? t('cut_iso') : t('cut_pgm'), ids.includes(X.rec1) ? t('viaRec', nm(X.rec1)) : pc ? 'vMix / OBS' : t('builtIn')]);
+    return `<figure class="sigch" aria-label="${esc(t('chainK'))}">
+      <div class="ch-col ch-cams"><span class="meta">${esc(t('chCams'))}</span>${ev.cams.map((c, i) => `<span class="ch-n${c.mob && c.k !== 'ptz' ? ' wl' : ''}"><b>${i + 1}</b>${esc(P[c.m] ? P[c.m].name : c.m)}${c.mob && c.k !== 'ptz' ? ' · ' + esc(t('chWl', '')) : ''}</span>`).join('')}</div>
+      <div class="ch-arw" aria-hidden="true"></div>
+      <div class="ch-col ch-sw"><span class="meta">${esc(pc ? t('how_pc') : t('sSw'))}</span><b>${esc(sw)}</b><span class="meta-s">${esc(ev.tr === 'ip' ? 'IP / NDI' : ev.tr.toUpperCase())}${wl ? ' · ' + esc(t('chWl', wl)) : ''}</span></div>
+      <div class="ch-arw" aria-hidden="true"></div>
+      <div class="ch-col ch-outs"><span class="meta">${esc(t('chOut'))}</span>${outs.length ? outs.map(([k, cut, via]) => `<span class="ch-o"><b>${esc(t(k))}</b><span>${esc(cut)}</span>${via ? `<span class="meta-s">${esc(via)}</span>` : ''}</span>`).join('') : '<span class="ch-o"><span class="meta-s">—</span></span>'}</div>
+    </figure>`;
+  }
+  function stepProd() {
+    const pr = prOf(Z), lt = ltOf(Z), opts = options(), o = opts[shownId(opts)], ev = o.ev;
+    const q = (key, k, vals, cur, sub) => `<div class="fq pq"><span class="ql">${esc(t(key))}${sub ? `<span class="meta-s">${esc(sub)}</span>` : ''}</span><span class="seg" role="group" aria-label="${esc(t(key))}">${vals.map(v => `<button type="button" data-pr="${k}:${v}" aria-pressed="${String(cur) === String(v)}">${esc(t(k + '_' + v))}</button>`).join('')}</span></div>`;
+    const lq = (key, k, vals, cur) => `<div class="fq pq"><span class="ql">${esc(t(key))}</span><span class="seg" role="group" aria-label="${esc(t(key))}">${vals.map(v => `<button type="button" data-lt="${k}:${v}" aria-pressed="${String(cur) === String(v)}">${esc(t(v === 1 ? 'yesLights' : v === 0 ? 'noLights' : k + '_' + v))}</button>`).join('')}</span></div>`;
+    const scr = pr.scr !== 'none';
+    const checks = ev.checks.filter(c => c.lvl !== 'ok' && /screen|telão|cut|corte|aux|stream|transm|multiview|DMX|Companion|vMix|NANLINK|Aputure|wireless|sem fio|ProPresenter/i.test(c.txt)).slice(0, 6);
+    return `<div class="pgrid4">
+      <div class="pform">
+        <h2 class="meta lh4"><span class="tally"></span>${esc(t('st4'))}</h2>
+        ${q('q_rec', 'rec', ['none', 'pgm', 'iso'], pr.rec)}
+        ${q('q_st', 'st', [0, 1, 2], pr.st)}
+        ${q('q_scr', 'scr', ['none', 'led', 'proj', 'overflow'], pr.scr)}
+        ${scr && pr.scr !== 'overflow' ? `<fieldset class="fs pfeed"><legend class="meta">${esc(t('q_feed'))}</legend><div class="cds">${['same', 'aux', 'mix'].map((f, i) => `<button type="button" class="cd${pr.feed === f ? ' on' : ''}" data-pr="feed:${f}" aria-pressed="${pr.feed === f}"><span class="n">${String(i + 1).padStart(2, '0')}<i aria-hidden="true"></i></span><b>${esc(t('feed_' + f))}</b><span class="meta-s">${esc(t('fd_' + f))}</span></button>`).join('')}</div></fieldset>` : ''}
+        ${q('q_gfx', 'gfx', ['none', 'lower', 'lyrics'], pr.gfx, pr.gfx === 'lyrics' ? t('gfxNote') : '')}
+        ${q('q_how', 'how', ['hw', 'pc'], pr.how)}
+        ${q('q_lvl', 'lvl', ['s', 'm', 'p'], pr.lvl)}
+        <h2 class="meta lh4"><span class="tally"></span>${esc(t('lightK'))}</h2>
+        ${lq('q_lights', 'on', [1, 0], lt.on)}
+        ${lt.on ? lq('q_ctl', 'ctl', ['app', 'dmx', 'crmx'], lt.ctl) : ''}
+        ${lt.on && lt.ctl !== 'app' ? `<div class="fq pq"><span class="ql">${esc(t(Z.k === 'podcast' ? 'q_relay' : 'q_panel'))}<span class="meta-s">${esc(t(Z.k === 'podcast' ? 'panelNoteP' : 'panelNote'))}</span></span>
+          <label class="csame"><input type="checkbox" data-ltc="${Z.k === 'podcast' ? 'relay' : 'panel'}"${(Z.k === 'podcast' ? lt.relay : lt.panel) ? ' checked' : ''}><span class="box" aria-hidden="true"></span><span>${esc(t('yes'))}</span></label></div>
+          <p class="meta-s pnote">${esc(t('noArt'))}</p>` : ''}
+      </div>
+      <aside class="psum4" aria-label="${esc(t('chainK'))}">
+        <p class="meta"><span class="tally"></span>${esc(t('chainK'))}</p>
+        ${chain(ev, pr)}
+        ${checks.length ? `<ul class="checks pchecks">${checks.map(c => `<li class="${c.lvl}"><i aria-hidden="true"></i><span>${esc(c.txt)}</span></li>`).join('')}</ul>` : ''}
+        ${rollHTML(ev.bom)}
+        <p class="ptot4"><b class="price">${usd(ev.total)}</b><span class="meta-s">${esc(t('priced'))} · ${esc(ev.quote.length === 1 ? t('plusQuote1') : t('plusQuote', ev.quote.length))}</span></p>
+      </aside>
+    </div>`;
+  }
+
+  /* ----- step 5: budget ----- */
   function step4() {
     const opts = options();
     const pick = pickFor(opts);
@@ -914,7 +1015,7 @@
   function hasWebGL() { try { const c = document.createElement('canvas'); return !!(window.WebGLRenderingContext && (c.getContext('webgl2') || c.getContext('webgl'))); } catch (e) { return false; } }
   function mount3d() {
     const box = $('#g3box'), msg = $('#g3msg');
-    const fail = key => { msg.innerHTML = `<span class="meta"><span class="tally"></span>3D</span><b>${esc(t(key))}</b><span class="meta-s">${esc(t('noGLp'))}</span><span class="g3acts"><button type="button" class="btn sm" data-go="5">${esc(t('st5'))}</button><button type="button" class="btn sm sig" data-go="7">${esc(t('toList'))}</button></span>`; msg.classList.add('fail'); };
+    const fail = key => { msg.innerHTML = `<span class="meta"><span class="tally"></span>3D</span><b>${esc(t(key))}</b><span class="meta-s">${esc(t('noGLp'))}</span><span class="g3acts"><button type="button" class="btn sm" data-go="6">${esc(t('st6'))}</button><button type="button" class="btn sm sig" data-go="8">${esc(t('toList'))}</button></span>`; msg.classList.add('fail'); };
     if (!hasWebGL()) { fail('noGL'); return; }
     const want = Z.s;
     import('./planner-3d.js').then(m => {
@@ -934,16 +1035,17 @@
   /* ----- step 7: list (the planner's own #bom section shows; this adds the budget bar) ----- */
   function renderBudgetBar() {
     const el = $('#wz-budget'); if (!el) return;
-    const show = Z.pl && (Z.v === 'w' ? Z.s === 7 : !!Z.b);
+    const show = Z.pl && (Z.v === 'w' ? Z.s === 8 : !!Z.b);
     el.hidden = !show; if (!show) return;
     const tt = PL.tally(), b = Z.b;
     const over = b && tt.total > b;
     el.innerHTML = `<div class="wzb-row">
-        <div><span class="meta">${esc(t('bBudget'))}</span><b class="price">${b ? usd0(b) : '—'}</b>${!b ? `<button type="button" class="textlink sm" data-go="4">${esc(t('setBudget'))}${icon('arrow-right')}</button>` : ''}</div>
+        <div><span class="meta">${esc(t('bBudget'))}</span><b class="price">${b ? usd0(b) : '—'}</b>${!b ? `<button type="button" class="textlink sm" data-go="5">${esc(t('setBudget'))}${icon('arrow-right')}</button>` : ''}</div>
         <div><span class="meta">${esc(t('bTotal'))}</span><b class="price">${usd(tt.total)}</b></div>
         <div><span class="meta"><i class="qd"></i>${esc(t('bQuote'))}</span><b>${esc(t('bQuoteN', tt.quote.length))}</b></div>
         <div><span class="meta"><i class="ow"></i>${esc(t('bHave'))}</span><b>${esc(t('bHaveN', tt.owned.length))}</b></div>
       </div>
+      ${rollHTML(PL.bom)}
       ${b ? `${fitHTML(tt.total, b).replace('class="fit', 'class="fit big')}` : ''}
       ${b ? `<p class="wzb-st meta-s${over ? ' over' : ''}">${esc(over ? t('bOver', usd0(tt.total - b)) : t('bLeft', usd0(b - tt.total)))}</p>` : ''}`;
   }
@@ -959,10 +1061,10 @@
     renderChrome();
     const s = Z.s;
     panel.className = 'wz-panel s' + s;
-    panel.innerHTML = s === 1 ? step1() : s === 2 ? step2() : s === 3 ? step3() : s === 4 ? step4() : s === 5 ? step5() : s === 6 ? step6() : '';
-    if (s === 5) { const slot = $('#wz-plan-slot'); slot.appendChild(planbox); slot.appendChild(mvh); slot.appendChild(cviews); requestAnimationFrame(() => PL.renderPlanNow()); }
-    if (s === 6) mount3d();
-    if (s === 4) renderChrome();   /* the pick may have changed the chosen option */
+    panel.innerHTML = s === 1 ? step1() : s === 2 ? step2() : s === 3 ? step3() : s === 4 ? stepProd() : s === 5 ? step4() : s === 6 ? step5() : s === 7 ? step6() : '';
+    if (s === 6) { const slot = $('#wz-plan-slot'); slot.appendChild(planbox); slot.appendChild(mvh); slot.appendChild(cviews); requestAnimationFrame(() => PL.renderPlanNow()); }
+    if (s === 7) mount3d();
+    if (s === 5) renderChrome();   /* the pick may have changed the chosen option */
   }
   let rT = 0;
   document.addEventListener('i9plan:update', () => {
@@ -971,8 +1073,8 @@
     if (Z.v !== 'w') return;
     cancelAnimationFrame(rT);
     rT = requestAnimationFrame(() => {
-      if (Z.s === 5) { const sd = $('#wz-side'); if (sd) { const a = document.activeElement, keep = sd.contains(a) ? (a.dataset.cam5 != null ? `[data-cam5="${a.dataset.cam5}"]` : a.id ? '#' + a.id : null) : null; sd.innerHTML = side5(); if (keep) $(keep, sd)?.focus({ preventScroll:true }); } }
-      if (Z.s >= 4) renderChrome();
+      if (Z.s === 6) { const sd = $('#wz-side'); if (sd) { const a = document.activeElement, keep = sd.contains(a) ? (a.dataset.cam5 != null ? `[data-cam5="${a.dataset.cam5}"]` : a.id ? '#' + a.id : null) : null; sd.innerHTML = side5(); if (keep) $(keep, sd)?.focus({ preventScroll:true }); } }
+      if (Z.s >= 5) renderChrome();
     });
   });
   document.addEventListener('i9plan:load', () => {
@@ -981,13 +1083,13 @@
     Z = valid(PL.z); if (!PL.z) Z.v = 'a'; Z.dirty = 0; Z.lo = Z.o; OPT_CACHE.key = ''; render(); });
 
   /* ======================= events ======================= */
-  $('#to-adv').addEventListener('click', () => { if (Z.k && Z.s >= 4) ensurePlan(); setView('a'); scrollTo(0, 0); $('#advbar .btn')?.focus(); });
-  $('#to-wiz').addEventListener('click', () => { if (!Z.k) { const k = TPL_KIND[PL.state.tpl] || 'church'; chooseKind(k); } syncRoom(); Z.pl = 1; Z.dirty = 0; Z.lo = Z.o = Z.o || 'r'; Z.s = Math.max(Z.s, 5); Z.mx = Math.max(Z.mx, 5); setView('w'); scrollTo(0, 0); });
+  $('#to-adv').addEventListener('click', () => { if (Z.k && Z.s >= 5) ensurePlan(); setView('a'); scrollTo(0, 0); $('#advbar .btn')?.focus(); });
+  $('#to-wiz').addEventListener('click', () => { if (!Z.k) { const k = TPL_KIND[PL.state.tpl] || 'church'; chooseKind(k); } syncRoom(); Z.pl = 1; Z.dirty = 0; Z.lo = Z.o = Z.o || 'r'; Z.s = Math.max(Z.s, 6); Z.mx = Math.max(Z.mx, 6); setView('w'); scrollTo(0, 0); });
   stepsEl.addEventListener('click', e => { const b = e.target.closest('[data-go]'); if (b && !b.disabled) go(+b.dataset.go); });
   $('#wz-back').addEventListener('click', () => go(Z.s - 1));
   $('#wz-next').addEventListener('click', () => {
-    if (Z.s === 5) { approve(); go(6, { approve:true }); return; }
-    if (Z.s === 7) { $('#b-quote')?.click(); return; }
+    if (Z.s === 6) { approve(); go(7, { approve:true }); return; }
+    if (Z.s === 8) { $('#b-quote')?.click(); return; }
     go(Z.s + 1);
   });
   document.addEventListener('click', e => { const b = e.target.closest('#wz-budget [data-go], .g3msg [data-go]'); if (!b) return; if (Z.v === 'a') { Z.v = 'w'; root.classList.add('pl-wiz'); root.classList.remove('pl-adv'); } go(+b.dataset.go); });
@@ -1000,8 +1102,11 @@
     if (b.dataset.n) { Z.n = clamp(Z.n + +b.dataset.n, 1, 8); Z.dirty = 1; render(); $(`[data-n="${b.dataset.n}"]`)?.focus(); return; }
     if (b.dataset.au) { Z.au = +b.dataset.au; Z.dirty = 1; render(); return; }
     if (b.dataset.cd) { Z.cd = b.dataset.cd; Z.dirty = 1; render(); $(`[data-cd="${b.dataset.cd}"]`)?.focus(); return; }
-    /* step 3: cameras */
     const keep = sel => { render(); const el = $(sel, panel); if (el) el.focus({ preventScroll:true }); };
+    if (b.dataset.pr) { const [k, v] = b.dataset.pr.split(':'); Z.pr = { ...prOf(Z), [k]: k === 'st' ? +v : v }; if (k === 'lvl') { /* level nudges the defaults */ } Z.dirty = 1; if (!Z.om) Z.o = null; keep(`[data-pr="${b.dataset.pr}"]`); save(); return; }
+    if (b.dataset.lt) { const [k, v] = b.dataset.lt.split(':'); Z.lt = { ...ltOf(Z), [k]: k === 'on' ? +v : v }; Z.dirty = 1; if (!Z.om) Z.o = null; keep(`[data-lt="${b.dataset.lt}"]`); save(); return; }
+    /* step 3: cameras */
+    const keep2 = sel => { render(); const el = $(sel, panel); if (el) el.focus({ preventScroll:true }); };
     if (b.dataset.fam) { if (famOf(Z) !== b.dataset.fam) { Z.fam = b.dataset.fam; Z.cl = null; Z.o = null; Z.om = 0; Z.dirty = 1; UI.tab = null; UI.b = ''; } keep(`[data-fam="${b.dataset.fam}"]`); save(); return; }
     if (b.dataset.cn) { setCount(lineupShown().length + +b.dataset.cn); keep(`[data-cn="${b.dataset.cn}"]`); save(); return; }
     if (b.dataset.pos != null) { Z.pos = +b.dataset.pos; Z.same = 0; UI.tab = null; render(); const h = $('#cpick-h'); if (h) { h.setAttribute('tabindex', '-1'); if (matchMedia('(max-width:1099px)').matches) h.scrollIntoView({ block:'start', behavior:'smooth' }); } $(`[data-pos="${b.dataset.pos}"]`, panel)?.focus({ preventScroll:true }); save(); return; }
@@ -1023,13 +1128,15 @@
     if (b.dataset.b != null) { Z.b = +b.dataset.b || null; render(); save(); $(`[data-b="${b.dataset.b}"]`)?.focus(); return; }
     if (b.dataset.choose) { Z.o = b.dataset.choose; Z.om = 1; render(); save(); $(`[data-choose="${Z.o}"]`)?.focus(); return; }
     if (b.dataset.cam5 != null) { PL.select('cam', +b.dataset.cam5); return; }
-    if (b.id === 'wz-approve') { approve(); go(6, { approve:true }); return; }
+    if (b.id === 'wz-approve') { approve(); go(7, { approve:true }); return; }
     if (b.id === 'wz-fine') { setView('a'); scrollTo(0, 0); return; }
     if (b.dataset.v3 != null && G3) { G3.setView(b.dataset.v3 === 'o' ? null : +b.dataset.v3); return; }
     if (b.id === 'g3-reset' && G3) { G3.setView(null); G3.reset(); return; }
   });
   panel.addEventListener('change', e => {
     const i = e.target;
+    if (i.dataset.ltc) { Z.lt = { ...ltOf(Z), [i.dataset.ltc]: i.checked ? 1 : 0 }; Z.dirty = 1; if (!Z.om) Z.o = null; render(); $(`[data-ltc="${i.dataset.ltc}"]`)?.focus(); save(); return; }
+    if (i.dataset.mob != null) { const k = +i.dataset.mob, v = i.checked; editLineup(cl => { cl[k].mob = v; }); render(); $(`[data-mob="${k}"]`)?.focus(); save(); return; }
     if (i.dataset.owncam != null) { const k = +i.dataset.owncam, v = i.checked; editLineup(cl => { cl[k].own = v; }); render(); $(`[data-owncam="${k}"]`)?.focus(); save(); return; }
     if (i.dataset.cmp) { const id = i.dataset.cmp; UI.cmp = i.checked ? UI.cmp.filter(x => x !== id).concat(id).slice(-3) : UI.cmp.filter(x => x !== id); render(); $(`[data-cmp="${id}"]`)?.focus(); return; }
     if (i.id === 'wz-same') { Z.same = i.checked ? 1 : 0; if (Z.same) { const lu = lineupShown(), m = lu[clamp(Z.pos, 0, lu.length - 1)].m; if (lu.some(c => c.m !== m)) pickModel(m); } render(); $('#wz-same')?.focus(); save(); return; }
@@ -1056,15 +1163,15 @@
     const hk = PL.hashKind, q = PL.queryTemplate;
     if (hk === 'p' && PL.z) { Z = valid(PL.z); Z.dirty = 0; if (Z.pl) Z.lo = Z.o; }
     else if (hk === 'tpl' && kindFromHash(PL.bootHash)) { Z = DEF(); chooseKind(kindFromHash(PL.bootHash)); Z.s = 2; Z.mx = 2; }   /* guides, product pages: the guided steps on that kind */
-    else if (hk === 'p' || hk === 'tpl' || hk === 'adv') { Z = DEF(); Z.v = 'a'; const k = TPL_KIND[PL.state.tpl]; if (k) chooseKind(k); syncRoom(); Z.pl = 1; Z.dirty = 0; Z.o = Z.lo = 'r'; Z.s = 5; Z.mx = 5; }
+    else if (hk === 'p' || hk === 'tpl' || hk === 'adv') { Z = DEF(); Z.v = 'a'; const k = TPL_KIND[PL.state.tpl]; if (k) chooseKind(k); syncRoom(); Z.pl = 1; Z.dirty = 0; Z.o = Z.lo = 'r'; Z.s = 6; Z.mx = 6; }
     else if (q) {
       const st = window.I9S.SET[q], S = PL.state;
       Z = DEF(); Z.k = SETUP_KIND[st.sol] || TPL_KIND[S.tpl] || 'church'; Z.w = S.w; Z.d = S.d; Z.rp = 'c';
       const pre = D.ROOMS[Z.k].find(p => Array.isArray(p) && p[1] === S.w && p[2] === S.d); if (pre) Z.rp = pre[0];
       Z.n = clamp(S.ppl.length || 1, 1, 8); Z.au = S.furn.some(f => f.k === 'seats') ? 1 : 0; Z.cd = 'back';
-      Z.st = q; Z.o = Z.lo = 's'; Z.om = 1; Z.pl = 1; Z.dirty = 0; Z.s = 5; Z.mx = 5;
+      Z.st = q; Z.o = Z.lo = 's'; Z.om = 1; Z.pl = 1; Z.dirty = 0; Z.s = 6; Z.mx = 6;
     }
-    if (Z.s >= 5 && Z.v === 'w') ensurePlan();
+    if (Z.s >= 6 && Z.v === 'w') ensurePlan();
     render();
     save();
   })();
